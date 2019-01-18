@@ -1,0 +1,988 @@
+<Day cometEmailId="mark.easter@colostate.edu">
+	<Cropland name="module:cropland|id:1|irrigated:N|mlra:107B|practice:Conversion to non-legume grassland reserve|crop2009:corn|crop2010:soybeans|crop2011:corn|crop2012:soybeans|crop2013:corn|crop2014:soybeans|crop2015:corn">
+		<GEOM SRID="4326" AREA="10">POINT(-93.2519 39.1273)</GEOM>
+		<Pre-1980>Upland Non-Irrigated (Pre 1980s)</Pre-1980>
+		<CRP>None</CRP>
+		<CRPStartYear></CRPStartYear>
+		<CRPEndYear></CRPEndYear>
+		<CRPType>None</CRPType>
+		<Year1980-2000>Non-Irrigated: Corn-Soybean</Year1980-2000>
+		<Year1980-2000_Tillage>Intensive Tillage</Year1980-2000_Tillage>
+		<CropScenario Name="Current">
+			<CropYear Year="2000">
+				<Crop CropNumber="1">
+					<CropName>soybean</CropName>
+					<PlantingDate>06/03/2000</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/21/2000</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>39.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>06/02/2000</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>06/03/2000</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>17.8</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2001">
+				<Crop CropNumber="1">
+					<CropName>corn</CropName>
+					<PlantingDate>05/04/2001</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/06/2001</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>135.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>05/03/2001</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>05/04/2001</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>141.9</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2002">
+				<Crop CropNumber="1">
+					<CropName>corn</CropName>
+					<PlantingDate>05/04/2002</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/06/2002</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>135.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>05/03/2002</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>05/04/2002</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>141.9</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2003">
+				<Crop CropNumber="1">
+					<CropName>soybean</CropName>
+					<PlantingDate>06/03/2003</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/21/2003</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>39.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>06/02/2003</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>06/03/2003</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>17.8</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2004">
+				<Crop CropNumber="1">
+					<CropName>corn</CropName>
+					<PlantingDate>05/04/2004</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/06/2004</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>135.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>05/03/2004</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>05/04/2004</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>141.9</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2005">
+				<Crop CropNumber="1">
+					<CropName>soybean</CropName>
+					<PlantingDate>06/03/2005</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/21/2005</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>39.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>06/02/2005</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>06/03/2005</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>17.8</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2006">
+				<Crop CropNumber="1">
+					<CropName>corn</CropName>
+					<PlantingDate>05/04/2006</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/06/2006</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>135.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>05/03/2006</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>05/04/2006</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>141.9</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2007">
+				<Crop CropNumber="1">
+					<CropName>soybean</CropName>
+					<PlantingDate>06/03/2007</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/21/2007</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>39.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>06/02/2007</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>06/03/2007</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>17.8</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2008">
+				<Crop CropNumber="1">
+					<CropName>corn</CropName>
+					<PlantingDate>05/04/2008</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/06/2008</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>135.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>05/03/2008</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>05/04/2008</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>141.9</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2009">
+				<Crop CropNumber="1">
+					<CropName>corn</CropName>
+					<PlantingDate>05/04/2009</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/06/2009</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>135.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>05/03/2009</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>05/04/2009</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>141.9</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2010">
+				<Crop CropNumber="1">
+					<CropName>soybean</CropName>
+					<PlantingDate>06/03/2010</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/21/2010</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>39.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>06/02/2010</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>06/03/2010</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>17.8</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2011">
+				<Crop CropNumber="1">
+					<CropName>corn</CropName>
+					<PlantingDate>05/04/2011</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/06/2011</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>135.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>05/03/2011</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>05/04/2011</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>141.9</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2012">
+				<Crop CropNumber="1">
+					<CropName>soybean</CropName>
+					<PlantingDate>06/03/2012</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/21/2012</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>39.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>06/02/2012</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>06/03/2012</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>17.8</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2013">
+				<Crop CropNumber="1">
+					<CropName>corn</CropName>
+					<PlantingDate>05/04/2013</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/06/2013</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>135.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>05/03/2013</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>05/04/2013</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>141.9</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2014">
+				<Crop CropNumber="1">
+					<CropName>soybean</CropName>
+					<PlantingDate>06/03/2014</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/21/2014</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>39.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>06/02/2014</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>06/03/2014</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>17.8</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2015">
+				<Crop CropNumber="1">
+					<CropName>corn</CropName>
+					<PlantingDate>05/04/2015</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/06/2015</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>135.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>05/03/2015</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>05/04/2015</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>141.9</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2016">
+				<Crop CropNumber="1">
+					<CropName>corn</CropName>
+					<PlantingDate>05/04/2016</PlantingDate>
+					<ContinueFromPreviousYear>N</ContinueFromPreviousYear>
+					<HarvestList>
+						<HarvestEvent>
+							<HarvestDate>10/06/2016</HarvestDate>
+							<Grain>Yes</Grain>
+							<yield>135.0</yield>
+							<StrawStoverHayRemoval>0</StrawStoverHayRemoval>
+						</HarvestEvent>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+						<TillageEvent>
+							<TillageDate>05/03/2016</TillageDate>
+							<TillageType>Intensive Tillage</TillageType>
+						</TillageEvent>
+					</TillageList>
+					<NApplicationList>
+						<NApplicationEvent>
+							<NApplicationDate>05/04/2016</NApplicationDate>
+							<NApplicationType>UAN</NApplicationType>
+							<NApplicationAmount>141.9</NApplicationAmount>
+							<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>
+							<EEP>None</EEP>
+						</NApplicationEvent>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+		</CropScenario>
+		<CropScenario Name="Conversion to non-legume grassland reserve">
+			<CropYear Year="2017">
+				<Crop CropNumber="1">
+					<CropName>Grass</CropName>
+					<PlantingDate>01/03/2017</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+				<Crop CropNumber="2">
+					<CropName>Grass</CropName>
+					<PlantingDate>10/20/2017</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2018">
+				<Crop CropNumber="1">
+					<CropName>Grass</CropName>
+					<PlantingDate>01/03/2018</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+				<Crop CropNumber="2">
+					<CropName>Grass</CropName>
+					<PlantingDate>10/20/2018</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2019">
+				<Crop CropNumber="1">
+					<CropName>Grass</CropName>
+					<PlantingDate>01/03/2019</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+				<Crop CropNumber="2">
+					<CropName>Grass</CropName>
+					<PlantingDate>10/20/2019</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2020">
+				<Crop CropNumber="1">
+					<CropName>Grass</CropName>
+					<PlantingDate>01/03/2020</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+				<Crop CropNumber="2">
+					<CropName>Grass</CropName>
+					<PlantingDate>10/20/2020</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2021">
+				<Crop CropNumber="1">
+					<CropName>Grass</CropName>
+					<PlantingDate>01/03/2021</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+				<Crop CropNumber="2">
+					<CropName>Grass</CropName>
+					<PlantingDate>10/20/2021</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2022">
+				<Crop CropNumber="1">
+					<CropName>Grass</CropName>
+					<PlantingDate>01/03/2022</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+				<Crop CropNumber="2">
+					<CropName>Grass</CropName>
+					<PlantingDate>10/20/2022</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2023">
+				<Crop CropNumber="1">
+					<CropName>Grass</CropName>
+					<PlantingDate>01/03/2023</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+				<Crop CropNumber="2">
+					<CropName>Grass</CropName>
+					<PlantingDate>10/20/2023</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2024">
+				<Crop CropNumber="1">
+					<CropName>Grass</CropName>
+					<PlantingDate>01/03/2024</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+				<Crop CropNumber="2">
+					<CropName>Grass</CropName>
+					<PlantingDate>10/20/2024</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2025">
+				<Crop CropNumber="1">
+					<CropName>Grass</CropName>
+					<PlantingDate>01/03/2025</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+				<Crop CropNumber="2">
+					<CropName>Grass</CropName>
+					<PlantingDate>10/20/2025</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+			<CropYear Year="2026">
+				<Crop CropNumber="1">
+					<CropName>Grass</CropName>
+					<PlantingDate>01/03/2026</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+				<Crop CropNumber="2">
+					<CropName>Grass</CropName>
+					<PlantingDate>10/20/2026</PlantingDate>
+					<ContinueFromPreviousYear>Y</ContinueFromPreviousYear>
+					<HarvestList>
+					</HarvestList>
+					<GrazingList>
+					</GrazingList>
+					<TillageList>
+					</TillageList>
+					<NApplicationList>
+					</NApplicationList>
+					<OMADApplicationList>
+					</OMADApplicationList>
+					<IrrigationList>
+					</IrrigationList>
+				</Crop>
+			</CropYear>
+		</CropScenario>
+	</Cropland>
+</Day>
