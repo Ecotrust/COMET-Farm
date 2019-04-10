@@ -2,12 +2,14 @@
 
 Information gathered during meeting on 4.9.19  
 
-## Problems to Solve
+<details>
+<summary>Reason for project</summary>
+
+## Problems to Solve  
 
 1. Understand potential for different landscapes to sequester carbon as part of ongoing efforts to mitigate and build resilance against effects of climate change  
 
 2. Simplify use of Comet-Farm by utilizing Comet-Farm API  
-
 
 ## Why these are problems  
 
@@ -15,7 +17,13 @@ Information gathered during meeting on 4.9.19
 
 2. Current work flow demands too much time  
 
+</details>  
 
+____  
+
+
+<details>
+<summary>Goals & Success</summary>
 
 ## Goals
 
@@ -30,9 +38,13 @@ Information gathered during meeting on 4.9.19
 3. Ability to do analysis of climate outputs 
 
 
-## How we will be successful
+## How we will be successful  
 
-- Automate Daycent model runs through Comet-Farm API
+Automate Daycent model runs through Comet-Farm API
+
+</details>  
+
+____  
 
 
 ## Summary
