@@ -9,7 +9,7 @@ GEOM
 `SRID` - projection id, suggest using NAD83 (4326)  
 `AREA` - size in acres of parcel or point
   
-Pre-1980
+Pre-1980  
 *one of the following options:*   
   - [ ] "Irrigation (Pre 1980s)"
   - [ ] "Livestock Grazing"
