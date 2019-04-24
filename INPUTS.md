@@ -1,15 +1,15 @@
-Day  
-  `cometEmailId` - user email address registered in COMET-Farm  
+Day
+`cometEmailId` - user email address registered in COMET-Farm  
 
-Cropland  
-  `name` - descriptive name of model run  
+Cropland
+`name` - descriptive name of model run  
 
 GEOM  
-*WKT parcel or point GIS Definition*  
-  `SRID` - projection id, suggest using NAD83 (4326)   
-  `AREA` - size in acres of parcel or point
+*WKT parcel or point GIS Definition*
+`SRID` - projection id, suggest using NAD83 (4326)
+`AREA` - size in acres of parcel or point
   
-Pre-1980  
+Pre-1980
 *one of the following options:*   
   - [ ] "Irrigation (Pre 1980s)"
   - [ ] "Livestock Grazing"
@@ -89,6 +89,9 @@ CropScenario
 
 CropYear  
 `Year` - yyyy format  
+CropYear definitions repeat for each year from 2000 to the current calendar year - 1
+
+---  
 
 Crop  
 `CropNumber` - option is "1" or "2"  
@@ -249,9 +252,82 @@ EEP
   - [ ] "Slow Release"
   - [ ] "Nitrification Inhibitor"
   
-
-
+OMADApplicationList  
+  
+OMADApplicationEvent
  
+OMADApplicationDate
+Date must be in mm/dd/yyyy format  
+
+OMADType  
+*one of the following options:*  
+  - [ ] "Compost or Composted Manure"
+  - [ ] "Farmyard Manure"
+  - [ ] "Other"
+  - [ ] "Beef"
+  - [ ] "Dairy"
+  - [ ] "Chicken - Broiler (litter)"
+  - [ ] "Chicken - layer"
+  - [ ] "Sheep"
+  - [ ] "Swine"  
+  
+OMADApplicationAmount  
+Units in tons dry matter per acre
+
+OMADPercentN  
+Units in % N  
+
+OMADCNRatio
+
+IrrigationList
+
+IrrigationApplicationEvent
+
+IrrigationApplicationDate
+IrrigationApplicationAmount
+
+IrrigationApplicationAmount
+Units in inches
+
+
+LimingList
+
+LimingApplicationEvent
+
+LimingApplicationDate
+Date must be in mm/dd/yyyy format
+
+LimingMaterial
+*one of the following options:*  
+  - [ ] "None"
+  - [ ] "Crushed Limestone"
+  - [ ] "Calcitic Limestone"
+  - [ ] "Dolomitic Limestone"
+
+LimingApplicationAmount
+Units in tons/acre
+
+BurningList
+
+BurningEvent
+
+DidYouBurnCropResidue
+*one of the following options:*  
+  - [ ] "No burning"
+  - [ ] "Yes, before planting"
+  - [ ] "Yes, after harvesting"
+  
+---  
+
+:repeat: `<Crop>`
+
+:note: Options are exactly as above for crop #1 for this year. Planting date cannot be earlier than the harvest date of the previous crop.
+
+:note: None of the other events (tillage, Napplication, OMADapplication, etc.) can have dates prior to the last harvest date of crop #1 of the previous year.
+
+
+## XML Scheme
+
 ```xml
 <Day cometEmailId="<user email address registered in COMET-Farm">
   <Cropland name="<descriptive name of model run">
