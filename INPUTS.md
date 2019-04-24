@@ -1,7 +1,7 @@
-Day
+Day  
 `cometEmailId` - user email address registered in COMET-Farm  
-
-Cropland
+ 
+Cropland  
 `name` - descriptive name of model run  
 
 GEOM  
