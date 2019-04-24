@@ -62,6 +62,195 @@ PostCRPManagement
   - [ ] "Non-Irrigated: Fallow-Grain" 
   - [ ] "Non-Irrigated: Orchard or Vineyard"
   
+PostCRPTillage  
+*one of the following options:*  
+  - [ ] "Intensive Tillage"
+  - [ ] "Reduced Tillage"
+  - [ ] "No Till"  
+  
+Year1980-2000
+*one of the following options:*  
+  - [ ] "Irrigated: Annual Crops in Rotation"
+  - [ ] "Irrigated: Annual Crops with Hay/Pasture in Rotation"
+  - [ ] "Irrigated: Continuous Hay"
+  - [ ] "Irrigated: Orchard or Vineyard"
+  - [ ] "Non-Irrigated: Annual Crops in Rotation"
+  - [ ] "Non-Irrigated: Continuous Hay"
+  - [ ] "Non-Irrigated: Livestock G
+  
+Year1980-2000_Tillage  
+*one of the following options:*  
+  - [ ] "Intensive Tillage"
+  - [ ] "Reduced Tillage"
+  - [ ] "No Till" 
+  
+CropScenario  
+`Name` - crop scenario name  
+
+CropYear  
+`Year` - yyyy format  
+
+Crop  
+`CropNumber` - option is "1" or "2"  
+
+CropName  
+*one of the following options:*  
+  - [ ] "Alfalfa"
+  - [ ] "Barley"
+  - [ ] "Broccoli-Coast"
+  - [ ] "Broccoli-Desert"
+  - [ ] "Cauliflower"
+  - [ ] "Clover"
+  - [ ] "Corn"
+  - [ ] "Corn Silage"
+  - [ ] "Cotton"
+  - [ ] "Dry Field Beans"
+  - [ ] "Fallow"
+  - [ ] "Grass"
+  - [ ] "Grass-Legume Mix"
+  - [ ] "Lettuce-Head"
+  - [ ] "Lettuce-Romaine"
+  - [ ] "Lettuce-Leaf"
+  - [ ] "Millet"
+  - [ ] "Oats"
+  - [ ] "Peanut"
+  - [ ] "Potato"
+  - [ ] "Rice - Flooded"
+  - [ ] "Rye"
+  - [ ] "Sorghum"
+  - [ ] "Sorghum Silage"
+  - [ ] "Soybean"
+  - [ ] "Spring Wheat"
+  - [ ] "Strawberry"
+  - [ ] "Sugar Beets"
+  - [ ] "Sunflower"
+  - [ ] "Switchgrass"
+  - [ ] "Tomatoes, Fresh"
+  - [ ] "Tomatoes, Processing"
+  - [ ] "Winter Wheat"
+  - [ ] "Annual Rye - Legume - Radish"
+  - [ ] "Annual Rye - Legume"
+  - [ ] "Annual Rye"
+  - [ ] "Cereal Rye"
+  - [ ] "Clover"
+  - [ ] "Corn"
+  - [ ] "Forage Radish"
+  - [ ] "Millet"
+  - [ ] "Oilseed Radish"
+  - [ ] "Winter Grain-Other"
+  - [ ] "Sorghum"
+  - [ ] "Vetch"
+  - [ ] "Winter Wheat"
+  - [ ] "Almond"
+  - [ ] "Grape, Raisin"
+  - [ ] "Grape, Table"
+  - [ ] "Grape, Wine (<1390 GDD)"
+  - [ ] "Grape, Wine (1391-1670 GDD)"
+  - [ ] "Grape, Wine (1671-1950 GDD)"
+  - [ ] "Grape, Wine (>1950 GDD)"
+  - [ ] "Grapefruit"
+  - [ ] "Lemons & Limes"
+  - [ ] "Oranges"
+  - [ ] "Pistachio"
+  - [ ] "Tangerines & Mandarins"
+  - [ ] "English Walnuts"
+
+PlantingDate  
+Date must be in mm/dd/yyyy format  
+
+ContinueFromPreviousYear
+*one of the following options:* 
+  - [ ] "No"
+  - [ ] "Yes"
+
+DidYouPrune  
+*one of the following options:* 
+  - [ ] "No"
+  - [ ] "Yes"
+
+RenewOrClearYourOrchard  
+*one of the following options:* 
+  - [ ] "No"
+  - [ ] "Yes"
+
+HarvestList  
+
+HarvestEvent  
+
+HarvestDate  
+Date must be in mm/dd/yyyy format  
+
+Grain  
+*one of the following options:* 
+  - [ ] "No"
+  - [ ] "Yes"
+
+yield  
+Refer to "Units" worksheet for details on units (?)
+
+StrawStoverHayRemoval  
+Units in %  
+
+GrazingList
+
+TillageList
+ 
+TillageEvent  
+
+TillageDate  
+Date must be in mm/dd/yyyy format  
+
+TillageType  
+*one of the following options:*  
+  - [ ] "Intensive Tillage"
+  - [ ] "Reduced Tillage"
+  - [ ] "Mulch Tillage"
+  - [ ] "Ridge Tillage"
+  - [ ] "Strip Tillage"
+  - [ ] "No Tillage"
+  - [ ] "Growing Season Cultivation"
+  - [ ] "Mow"
+  - [ ] "Crimp"
+  - [ ] "Broad-spectrum herbicide"  
+  
+NApplicationList  
+
+NApplicationEvent  
+
+NApplicationDate  
+Date must be in mm/dd/yyyy format  
+
+NApplicationType  
+*one of the following options:*  
+  - [ ] "Ammonium Nitrate"
+  - [ ] "Anhydrous Ammonia"
+  - [ ] "Ammonium Sulfate"
+  - [ ] "Urea"
+  - [ ] "UAN"
+  - [ ] "Compost"
+  - [ ] "Mixed Blends"
+  - [ ] "Mono-Ammonium Phosphate"
+  - [ ] "Di-Ammonium Phosphate"
+
+NApplicationAmount
+Units in lbs N/acre  
+
+NApplicationMethod  
+*one of the following options:*  
+  - [ ] "Surface Broadcast"
+  - [ ] "Surface Band / Sidedress"
+  - [ ] "Incorporate / Inject"
+  - [ ] "Fertigation"
+  - [ ] "Aerial Application"
+  
+EEP  
+*one of the following options:*  
+  - [ ] "None"
+  - [ ] "Slow Release"
+  - [ ] "Nitrification Inhibitor"
+  
+
+
  
 ```xml
 <Day cometEmailId="<user email address registered in COMET-Farm">
