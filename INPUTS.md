@@ -1,13 +1,13 @@
-Day
-  - cometEmailId = user email address registered in COMET-Farm  
+Day  
+  `cometEmailId` - user email address registered in COMET-Farm  
 
 Cropland  
-  - name = descriptive name of model run  
+  `name` - descriptive name of model run  
 
 GEOM  
-*WKT parcel or point GIS Definition*
-  - SRID = projection id, suggest using NAD83 (4326) 
-  - AREA = size in acres of parcel or point
+*WKT parcel or point GIS Definition*  
+  `SRID` - projection id, suggest using NAD83 (4326)   
+  `AREA` - size in acres of parcel or point
   
 Pre-1980  
 *one of the following options:*   
@@ -33,7 +33,7 @@ CRPType
   - [ ] "Grass/Legume Mixture"  
   
 PreCRPManagement  
-*one of the following options:*
+*one of the following options:*  
   - [ ] "Irrigated: Annual Crops in Rotation"
   - [ ] "Irrigated: Annual Crops with Hay/Pasture in Rotation"
   - [ ] "Irrigated: Continuous Hay"
@@ -44,9 +44,23 @@ PreCRPManagement
   - [ ] "Non-Irrigated: Fallow-Grain"
   - [ ] "Non-Irrigated: Orchard or Vineyard"
   
+PreCRPTillage  
+*one of the following options:*  
+  - [ ] "Intensive Tillage"
+  - [ ] "Reduced Tillage"
+  - [ ] "No Till"
 
-"Intensive Tillage","Reduced Tillage","No Till"
-
+PostCRPManagement  
+*one of the following options:*  
+  - [ ] "Irrigated: Annual Crops in Rotation"
+  - [ ] "Irrigated: Annual Crops with Hay/Pasture in Rotation"
+  - [ ] "Irrigated: Continuous Hay"
+  - [ ] "Irrigated: Orchard or Vineyard"
+  - [ ] "Non-Irrigated: Annual Crops in Rotation"
+  - [ ] "Non-Irrigated: Continuous Hay" 
+  - [ ] "Non-Irrigated: Livestock Grazing"
+  - [ ] "Non-Irrigated: Fallow-Grain" 
+  - [ ] "Non-Irrigated: Orchard or Vineyard"
   
  
 ```xml
