@@ -5,8 +5,8 @@ Cropland
 `name` - descriptive name of model run  
 
 GEOM  
-*WKT parcel or point GIS Definition*
-`SRID` - projection id, suggest using NAD83 (4326)
+*WKT parcel or point GIS Definition*  
+`SRID` - projection id, suggest using NAD83 (4326)  
 `AREA` - size in acres of parcel or point
   
 Pre-1980
