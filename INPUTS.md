@@ -1,40 +1,61 @@
-| XML Name | Name |
-|----------|----------|
+### Applicable to all model runs  
+
+| XML Name | Value |
+|----------|-------|
 | `cometEmailId` | TBD \* |
-| `name` | *user defined* |  
 | `CRP` | `No` \* |  
 
 \* *Will be same across all model runs*  
 
+Day  
+`cometEmailId` - user email address registered in COMET-Farm  
+
+___  
+
+
+### User defined      
+
+| XML Name | Source |
+|----------|--------|
+| `name` | ? |  
+
+
+Cropland  
+`name` - descriptive name of model run
+
+---  
+
+### GIS generated  
 
 | XML Name | GIS Name |
 |----------|----------|
-| `GEOM` | `MultiPolygon`, `Polygon`, `Point` |
-| `SRID` |  |
+| `<GEOM>` | `MultiPolygon`, `Polygon`, `Point` |
+| `SRID` | ? |
 | `AREA` | `acres` |
-| `Pre-1980` (str) | `pre_80` (int) |
-| `Year1980-2000` (str) | `yr80_2000` (int) |
-| `Year1980-2000_Tillage` (str) | `till80_200` (int) |
+| `<Pre-1980>` (str) | `pre_80` (int) |
+| `<Year1980-2000>` (str) | `yr80_2000` (int) |
+| `<Year1980-2000_Tillage>` (str) | `till80_200` (int) |
 | `NAME` | polygon id + field id + scenario id ** |
 | `YEAR` | ? |
 | `CropNumber` | ? |
-| CropName | `Ccop_name` |
+| `<CropName>` | `Ccop_name` |
+| `<PlantingDate>` | ? |
+| `<ContinueFromPreviousYear>` | ? |
+| `<HarvestDate>` | ? |
+| `<Grain>` | ? |
+| `<yield>` | ? |
+| `<StrawStoverHayRemoval>` | ? |
+| `<TillageDate>` | ? |
+| `<TillageType>` | ? | 
+| `<NApplicationDate>` | ? |
+| `<NApplicationType>` | ? |
+| `<NApplicationAmount>` | ? |
+| `<NApplicationMethod>` | ? |
+| `<EEP>` | ? |
+
 
 \*\* *Need clarification of which GIS fields match*
 
-
-### Applicable to all model runs  
-
-Day  
-`cometEmailId` - user email address registered in COMET-Farm  
-  
-
-### User defined    
-
-Cropland  
-`name` - descriptive name of model run  
-
-### GIS generated  
 
 GEOM  
 *WKT parcel or point GIS Definition*  
