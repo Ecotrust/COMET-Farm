@@ -1,8 +1,40 @@
+| XML Name | Name |
+|----------|----------|
+| `cometEmailId` | TBD \* |
+| `name` | *user defined* |  
+| `CRP` | `No` \* |  
+
+\* *Will be same across all model runs*  
+
+
+| XML Name | GIS Name |
+|----------|----------|
+| `GEOM` | `MultiPolygon`, `Polygon`, `Point` |
+| `SRID` |  |
+| `AREA` | `acres` |
+| `Pre-1980` (str) | `pre_80` (int) |
+| `Year1980-2000` (str) | `yr80_2000` (int) |
+| `Year1980-2000_Tillage` (str) | `till80_200` (int) |
+| `NAME` | polygon id + field id + scenario id ** |
+| `YEAR` | ? |
+| `CropNumber` | ? |
+| CropName | `Ccop_name` |
+
+\*\* *Need clarification of which GIS fields match*
+
+
+### Applicable to all model runs  
+
 Day  
 `cometEmailId` - user email address registered in COMET-Farm  
- 
+  
+
+### User defined    
+
 Cropland  
 `name` - descriptive name of model run  
+
+### GIS generated  
 
 GEOM  
 *WKT parcel or point GIS Definition*  
@@ -75,8 +107,10 @@ Year1980-2000
   - [ ] "Irrigated: Continuous Hay"
   - [ ] "Irrigated: Orchard or Vineyard"
   - [ ] "Non-Irrigated: Annual Crops in Rotation"
-  - [ ] "Non-Irrigated: Continuous Hay"
-  - [ ] "Non-Irrigated: Livestock G
+  - [ ] "Non-Irrigated: Continuous Hay" 
+  - [ ] "Non-Irrigated: Livestock Grazing"
+  - [ ] "Non-Irrigated: Fallow-Grain" 
+  - [ ] "Non-Irrigated: Orchard or Vineyard"
   
 Year1980-2000_Tillage  
 *one of the following options:*  
