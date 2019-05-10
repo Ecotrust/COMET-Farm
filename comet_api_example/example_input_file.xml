@@ -1,4 +1,4 @@
-<Day cometEmailId="mark.easter@colostate.edu">
+<Day cometEmailId="dpollard@ecotrust.org">
 	<Cropland name="module:cropland|id:1|irrigated:N|mlra:107B|practice:Conversion to non-legume grassland reserve|crop2009:corn|crop2010:soybeans|crop2011:corn|crop2012:soybeans|crop2013:corn|crop2014:soybeans|crop2015:corn">
 		<GEOM SRID="4326" AREA="10">POINT(-93.2519 39.1273)</GEOM>
 		<Pre-1980>Upland Non-Irrigated (Pre 1980s)</Pre-1980>
