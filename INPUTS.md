@@ -1,9 +1,9 @@
 ### Applicable to all model runs  
 
-| XML Name | Value |
-|----------|-------|
-| `cometEmailId` | TBD \* |
-| `CRP` | `No` \* |  
+| XML Tag | XML Name | Excel Name | GIS Name | Value |
+|---------|----------|------------|----------|-------|
+| `<Day>` | `cometEmailId` | `Email` \* | N/A | N/A |
+| `<CRP>` | N/A | `CRP` \* |  N/A | `No` |
 
 \* *Will be same across all model runs*  
 
@@ -15,9 +15,9 @@ ___
 
 ### User defined      
 
-| XML Name | Source |
-|----------|--------|
-| `name` | ? |  
+| XML Tag | XML Name | Excel Name | GIS Name | Value |
+|---------|----------|------------|----------|-------|
+| `<Cropland>` | `name` | `Name` | N/A | *user defined* |  
 
 
 Cropland  
@@ -27,11 +27,11 @@ Cropland
 
 ### GIS generated  
 
-| XML Name | GIS Name |
-|----------|----------|
-| `<GEOM>` | `MultiPolygon`, `Polygon`, `Point` |
-| `SRID` | ? |
-| `AREA` | `acres` |
+| XML Tag | XML Name | Excel Name | GIS Name | Type |
+|---------|----------|------------|----------|-------|
+| `<GEOM>` | N/A | `GEOM` | ? | `MultiPolygon`, `Polygon`, `Point` |
+| `<GEOM>` | `SRID` | `SRID` | ? | ? |
+| `<GEOM>` | `AREA` | `AREA` | `acres` | int |
 | `<Pre-1980>` (str) | `pre_80` (int) |
 | `<Year1980-2000>` (str) | `yr80_2000` (int) |
 | `<Year1980-2000_Tillage>` (str) | `till80_200` (int) |
@@ -46,7 +46,7 @@ Cropland
 | `<yield>` | ? |
 | `<StrawStoverHayRemoval>` | ? |
 | `<TillageDate>` | ? |
-| `<TillageType>` | ? | 
+| `<TillageType>` | ? |
 | `<NApplicationDate>` | ? |
 | `<NApplicationType>` | ? |
 | `<NApplicationAmount>` | ? |
@@ -61,30 +61,30 @@ GEOM
 *WKT parcel or point GIS Definition*  
 `SRID` - projection id, suggest using NAD83 (4326)  
 `AREA` - size in acres of parcel or point
-  
+
 Pre-1980  
 *one of the following options:*   
   - [ ] "Irrigation (Pre 1980s)"
   - [ ] "Livestock Grazing"
   - [ ] "Lowland Non-Irrigated Pre-1980s"
   - [ ] "Upland Non-irrigated Pre-1980s"
-  
+
 CRP  
-*one of the following options:* 
+*one of the following options:*
   - [ ] "No"
   - [ ] "Yes"
 
 CRPStartYear  
 *yyyy* (Must be in yyyy)
 
-CRPEndYear 
+CRPEndYear
 *yyyy* (Must be in yyyy)  
 
 CRPType  
 *one of the following options:*
   - [ ] "100% Grass"
   - [ ] "Grass/Legume Mixture"  
-  
+
 PreCRPManagement  
 *one of the following options:*  
   - [ ] "Irrigated: Annual Crops in Rotation"
@@ -96,7 +96,7 @@ PreCRPManagement
   - [ ] "Non-Irrigated: Livestock Grazing"
   - [ ] "Non-Irrigated: Fallow-Grain"
   - [ ] "Non-Irrigated: Orchard or Vineyard"
-  
+
 PreCRPTillage  
 *one of the following options:*  
   - [ ] "Intensive Tillage"
@@ -110,17 +110,17 @@ PostCRPManagement
   - [ ] "Irrigated: Continuous Hay"
   - [ ] "Irrigated: Orchard or Vineyard"
   - [ ] "Non-Irrigated: Annual Crops in Rotation"
-  - [ ] "Non-Irrigated: Continuous Hay" 
+  - [ ] "Non-Irrigated: Continuous Hay"
   - [ ] "Non-Irrigated: Livestock Grazing"
-  - [ ] "Non-Irrigated: Fallow-Grain" 
+  - [ ] "Non-Irrigated: Fallow-Grain"
   - [ ] "Non-Irrigated: Orchard or Vineyard"
-  
+
 PostCRPTillage  
 *one of the following options:*  
   - [ ] "Intensive Tillage"
   - [ ] "Reduced Tillage"
   - [ ] "No Till"  
-  
+
 Year1980-2000
 *one of the following options:*  
   - [ ] "Irrigated: Annual Crops in Rotation"
@@ -128,17 +128,17 @@ Year1980-2000
   - [ ] "Irrigated: Continuous Hay"
   - [ ] "Irrigated: Orchard or Vineyard"
   - [ ] "Non-Irrigated: Annual Crops in Rotation"
-  - [ ] "Non-Irrigated: Continuous Hay" 
+  - [ ] "Non-Irrigated: Continuous Hay"
   - [ ] "Non-Irrigated: Livestock Grazing"
-  - [ ] "Non-Irrigated: Fallow-Grain" 
+  - [ ] "Non-Irrigated: Fallow-Grain"
   - [ ] "Non-Irrigated: Orchard or Vineyard"
-  
+
 Year1980-2000_Tillage  
 *one of the following options:*  
   - [ ] "Intensive Tillage"
   - [ ] "Reduced Tillage"
-  - [ ] "No Till" 
-  
+  - [ ] "No Till"
+
 CropScenario  
 `Name` - crop scenario name  
 
@@ -217,17 +217,17 @@ PlantingDate
 Date must be in mm/dd/yyyy format  
 
 ContinueFromPreviousYear
-*one of the following options:* 
+*one of the following options:*
   - [ ] "No"
   - [ ] "Yes"
 
 DidYouPrune  
-*one of the following options:* 
+*one of the following options:*
   - [ ] "No"
   - [ ] "Yes"
 
 RenewOrClearYourOrchard  
-*one of the following options:* 
+*one of the following options:*
   - [ ] "No"
   - [ ] "Yes"
 
@@ -239,7 +239,7 @@ HarvestDate
 Date must be in mm/dd/yyyy format  
 
 Grain  
-*one of the following options:* 
+*one of the following options:*
   - [ ] "No"
   - [ ] "Yes"
 
@@ -252,7 +252,7 @@ Units in %
 GrazingList
 
 TillageList
- 
+
 TillageEvent  
 
 TillageDate  
@@ -270,7 +270,7 @@ TillageType
   - [ ] "Mow"
   - [ ] "Crimp"
   - [ ] "Broad-spectrum herbicide"  
-  
+
 NApplicationList  
 
 NApplicationEvent  
@@ -300,17 +300,17 @@ NApplicationMethod
   - [ ] "Incorporate / Inject"
   - [ ] "Fertigation"
   - [ ] "Aerial Application"
-  
+
 EEP  
 *one of the following options:*  
   - [ ] "None"
   - [ ] "Slow Release"
   - [ ] "Nitrification Inhibitor"
-  
+
 OMADApplicationList  
-  
+
 OMADApplicationEvent
- 
+
 OMADApplicationDate
 Date must be in mm/dd/yyyy format  
 
@@ -325,7 +325,7 @@ OMADType
   - [ ] "Chicken - layer"
   - [ ] "Sheep"
   - [ ] "Swine"  
-  
+
 OMADApplicationAmount  
 Units in tons dry matter per acre
 
@@ -371,7 +371,7 @@ DidYouBurnCropResidue
   - [ ] "No burning"
   - [ ] "Yes, before planting"
   - [ ] "Yes, after harvesting"
-  
+
 ---  
 
 :repeat: `<Crop>`
