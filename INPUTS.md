@@ -32,26 +32,26 @@ Cropland
 | `<GEOM>` | N/A | `GEOM` | ? | `MultiPolygon`, `Polygon`, `Point` |
 | `<GEOM>` | `SRID` | `SRID` | ? | ? |
 | `<GEOM>` | `AREA` | `AREA` | `acres` | int |
-| `<Pre-1980>` (str) | `pre_80` (int) |
-| `<Year1980-2000>` (str) | `yr80_2000` (int) |
-| `<Year1980-2000_Tillage>` (str) | `till80_200` (int) |
-| `NAME` | polygon id + field id + scenario id ** |
-| `YEAR` | ? |
-| `CropNumber` | ? |
-| `<CropName>` | `Ccop_name` |
-| `<PlantingDate>` | ? |
-| `<ContinueFromPreviousYear>` | ? |
-| `<HarvestDate>` | ? |
-| `<Grain>` | ? |
-| `<yield>` | ? |
-| `<StrawStoverHayRemoval>` | ? |
-| `<TillageDate>` | ? |
-| `<TillageType>` | ? |
-| `<NApplicationDate>` | ? |
-| `<NApplicationType>` | ? |
-| `<NApplicationAmount>` | ? |
-| `<NApplicationMethod>` | ? |
-| `<EEP>` | ? |
+| `<Pre-1980>` | N/A | `pre_80` | `pre_80` | XML: str, GIS: int |
+| `<Year1980-2000>` (str) | N/A | `yr80_2000` | `yr80_2000` (int) | XML: str, GIS: int |
+| `<Year1980-2000_Tillage>` (str) | N/A | `till80_200` | `till80_200` (int) | XML: str, GIS: int |
+| `<CropScenario>` | NAME | `crop_scenario_name` | `${id}_${<field id>}_${}_${<scenario id>}` ** | string |
+| `<CropYear>` | `YEAR` |'YEAR' | N/A | 2000 to the current year - 1 |
+| `<Crop>` | `CropNumber` | 'CROP_NUMBER' | COMET_ID? | "1" or "2" (str) |
+| `<CropName>` | N/A | `Ccop_name` | `Ccop_name` | string |
+| `<PlantingDate>` | N/A | `planting_date` | ? | mm/dd/yyyy |
+| `<ContinueFromPreviousYear>` | N/A | `continue_from_previous_year` | ? | "Yes" or "No" (str) |
+| `<HarvestDate>` | N/A | `harvest_date` | ? | mm/dd/yyyy |
+| `<Grain>` | N/A | `grain` | ? | "Yes" or "No" (str) |
+| `<yield>` | N/A | `yield` | ? | List |
+| `<StrawStoverHayRemoval>` | N/A | `straw_stover_hay_removal` | ? | Units in % |
+| `<TillageDate>` | N/A | `tillage_date` | ? | mm/dd/yyyy |
+| `<TillageType>` | N/A | `tillage_type` | ? | List |
+| `<NApplicationDate>` | N/A | `n_application_date` | ? | mm/dd/yyyy |
+| `<NApplicationType>` | N/A | `n_application_type` | ? | List |
+| `<NApplicationAmount>` | N/A | `n_application_amount` | ? | units in lbs N/acre |
+| `<NApplicationMethod>` | N/A | `n_application_method` | ? | List |
+| `<EEP>` | N/A | `eep` | ? | List |
 
 
 \*\* *Need clarification of which GIS fields match*
