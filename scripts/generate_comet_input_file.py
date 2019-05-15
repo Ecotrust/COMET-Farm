@@ -26,6 +26,10 @@ for row in range(2, scenario_sheet.max_row + 1):
     scenario_values.setdefault(param, param_val)
 
 # create XML file
-input_xml_file_name = scenario_values['crop_scenario_name']
+input_xml_file_name = scenario_values['crop_scenario_name'] + '.xml'
 
-print(input_xml_file_name)
+input_xml_file = open(input_xml_file_name, 'w')
+input_xml_file.write('allData = ' + pprint.pformat(scenario_values))
+input_xml_file.close()
+
+print('XML file generated')
