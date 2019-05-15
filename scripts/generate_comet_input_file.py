@@ -17,4 +17,15 @@ if len( sys.argv ) < 1:
 
 wb_dir = sys.argv[1]
 wb = load_workbook(filename = wb_dir)
-print(wb.sheetnames)
+scenario_sheet = wb.get_sheet_by_name('scenario')
+scenario_values = {}
+# loop through scenario values
+for row in range(2, scenario_sheet.max_row + 1):
+    param  = scenario_sheet['A' + str(row)].value
+    param_val  = scenario_sheet['B' + str(row)].value
+    scenario_values.setdefault(param, param_val)
+
+# create XML file
+input_xml_file_name = scenario_values['crop_scenario_name']
+
+print(input_xml_file_name)
