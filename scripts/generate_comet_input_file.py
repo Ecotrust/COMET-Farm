@@ -1,5 +1,5 @@
 # import system modules
-import os, sys
+import os, sys, pprint
 
 # import functions for extracting data from excel
 from openpyxl import load_workbook
@@ -29,7 +29,7 @@ for row in range(2, scenario_sheet.max_row + 1):
 input_xml_file_name = scenario_values['crop_scenario_name'] + '.xml'
 
 input_xml_file = open(input_xml_file_name, 'w')
-input_xml_file.write('allData = ' + pprint.pformat(scenario_values))
+input_xml_file.write(pprint.pformat(scenario_values))
 input_xml_file.close()
 
 print('XML file generated')
