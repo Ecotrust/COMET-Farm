@@ -1,0 +1,2 @@
+<Day cometEmailId="dpollard@ecotrust.org"><Cropland name="test"><GEOM SRID="43" AREA="10">POLYGON((-123.12342 31.2009), (-121.334 32.333))</GEOM><Pre-1980>Irrigation (Pre 1980s)</Pre-1980><CRP>None</CRP><CRPStartYear></CRPStartYear><CRPEndYear></CRPEndYear><CRPType>None</CRPType><Year1980-2000>Non-Irrigated: Continuous Hay</Year1980-2000><Year1980-2000_Tillage>No Till</Year1980-2000_Tillage><CropScenario Name="test"></CropScenario></Cropland>
+</Day>

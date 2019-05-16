@@ -5,7 +5,7 @@ import os, sys, pprint
 from openpyxl import load_workbook
 
 # check if argument for workbook has been given
-if len( sys.argv ) < 1:
+if len(sys.argv) < 1:
     print("\n")
     print("python script generate_comet_input_file.py <spreadsheet location>")
     print("\n")
@@ -26,10 +26,28 @@ for row in range(2, scenario_sheet.max_row + 1):
     scenario_values.setdefault(param, param_val)
 
 # create XML file
-input_xml_file_name = scenario_values['crop_scenario_name'] + '.xml'
+input_xml_file_name = scenario_values['crop_scenario_name']
+input_xml_file = input_xml_file_name + '.xml'
 
-input_xml_file = open(input_xml_file_name, 'w')
-input_xml_file.write(pprint.pformat(scenario_values))
-input_xml_file.close()
+if (os.path.isfile(input_xml_file)):
+    os.remove(input_xml_file)
+
+# initialize the file content string that will contain the text to be written to the file
+with open(input_xml_file, 'w') as f:
+    f.write("<Day cometEmailId=\"" + scenario_values['Email'] + "\">")
+    # todo: rename cropland something more meaningful
+    f.write("<Cropland name=\"" + scenario_values['crop_scenario_name'] + "\">")
+    f.write("<GEOM SRID=\"" + str(scenario_values['SRID']) + "\" AREA=\"" + str(scenario_values['AREA']) + "\">" + scenario_values['GEOM'] + "</GEOM>")
+    f.write("<Pre-1980>" + scenario_values['pre_80'] + "</Pre-1980>")
+    # CRP always None
+    f.write("<CRP>None</CRP><CRPStartYear></CRPStartYear><CRPEndYear></CRPEndYear><CRPType>None</CRPType>")
+    f.write("<Year1980-2000>" + scenario_values['yr80_2000'] + "</Year1980-2000>")
+    f.write("<Year1980-2000_Tillage>" + scenario_values['till80_200'] + "</Year1980-2000_Tillage>")
+    f.write("<CropScenario Name=\"" + scenario_values['crop_scenario_name'] + "\">")
+
+    f.write("</CropScenario>")
+    f.write("</Cropland>\n")
+    f.write("</Day>")
+    f.close()
 
 print('XML file generated')
