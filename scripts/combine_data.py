@@ -36,12 +36,19 @@ with open(gis_dir) as csv_file:
 
     # add gis data to spreadsheet
     for row in gis_values:
-        new_scenario_sheet = wb.copy_worksheet(scenario_sheet)
-        print(new_scenario_sheet)
-        for rowNum in range(2, new_scenario_sheet.max_row):
-            rowName = new_scenario_sheet.cell(row=rowNum, column=1).value
-            print(rowName)
+        field_sheet = wb.copy_worksheet(scenario_sheet)
+        for rowNum in range(2, field_sheet.max_row):
+            rowName = field_sheet.cell(row=rowNum, column=1).value
             if rowName == 'GEOM':
-                new_scenario_sheet.cell(row=rowNum, column=2).value = "Polygon(" + row['geom'] + ")"
+                field_sheet.cell(row=rowNum, column=2).value = "Polygon(" + row['geom'] + ")"
+            if rowName == 'AREA':
+                field_sheet.cell(row=rowNum, column=2).value = row['acres']
+            if rowName == 'Ccop_name':
+                field_sheet.cell(row=rowNum, column=2).value = row['comet_crop']
+            if rowName == 'pre_80':
+                pre_1980_sheet = wb.get_sheet_by_name('pre1980')
+                pre_80_gis_val = row['pre-1980']
+                pre_1980_val = pre_1980_sheet.cell(row=int(pre_80_gis_val), column=1).value
+                field_sheet.cell(row=rowNum, column=2).value = pre_1980_val
 
 wb.save('combined_data.xlsx')
