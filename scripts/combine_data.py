@@ -22,16 +22,26 @@ scenario_sheet = wb.get_sheet_by_name('scenario')
 
 gis_values = {}
 
-# open GIS data file
+# open GIS data file and save it as dict
 with open(gis_dir) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     csv_dict = csv.DictReader(csv_file)
-    # loop through GIS values
-    for row in csv_dict:
-        print(dict(row))
+    gis_values = csv_dict
+    print(gis_values)
+    # for row in csv_dict:
+        # print(dict(row))
         # param  = scenario_sheet['A' + str(row)].value
         # param_val  = scenario_sheet['B' + str(row)].value
         # scenario_values.setdefault(param, param_val)
 
-# add gis data to spreadsheet
-# with open(input_xml_file, 'w') as f:
+    # add gis data to spreadsheet
+    for row in gis_values:
+        new_scenario_sheet = wb.copy_worksheet(scenario_sheet)
+        print(new_scenario_sheet)
+        for rowNum in range(2, new_scenario_sheet.max_row):
+            rowName = new_scenario_sheet.cell(row=rowNum, column=1).value
+            print(rowName)
+            if rowName == 'GEOM':
+                new_scenario_sheet.cell(row=rowNum, column=2).value = "Polygon(" + row['geom'] + ")"
+
+wb.save('combined_data.xlsx')

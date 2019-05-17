@@ -32,9 +32,9 @@ Cropland
 | `<GEOM>` | N/A | `GEOM` | ? | `MultiPolygon`, `Polygon`, `Point` |
 | `<GEOM>` | `SRID` | `SRID` | ? | ? |
 | `<GEOM>` | `AREA` | `AREA` | `acres` | int |
-| `<Pre-1980>` | N/A | `pre_80` | `pre_80` | XML: str, GIS: int |
-| `<Year1980-2000>` (str) | N/A | `yr80_2000` | `yr80_2000` (int) | XML: str, GIS: int |
-| `<Year1980-2000_Tillage>` (str) | N/A | `till80_200` | `till80_200` (int) | XML: str, GIS: int |
+| `<Pre-1980>` | N/A | `pre_80` | `pre_80` | XML: str, GIS: int (List) |
+| `<Year1980-2000>` (str) | N/A | `yr80_2000` | `yr80_2000` (int) | XML: str, GIS: int (List) |
+| `<Year1980-2000_Tillage>` (str) | N/A | `till80_200` | `till80_200` (int) | XML: str, GIS: int (List) |
 | `<CropScenario>` | NAME | `crop_scenario_name` | `${id}_${<field id>}_${}_${<scenario id>}` ** | string |
 | `<CropYear>` | `YEAR` |'YEAR' | N/A | 2000 to the current year - 1 |
 | `<Crop>` | `CropNumber` | 'CROP_NUMBER' | COMET_ID? | "1" or "2" (str) |
