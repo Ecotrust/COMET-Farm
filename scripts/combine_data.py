@@ -22,6 +22,9 @@ scenario_sheet = wb.get_sheet_by_name('scenario')
 
 gis_values = {}
 
+# create sheet for list of processed fields
+processed_sheet = wb.create_sheet('processed')
+
 # open GIS data file and save it as dict
 with open(gis_dir) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
@@ -37,12 +40,14 @@ with open(gis_dir) as csv_file:
     # add gis data to spreadsheet
     for row in gis_values:
         field_sheet = wb.copy_worksheet(scenario_sheet)
+        field_sheet.title = 'ready_' + row['field_ID']
+        processed_sheet.append(["name", field_sheet.title])
         for rowNum in range(2, field_sheet.max_row):
             rowName = field_sheet.cell(row=rowNum, column=1).value
             if rowName == 'id':
                 field_sheet.cell(row=rowNum, column=2).value = row['field_ID']
             if rowName == 'GEOM':
-                field_sheet.cell(row=rowNum, column=2).value = 'Polygon(" + row[\'geom\'] + ")'
+                field_sheet.cell(row=rowNum, column=2).value = 'Polygon(' + row['geom'] + ')'
             if rowName == 'AREA':
                 field_sheet.cell(row=rowNum, column=2).value = row['acres']
             if rowName == 'SRID':
