@@ -6,7 +6,7 @@ from openpyxl import load_workbook
 
 # check if argument for workbook has been given
 if len(sys.argv) < 2:
-    print("\npython script generate_comet_input_file.py <GIS data location> <spreadsheet location>\n")
+    print("\npython3 script combine_data.py <GIS data location> <spreadsheet location>\n")
     print("Command-line arguments are as follows:\n")
     print("  <GIS data location> system location of comma separated data from GIS\n")
     print("    eg /usr/local/name/comet/data.csv\n")

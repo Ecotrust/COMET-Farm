@@ -7,7 +7,7 @@ from openpyxl import load_workbook
 # check if argument for workbook has been given
 if len(sys.argv) < 1:
     print("\n")
-    print("python script generate_comet_input_file.py <spreadsheet location>")
+    print("python3 script generate_comet_input_file.py <spreadsheet location>")
     print("\n")
     print("Command-line arguments are as follows:")
     print("  <spreadsheet locatiion> system location of spreadsheet with input data")
@@ -55,11 +55,12 @@ for row in range(1, processed_fields_sheet.max_row + 1):
         f.write("<CropScenario Name=\"" + scenario_values['crop_scenario_name'] + "\">")
         # crop year
         f.write("<CropYear Year=\"" + str(scenario_values['YEAR']) + "\">")
+        f.write("<Crop CropNumber=\"1\">")
         f.write("<CropName>" + scenario_values['Ccop_name'] + "</CropName>")
         f.write("<PlantingDate>" + scenario_values['planting_date'] + "</PlantingDate>")
         f.write("<ContinueFromPreviousYear>" + scenario_values['continue_from_previous_year'] + "</ContinueFromPreviousYear>")
         f.write("<DidYouPrune></DidYouPrune>") # todo
-        f.write("<RenewOrClearYourOrchard/Vinyard></RenewOrClearYourOrchard/Vinyard>") # todo
+        f.write("<RenewOrClearYourOrchard></RenewOrClearYourOrchard>") # todo
         # start harvest list
         f.write("<HarvestList>") # todo should i add conditional
         f.write("<HarvestEvent>") # todo
@@ -117,11 +118,14 @@ for row in range(1, processed_fields_sheet.max_row + 1):
         f.write("</BurningList>")
         # end burning list
         f.write("</Crop>")
+        f.write("</CropYear>")
         # end crop 1
         # begin crop 2
-        f.write("<Crop CropNumber=\"2\">")
-        f.write("</Crop>")
-        # end crop
+        # f.write("<CropYear Year=\"" + str(scenario_values['YEAR']) + "\">")
+        # f.write("<Crop CropNumber=\"2\">")
+        # f.write("</Crop>")
+        # f.write("</CropYear>")
+        # end crop 2
         f.write("</CropScenario>")
         # end crop scenario
         f.write("</Cropland>\n")
