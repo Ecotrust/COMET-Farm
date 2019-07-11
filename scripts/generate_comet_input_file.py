@@ -57,7 +57,7 @@ for row in range(1, processed_fields_sheet.max_row + 1):
         f.write("<CropYear Year=\"" + str(scenario_values['YEAR']) + "\">")
         f.write("<Crop CropNumber=\"1\">")
         f.write("<CropName>" + scenario_values['Ccop_name'] + "</CropName>")
-        f.write("<PlantingDate>" + scenario_values['planting_date'] + "</PlantingDate>")
+        f.write("<PlantingDate>" + scenario_values['planting_date'].strip('\"') + "</PlantingDate>")
         f.write("<ContinueFromPreviousYear>" + scenario_values['continue_from_previous_year'] + "</ContinueFromPreviousYear>")
         f.write("<DidYouPrune></DidYouPrune>") # todo
         f.write("<RenewOrClearYourOrchard></RenewOrClearYourOrchard>") # todo
