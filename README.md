@@ -9,9 +9,8 @@ Here's a brief intro about what a developer must do in order to start developing
 the project further:
 
 ```shell
-git clone https://github.com/your/your-project.git
-cd your-project/
-packagemanager install
+git clone https://github.com/Ecotrust/COMET-Farm.git
+cd COMET-Farm/
 ```
 
 And state what happens step-by-step. If there is any virtual environment, local server or database feeder needed, explain here.
