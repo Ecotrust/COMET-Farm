@@ -70,6 +70,7 @@ def writeToCSVFile(elem, mapunit_id, area ,scenario):
         xml_text = str(child.text)
 
         if (xml_tag in ( 'aagdefac', 'abgdefac', 'accrst', 'accrste_1_', 'agcprd', 'aglivc', 'bgdefac', 'bglivcm', 'cgrain', 'cinput', 'crmvst', 'crootc', 'crpval', 'egracc_1_', 'eupacc_1_', 'fbrchc', 'fertac_1_', 'fertot_1_1_', 'frootcm', 'gromin_1_', 'irrtot', 'metabc_1_', 'metabc_2_', 'metabe_1_1_', 'metabe_2_1_', 'nfixac', 'omadac', 'omadae_1_', 'petann', 'rlwodc', 'somsc', 'somse_1_', 'stdedc', 'stdede_1_', 'strmac_1_', 'strmac_2_', 'strmac_6_', 'strucc_1_', 'struce_1_1_', 'struce_2_1_', 'tminrl_1_', 'tnetmn_1_', 'volpac' ) ):
+
             if scenario == 'Baseline':
                 values = writeEndOfYearDayCentOutput( xml_tag, str( xml_text ), 'baseline', mapunit_id, area )
                 for i in range(len(values)) :
@@ -78,6 +79,20 @@ def writeToCSVFile(elem, mapunit_id, area ,scenario):
             else:
                 # model_run.append([mapunit, scenario, xmlTag.lower(), xmlText])
                 values = writeEndOfYearDayCentOutput( xml_tag.lower(), str( xml_text ), 'scenario', mapunit_id, area )
+                for value in values:
+                    # value = values[i]
+                    model_run_data[xml_tag] = value
+                # model_run_data[xml_tag] = values
+        else:
+
+            if scenario == 'Baseline':
+                values = writeYearlyDayCentOutput( xml_tag, str( xml_text ), 'baseline', mapunit_id, area )
+                for i in range(len(values)) :
+                    value = values[i]
+                    model_run_data[xml_tag] = value
+            else:
+                # model_run.append([mapunit, scenario, xmlTag.lower(), xmlText])
+                values = writeYearlyDayCentOutput( xml_tag.lower(), str( xml_text ), 'scenario', mapunit_id, area )
                 for value in values:
                     # value = values[i]
                     model_run_data[xml_tag] = value
@@ -94,19 +109,23 @@ def writeToCSVFile(elem, mapunit_id, area ,scenario):
     count = 0
     for values in model_run_data:
         values_array.append(values)
+        # print(values)
 
     # write parsed out to csv
-    csv_file_name = mapunit_id + scenario
-    os.mkdir(mapunit_id)
-    with open('./' + mapunit_id + '/' + csv_file_name + '.csv', 'wt') as csvFile:
+    csv_file_name = scenario
+    dir_name = './results/' + mapunit_id
+    if not os.path.isdir(dir_name):
+        os.mkdir(dir_name)
+
+    with open(dir_name + csv_file_name + '.csv', 'wt') as csvFile:
         writer = csv.DictWriter(csvFile, fieldnames=values_array)
         writer.writeheader()
 
         if model_run_data:
             # writer.writerow(model_run_data)
-            for row in model_run_data:
-                print(model_run_data[row])
-                writer.writerow(model_run_data[row])
+            # for row in model_run_data:
+            print(model_run_data)
+            writer.writerow(model_run_data)
             # for value in values:
                     # print(value)
                     # values_array.append(values[i])
