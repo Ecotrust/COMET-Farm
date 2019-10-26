@@ -2,10 +2,12 @@
 from datetime import datetime
 import os, sys, csv, time, string, re, math
 import xml.etree.ElementTree as ET
-import pandas as pd
 import ipdb
+import pprint
 from os import listdir
 from os.path import isfile, join
+
+pp = pprint.PrettyPrinter(indent=4)
 
 '''
     Overview of script
@@ -27,42 +29,26 @@ from os.path import isfile, join
 
 '''
 
+def organizeByYear(data):
+    main_dic = {}
+    for key, value in data.items():
+        variable = ''
+        for y in value:
+            year = str(y["year"])
+            if year not in main_dic.keys():
+                main_dic[year] = {
+                    "year": year,
+                }
+        for v in value:
+            year = str(v["year"])
+            variable = str(v["var"])
+            output = str(v["output"])
+            main_dic[year][variable] = output
+    return main_dic
+
 def writeToCSVFile(elem, mapunit_id, area ,scenario):
 
-    model_run_data = {
-        # "year": [],
-        # "data": [],
-        # "id": mapunit_id,
-        # "area": area,
-        # "scenario": scenario,
-    }
-
-    # for child in elem.iter() :
-    #     xmlTag = str( child.tag )
-    #     xmlAttrib = str( child.attrib )
-    #     xmlAttribName = str( child.attrib.get( 'name' ) )
-    #     xmlAttribId = str( child.attrib.get( 'id' ) )
-    #     xmlAttribArea = str( child.attrib.get( 'area' ) )
-    #     xml_text = str( child.text )
-
-        # if (xmlTag == 'Year'):
-            # years = xml_text.split(',')
-            # for i in range(len(years)) :
-                # year = years[i]
-                # model_run_data["year"].append(str(year))
-        # model_run_data["data"].append([xmlTag, xmlText])
-        # print(xmlTag)
-        # ipdb.set_trace()
-
-        # print(model_run_data)
-
-    # for child in elem.iter():
-    #     xml_tag = str(child.tag)
-    #     xml_text = str(child.text)
-
-        # if (xml_tag.lower() not in ( 'Day', 'Cropland', 'Carbon', 'CO2', 'N2O', 'CH4', 'BiomassBurningCarbonUncertainty', 'BiomassBurningCH4Uncertainty', 'BiomassBurningN2OUncertainty', 'C02', 'DrainedOrganicSoilsCO2Uncertainty', 'DrainedOrganicSoilsN2OUncertainty', 'LimingCO2Uncertainty', 'SoilCarbonUncertainty', 'SoilCH4Uncertainty', 'SoilN2OUncertainty', 'UreaFertilizationCO2Uncertainty', 'WetlandRiceCultivationCH4Uncertainty', 'WetlandRiceCultivationN2OUncertainty', 'AFDownedDeadWood', 'AFDownedDeadWoodUncertainty', 'AFForestFloor', 'AFForestFloorUncertainty', 'AFLiveTrees', 'AFLiveTreesUncertainty', 'AFStandingDeadTrees', 'AFStandingDeadTreesUncertainty', 'AFUnderstory', 'AFUnderstoryUncertainty', 'Agroforestry', 'Animal', 'FORDownedDeadWood', 'FORDownedDeadWoodUncertainty', 'Forestry', 'FORForestFloorUncertainty', 'FORInLandfills', 'FORInLandfillsUncertainty', 'FORLiveTrees', 'FORLiveTreesUncertainty', 'FORProductsInUse', 'FORProductsInUseUncertainty', 'FORSoilOrganicCarbon', 'FORSoilOrganicCarbonUncertainty', 'FORStandingDeadTreesUncertainty', 'FORUnderstory', 'FORUnderstoryUncertainty' ) ):
-            # if xml_tag not in model_run_data:
-                # model_run_data[xml_tag] = []
+    model_run_data = {}
 
     for child in elem.iter():
         xml_tag = str(child.tag)
@@ -72,48 +58,77 @@ def writeToCSVFile(elem, mapunit_id, area ,scenario):
         if (xml_tag in ( 'aagdefac', 'abgdefac', 'accrst', 'accrste_1_', 'agcprd', 'aglivc', 'bgdefac', 'bglivcm', 'cgrain', 'cinput', 'crmvst', 'crootc', 'crpval', 'egracc_1_', 'eupacc_1_', 'fbrchc', 'fertac_1_', 'fertot_1_1_', 'frootcm', 'gromin_1_', 'irrtot', 'metabc_1_', 'metabc_2_', 'metabe_1_1_', 'metabe_2_1_', 'nfixac', 'omadac', 'omadae_1_', 'petann', 'rlwodc', 'somsc', 'somse_1_', 'stdedc', 'stdede_1_', 'strmac_1_', 'strmac_2_', 'strmac_6_', 'strucc_1_', 'struce_1_1_', 'struce_2_1_', 'tminrl_1_', 'tnetmn_1_', 'volpac' ) ):
 
             if scenario == 'Baseline':
-                values = writeEndOfYearDayCentOutput( xml_tag, str( xml_text ), 'baseline', mapunit_id, area )
+                values = writeEndOfYearDayCentOutput( xml_tag, xml_text, 'baseline', mapunit_id, area )
                 for i in range(len(values)) :
                     value = values[i]
-                    model_run_data[xml_tag] = value
+                    if xml_tag not in model_run_data.keys():
+                        model_run_data[xml_tag] = []
+                    model_run_data[xml_tag].append(value)
             else:
                 # model_run.append([mapunit, scenario, xmlTag.lower(), xmlText])
-                values = writeEndOfYearDayCentOutput( xml_tag.lower(), str( xml_text ), 'scenario', mapunit_id, area )
+                values = writeEndOfYearDayCentOutput( xml_tag, xml_text, 'scenario', mapunit_id, area )
                 for value in values:
                     # value = values[i]
-                    model_run_data[xml_tag] = value
+                    if xml_tag not in model_run_data.keys():
+                        model_run_data[xml_tag] = []
+                    model_run_data[xml_tag].append(value)
                 # model_run_data[xml_tag] = values
-        else:
+
+        elif( xml_tag in ('irrigated', 'inputcrop' ) ):
 
             if scenario == 'Baseline':
-                values = writeYearlyDayCentOutput( xml_tag, str( xml_text ), 'baseline', mapunit_id, area )
+                values = writeYearlyDayCentOutput( xml_tag, xml_text, 'baseline', mapunit_id, area )
                 for i in range(len(values)) :
                     value = values[i]
-                    model_run_data[xml_tag] = value
+                    if xml_tag not in model_run_data.keys():
+                        model_run_data[xml_tag] = []
+                    model_run_data[xml_tag].append(value)
+
             else:
                 # model_run.append([mapunit, scenario, xmlTag.lower(), xmlText])
-                values = writeYearlyDayCentOutput( xml_tag.lower(), str( xml_text ), 'scenario', mapunit_id, area )
+                values = writeYearlyDayCentOutput( xml_tag, xml_text, 'scenario', mapunit_id, area )
+                # print(values)
                 for value in values:
                     # value = values[i]
-                    model_run_data[xml_tag] = value
-                # model_run_data[xml_tag] = values
+                    # print(value)
+                    if xml_tag not in model_run_data.keys():
+                        model_run_data[xml_tag] = []
+                    model_run_data[xml_tag].append(value)
 
-            # transposed = []
-            # for i in range(len(model_run_data)):
-                # transposed.append([row[i] for row in model_run_data[xml_tag]])
+        elif( xml_tag in ( 'noflux', 'n2oflux', 'annppt' ) ):
 
+            if scenario == 'Baseline':
+                values = writeYearlyDayCentOutput92( xml_tag, xml_text, 'baseline', mapunit_id, area )
+                for i in range(len(values)) :
+                    value = values[i]
+                    if xml_tag not in model_run_data.keys():
+                        model_run_data[xml_tag] = []
+                    model_run_data[xml_tag].append(value)
+
+            else:
+                # model_run.append([mapunit, scenario, xmlTag.lower(), xmlText])
+                values = writeYearlyDayCentOutput92( xml_tag, xml_text, 'scenario', mapunit_id, area )
+                # print(values)
+                for value in values:
+                    # value = values[i]
+                    # print(value)
+                    if xml_tag not in model_run_data.keys():
+                        model_run_data[xml_tag] = []
+                    model_run_data[xml_tag].append(value)
+        else:
+            continue
     # print(model_run_data)
 
     #  header fields
-    values_array = ['year', 'id', 'area',]
-    count = 0
+    values_array = ['year', 'scenario', 'id', 'area']
+
     for values in model_run_data:
         values_array.append(values)
         # print(values)
 
     # write parsed out to csv
     csv_file_name = scenario
-    dir_name = './results/' + mapunit_id
+    dir_name = './results/' + mapunit_id + '/'
     if not os.path.isdir(dir_name):
         os.mkdir(dir_name)
 
@@ -122,44 +137,38 @@ def writeToCSVFile(elem, mapunit_id, area ,scenario):
         writer.writeheader()
 
         if model_run_data:
-            # writer.writerow(model_run_data)
-            # for row in model_run_data:
-            print(model_run_data)
-            writer.writerow(model_run_data)
-            # for value in values:
-                    # print(value)
-                    # values_array.append(values[i])
-
-                # writer.writerow(values_array)
-
+            org_by_year = organizeByYear(model_run_data)
+            for k,v in org_by_year.items():
+                writer.writerow(v)
     csvFile.close()
 
 
 # Extract yearly output data from the DayCent variable and insert the end-of-year value into the database
 # This function is used for API data with whole numbers representing the yearly output data
 # For example, the records with the date value of "2003" refer to "2003".
-def writeYearlyDayCentOutput( daycent_variable, arrayText, baselineOrScenario, mapunit, area ):
+def writeYearlyDayCentOutput( daycent_variable, arrayText, scenario, mapunit, area ):
+    if arrayText.endswith(','):
+        arrayText = arrayText[:-1]
     arrayText = arrayText.replace( ':', ',' )
     array1 = arrayText.split(',')
     array1Length = len( array1 )
     daycent_variable = str(daycent_variable).lower()
 
     values = []
-
-    for y in range( 2, ( array1Length // 2 ) ):
-        if '.' not in array1[ y * 2 ]:
-            # print(array1[y * 2])
-            year_value = str( int( array1[ y * 2 ] ) - 1 )
-            output_value = str( array1[ ( y * 2 ) + 1 ] )
-            yearly_output = {
-                "year": year_value,
-                # "value": output_value,
-                daycent_variable: output_value,
-                "id": mapunit,
-                "area": area,
-            }
-            values.append(yearly_output)
-
+    for y in range( 0, (array1Length // 2) ):
+        year_value = str( array1[ y * 2 ] )
+        output_value = str( array1[ int(( y * 2 ) + 1) ] )
+        yearly_output = {
+            "year": year_value,
+            "var": daycent_variable,
+            "output": output_value,
+            daycent_variable: output_value,
+            "id": mapunit,
+            "area": area,
+            "scenario": scenario,
+        }
+        values.append(yearly_output)
+    # print(values)
     return values
 
     # print(daycent_variable)
@@ -185,28 +194,31 @@ def writeYearlyDayCentOutput( daycent_variable, arrayText, baselineOrScenario, m
 # Extract only the end-of-year data from the DayCent variable
 # These are pulled from the year_summary.out and similar files.
 # For example, the records with the date value of "2003" refer to "2003".
-def writeEndOfYearDayCentOutput( daycent_variable, arrayText, baselineOrScenario, mapunit, area ):
+def writeEndOfYearDayCentOutput( daycent_variable, arrayText, scenario, mapunit, area ):
+    if arrayText.endswith(','):
+        arrayText = arrayText[:-1]
     arrayText = arrayText.replace( ':', ',' )
     array1 = arrayText.split(',')
-    array1Length = len( array1 )
+    array1Length = len(array1)
     daycent_variable = str(daycent_variable).lower()
 
     values = []
-    print(array1)
 
-    for y in range( 2, ( array1Length // 2 ) ):
-        # if '.' not in array1[ y * 2 ]:
+    for y in range( 0, ( array1Length // 2) ):
+        if '.' not in array1[ y * 2 ]:
             # print(array1[y * 2])
-        year_value = str( int( array1[ y * 2 ] ) - 1 )
-        output_value = str( array1[ ( y * 2 ) + 1 ] )
-        yearly_output = {
-            "year": year_value,
-            # "value": output_value,
-            daycent_variable: output_value,
-            "id": mapunit,
-            "area": area,
-        }
-        values.append(yearly_output)
+            year_value = str(int(array1[ y * 2 ]))
+            output_value = str( array1[ int(( y * 2 ) + 1) ] )
+            yearly_output = {
+                "year": year_value,
+                "var": daycent_variable,
+                "output": output_value,
+                daycent_variable: output_value,
+                "id": mapunit,
+                "area": area,
+                "scenario": scenario,
+            }
+            values.append(yearly_output)
 
             # writeToCSVFile([{daycent_variable, }])
             # sql = "INSERT INTO " + str( databaseName ) + ".api_results_cropland_daycent_" + str( baselineOrScenario ) + "_" + daycent_variable + " ( id_api_results_cropland_daycent_master, date_value, output_value ) VALUE ( '" + str( id_api_results_cropland_daycent_master ) + "', '" + str( year_value ) + "', '" + str( output_value ) + "' );"
@@ -221,34 +233,39 @@ def writeEndOfYearDayCentOutput( daycent_variable, arrayText, baselineOrScenario
 # Extract yearly output data from the DayCent variable and insert the end-of-year value into the database
 # These are pulled from the year_summary.out and similar files.
 # For example, the records with the date value of "2003.92" are truncated to "2003"
-def writeYearlyDayCentOutput92( daycent_variable, arrayText, baselineOrScenario, mapunit, area ):
+def writeYearlyDayCentOutput92( daycent_variable, arrayText, scenario, mapunit, area ):
+    if arrayText.endswith(','):
+        arrayText = arrayText[:-1]
     array1 = arrayText.split(',')
     array1Length = len( array1 )
+    daycent_variable = str(daycent_variable).lower()
 
-    if array1Length == 1:
-        return
-    else:
-        for y in range( 0, ( array1Length // 2 ) ):
-            if '.92' in array1[ y * 2 ]:
-                year_value = str( array1[ y * 2 ][:4] )
-                output_value = str( array1[ ( y * 2 ) + 1 ] )
-                # print(year_value)
-                # sql = "INSERT INTO " + str( databaseName ) + ".api_results_cropland_daycent_" + str( baselineOrScenario ) + "_" + daycent_variable + " ( id_api_results_cropland_daycent_master, date_value, output_value ) VALUE ( '" + str( id_api_results_cropland_daycent_master ) + "', '" + str( year_value ) + "', '" + str( output_value ) + "' );"
-                # try:
-                    # cursor_daycent.execute( sql )
-                #  TODO: Output CSV
-                # print(year_value)
-                # except mariadb_daycent.Error as error:
-                    # print( "Error: {}".format( error ) )
+    values = []
+    print(array1Length)
+    for y in range( 0, ( array1Length // 2 ) ):
+        if '.92' in array1[ y * 2 ]:
+            year_value = str( array1[ y * 2 ][:4] )
+            output_value = str( array1[ ( y * 2 ) + 1 ] )
+            yearly_output = {
+                "year": year_value,
+                "var": daycent_variable,
+                "output": output_value,
+                daycent_variable: output_value,
+                "id": mapunit,
+                "area": area,
+                "scenario": scenario,
+            }
+            values.append(yearly_output)
+
+    return values
 
 
 # Update the api_records_cropland table with the summary data produced by COMET-Farm
-def updateGUIdata( variableToUpdate2, updatedValue2, modelRunName, scenario):
+def updateGUIdata(name, array_text, model_run_name, scenario):
 
-    sql = [str( variableToUpdate2 ), str( updatedValue2 ), str( modelRunName), str(scenario)]
-    # runSQL( sql )
-    #  TODO: Output CSV
-    # print(sql)
+    sql = [str(name), str(array_text), str(model_run_name), str(scenario)]
+    print(sql)
+
 
 def main():
     # check if argument has been given for xml
@@ -333,23 +350,6 @@ def main():
         if ( str( elem.tag ) == 'Scenario' ):
             scenarioCount = scenarioCount + 1
 
-    # get title row values
-    mapunit_count = 0
-    header_row = []
-    for elem in tree.iter():
-        # use the elem tags in the first mapunit
-        # prevents multiple writes to list
-        # all mapunits should have matching elem.tags'
-        if ( str( elem.tag ) == 'MapUnit' ):
-            mapunit_count = mapunit_count + 1
-        if mapunit_count < 2:
-            if ( elem.tag not in ( 'Day', 'Cropland', 'Carbon', 'CO2', 'N2O', 'CH4', 'BiomassBurningCarbonUncertainty', 'BiomassBurningCH4Uncertainty', 'BiomassBurningN2OUncertainty', 'C02', 'DrainedOrganicSoilsCO2Uncertainty', 'DrainedOrganicSoilsN2OUncertainty', 'LimingCO2Uncertainty', 'SoilCarbonUncertainty', 'SoilCH4Uncertainty', 'SoilN2OUncertainty', 'UreaFertilizationCO2Uncertainty', 'WetlandRiceCultivationCH4Uncertainty', 'WetlandRiceCultivationN2OUncertainty', 'AFDownedDeadWood', 'AFDownedDeadWoodUncertainty', 'AFForestFloor', 'AFForestFloorUncertainty', 'AFLiveTrees', 'AFLiveTreesUncertainty', 'AFStandingDeadTrees', 'AFStandingDeadTreesUncertainty', 'AFUnderstory', 'AFUnderstoryUncertainty', 'Agroforestry', 'Animal', 'FORDownedDeadWood', 'FORDownedDeadWoodUncertainty', 'Forestry', 'FORForestFloorUncertainty', 'FORInLandfills', 'FORInLandfillsUncertainty', 'FORLiveTrees', 'FORLiveTreesUncertainty', 'FORProductsInUse', 'FORProductsInUseUncertainty', 'FORSoilOrganicCarbon', 'FORSoilOrganicCarbonUncertainty', 'FORStandingDeadTreesUncertainty', 'FORUnderstory', 'FORUnderstoryUncertainty' ) ):
-                header_row.append(str(elem.tag))
-
-    model_run.append(header_row)
-
-    # print(model_run)
-
     #process the scenarios
     recordCount = 1
 
@@ -389,9 +389,9 @@ def main():
                 # generate the scenario name to use further down in the script for the DayCent data when the mapunit tag is reached
                 scenario = xmlAttribName[:-15]
 
-            if ( "from reduced" not in scenario.lower() and "current" not in scenario.lower() ):
+            # if ( "from reduced" not in scenario.lower() and "current" not in scenario.lower() ):
                 # run_name = '"' + str( modelRunName ) + "', '" + str( ) + "', '" + str( mlra ) + "', '" + str( practice ) + "', '" + str( scenario ) + "', '" + str( irrigated ) + '"'
-                print("creating records for scenario = [" + str( scenario ) + "] and mapunit = [" + str( scenarioFullName ) + "]")
+                # print("creating records for mapunit = [" + str( scenarioFullName ) + "]" + "scenario = [" + str( scenario ) + "]")
 
         elif( "current" in scenario.lower() ):
             continue
@@ -406,9 +406,9 @@ def main():
 
             writeToCSVFile(elem, mapunit, area, scenario)
 
-            mapunit_ids.append(mapunit)
+            # mapunit_ids.append(mapunit)
 
-            model_run.append([mapunit, scenario, xmlTag.lower(), xmlText])
+            # model_run.append([mapunit, scenario, xmlTag.lower(), xmlText])
 
             if scenario == 'Baseline':
                 # create the master records
@@ -494,7 +494,7 @@ def main():
     # for i in range(mapunit_count):
         # mapunits_data.append(mapunits_data)
 
-    mapunit_ids = set(mapunit_ids)
+    # mapunit_ids = set(mapunit_ids)
 
     #close the XML input file
     xml_file.close()
