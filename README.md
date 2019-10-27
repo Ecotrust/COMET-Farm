@@ -17,6 +17,9 @@ And state what happens step-by-step. If there is any virtual environment, local 
 
 ## Installing / Getting started
 
+
+## Generate Input XML
+
 A quick introduction of the minimal setup you need to get a hello world up &
 running.
 
@@ -38,3 +41,18 @@ Generate XML file from CSV of GIS data and .xlsx file:
 ```shell
 python3 script generate_comet_input_file.py <spreadsheet location>
 ```
+
+## Output from COMET-Farm  
+
+COMET-Farm API in its current state sends an email with model run results in XML format.
+
+How to use model run XML:  
+  *
+
+## Caveats and Things to be aware of
+  * COMET-Farm parameter values in output XML have a trailing comma
+    (*e.g.,* `<agcprd>2000,765.234,2001,86.234,...,2028,76.212,</agcprd>`)
+  * COMET-Farm output XML returns the current year twice in each parameter value
+    (*e.g.,* `<agcprd>2000,765.234,2001,86.234,...,2019,55.328,2019,55.328,2020,450,230,...</agcprd`)
+    * sometimes on of the parameter values for the current year is 0
+      (*e.g.,* `<agcprd>2000,765.234,2001,86.234,...,2019,0,2019,55.328,2020,450,230,...</agcprd`)
