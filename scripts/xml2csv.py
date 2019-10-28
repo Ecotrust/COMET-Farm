@@ -2,7 +2,7 @@
 from datetime import datetime
 import os, sys, csv, time, string
 import xml.etree.ElementTree as ET
-import ipdb
+# import ipdb
 import pprint
 
 pp = pprint.PrettyPrinter(indent=4)

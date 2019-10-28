@@ -46,10 +46,35 @@ python3 script generate_comet_input_file.py <spreadsheet location>
 
 COMET-Farm API in its current state sends an email with model run results in XML format.
 
-How to use model run XML:  
-  *
+The xml2csv.py script will parse the model run results XML file and create a CSV file for each map unit within a model run scenario. Your final result should look something like:
 
-## Caveats and Things to be aware of
+```
+results/
+  16560/
+    baseline.csv
+    notill.csv
+  16561/
+    baseline.csv
+    notill.csv
+  16564/
+    baseline.csv
+    notill.csv
+```
+
+How to use model run XML:  
+  * save XML from COMET-Farm results email to somewhere on your local machine
+    (*e.g.,* `COMET-Farm/results/<model_output.xml>`)
+  * open a terminal window
+  * navigate to the saved XML file
+    `cd COMET-Farm/results/`
+  * run the script
+    `python3 COMET-Farm/scripts/xml2csv.py COMET-Farm/results/<model_output.xml>`  
+     
+
+## Caveats
+
+Gotcas and some other things to be aware of:  
+
   * COMET-Farm parameter values in output XML have a trailing comma
     (*e.g.,* `<agcprd>2000,765.234,2001,86.234,...,2028,76.212,</agcprd>`)
   * COMET-Farm output XML returns the current year twice in each parameter value
