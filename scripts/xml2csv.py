@@ -23,6 +23,34 @@ pp = pprint.PrettyPrinter(indent=4)
 
 '''
 
+# Most results contain duplicate for current year
+def remove_duplicate_years(arr=[]):
+    years = [dic["year"] for dic in arr]
+    dup_year = ''
+    for year in years:
+        if years.count(year) > 1:
+            dup_year = year
+    if len(dup_year) > 0:
+        for i in arr:
+            if dup_year == i.get('year'):
+                el = arr.pop(arr.index(i))
+    return arr
+
+def calc_co2_exchange(arr=[{"output": 0, "year": ""}]):
+    arr = remove_duplicate_years(arr)
+    arr_len = len(arr) - 1
+    if arr_len > 0:
+        area = mapUnitArea(arr)
+        calc = ((float(arr[0]["output"]) - float(arr[arr_len]["output"])) / arr_len) * (float(area)) * (1/100) * (44/12)
+        print(calc)
+    return
+
+def mapUnitArea(arr=[]):
+    # area should be same for each dict in list
+    # so we only need the first
+    return arr[0]['area']
+
+
 def organizeByYear(data):
     main_dic = {}
     for key, value in data.items():
@@ -59,51 +87,33 @@ def writeToCSVFile(elem, mapunit_id, area ,scenario):
 
         if (xml_tag in ( 'aagdefac', 'abgdefac', 'accrst', 'accrste_1_', 'agcprd', 'aglivc', 'bgdefac', 'bglivcm', 'cgrain', 'cinput', 'crmvst', 'crootc', 'crpval', 'egracc_1_', 'eupacc_1_', 'fbrchc', 'fertac_1_', 'fertot_1_1_', 'frootcm', 'gromin_1_', 'irrtot', 'metabc_1_', 'metabc_2_', 'metabe_1_1_', 'metabe_2_1_', 'nfixac', 'omadac', 'omadae_1_', 'petann', 'rlwodc', 'somsc', 'somse_1_', 'stdedc', 'stdede_1_', 'strmac_1_', 'strmac_2_', 'strmac_6_', 'strucc_1_', 'struce_1_1_', 'struce_2_1_', 'tminrl_1_', 'tnetmn_1_', 'volpac' ) ):
 
-            if scenario == 'Baseline':
-                values = writeEndOfYearDayCentOutput( xml_tag, xml_text, scenario, mapunit_id, area )
-                for i in range(len(values)) :
-                    value = values[i]
-                    if xml_tag not in model_run_data.keys():
-                        model_run_data[xml_tag] = []
-                    model_run_data[xml_tag].append(value)
-            else:
-                values = writeEndOfYearDayCentOutput( xml_tag, xml_text, scenario, mapunit_id, area )
-                for value in values:
-                    if xml_tag not in model_run_data.keys():
-                        model_run_data[xml_tag] = []
-                    model_run_data[xml_tag].append(value)
+            values = writeEndOfYearDayCentOutput( xml_tag, xml_text, scenario, mapunit_id, area )
+            for value in values:
+                if xml_tag not in model_run_data.keys():
+                    model_run_data[xml_tag] = []
+                model_run_data[xml_tag].append(value)
+
+            if (xml_tag == 'somsc') :
+                somsc = model_run_data[xml_tag]
+                co2exchange = calc_co2_exchange(somsc)
+                model_run_data['soil_carbon_exchange'] = co2exchange
 
         elif( xml_tag in ('irrigated', 'inputcrop' ) ):
 
-            if scenario == 'Baseline':
-                values = writeYearlyDayCentOutput( xml_tag, xml_text, scenario, mapunit_id, area )
-                for i in range(len(values)) :
-                    value = values[i]
-                    if xml_tag not in model_run_data.keys():
-                        model_run_data[xml_tag] = []
-                    model_run_data[xml_tag].append(value)
-            else:
-                values = writeYearlyDayCentOutput( xml_tag, xml_text, scenario, mapunit_id, area )
-                for value in values:
-                    if xml_tag not in model_run_data.keys():
-                        model_run_data[xml_tag] = []
-                    model_run_data[xml_tag].append(value)
+            values = writeYearlyDayCentOutput( xml_tag, xml_text, scenario, mapunit_id, area )
+            for value in values:
+                if xml_tag not in model_run_data.keys():
+                    model_run_data[xml_tag] = []
+                model_run_data[xml_tag].append(value)
 
-        elif( xml_tag in ( 'noflux', 'n2oflux', 'annppt' ) ):
+        elif( xml_tag in ('noflux', 'n2oflux', 'annppt') ):
 
-            if scenario == 'Baseline':
-                values = writeYearlyDayCentOutput92( xml_tag, xml_text, scenario, mapunit_id, area )
-                for i in range(len(values)) :
-                    value = values[i]
-                    if xml_tag not in model_run_data.keys():
-                        model_run_data[xml_tag] = []
-                    model_run_data[xml_tag].append(value)
-            else:
-                values = writeYearlyDayCentOutput92( xml_tag, xml_text, scenario, mapunit_id, area )
-                for value in values:
-                    if xml_tag not in model_run_data.keys():
-                        model_run_data[xml_tag] = []
-                    model_run_data[xml_tag].append(value)
+            values = writeYearlyDayCentOutput92( xml_tag, xml_text, scenario, mapunit_id, area )
+            for value in values:
+                if xml_tag not in model_run_data.keys():
+                    model_run_data[xml_tag] = []
+                model_run_data[xml_tag].append(value)
+
         else:
             continue
 
@@ -306,7 +316,7 @@ def main():
         xmlText = str( elem.text )
 
         # Model run parameters that we do not want/need to process
-        if ( xmlTag in ( 'Day', 'Cropland', 'Carbon', 'CO2', 'N2O', 'CH4', 'BiomassBurningCarbonUncertainty', 'BiomassBurningCH4Uncertainty', 'BiomassBurningN2OUncertainty', 'C02', 'DrainedOrganicSoilsCO2Uncertainty', 'DrainedOrganicSoilsN2OUncertainty', 'LimingCO2Uncertainty', 'SoilCarbonUncertainty', 'SoilCH4Uncertainty', 'SoilN2OUncertainty', 'UreaFertilizationCO2Uncertainty', 'WetlandRiceCultivationCH4Uncertainty', 'WetlandRiceCultivationN2OUncertainty', 'AFDownedDeadWood', 'AFDownedDeadWoodUncertainty', 'AFForestFloor', 'AFForestFloorUncertainty', 'AFLiveTrees', 'AFLiveTreesUncertainty', 'AFStandingDeadTrees', 'AFStandingDeadTreesUncertainty', 'AFUnderstory', 'AFUnderstoryUncertainty', 'Agroforestry', 'Animal', 'FORDownedDeadWood', 'FORDownedDeadWoodUncertainty', 'Forestry', 'FORForestFloorUncertainty', 'FORInLandfills', 'FORInLandfillsUncertainty', 'FORLiveTrees', 'FORLiveTreesUncertainty', 'FORProductsInUse', 'FORProductsInUseUncertainty', 'FORSoilOrganicCarbon', 'FORSoilOrganicCarbonUncertainty', 'FORStandingDeadTreesUncertainty', 'FORUnderstory', 'FORUnderstoryUncertainty' ) ):
+        if ( xmlTag in ( 'Day', 'Cropland', 'CO2', 'N2O', 'CH4', 'BiomassBurningCarbonUncertainty', 'BiomassBurningCH4Uncertainty', 'BiomassBurningN2OUncertainty', 'C02', 'DrainedOrganicSoilsCO2Uncertainty', 'DrainedOrganicSoilsN2OUncertainty', 'LimingCO2Uncertainty', 'SoilCarbonUncertainty', 'SoilCH4Uncertainty', 'SoilN2OUncertainty', 'UreaFertilizationCO2Uncertainty', 'WetlandRiceCultivationCH4Uncertainty', 'WetlandRiceCultivationN2OUncertainty', 'AFDownedDeadWood', 'AFDownedDeadWoodUncertainty', 'AFForestFloor', 'AFForestFloorUncertainty', 'AFLiveTrees', 'AFLiveTreesUncertainty', 'AFStandingDeadTrees', 'AFStandingDeadTreesUncertainty', 'AFUnderstory', 'AFUnderstoryUncertainty', 'Agroforestry', 'Animal', 'FORDownedDeadWood', 'FORDownedDeadWoodUncertainty', 'Forestry', 'FORForestFloorUncertainty', 'FORInLandfills', 'FORInLandfillsUncertainty', 'FORLiveTrees', 'FORLiveTreesUncertainty', 'FORProductsInUse', 'FORProductsInUseUncertainty', 'FORSoilOrganicCarbon', 'FORSoilOrganicCarbonUncertainty', 'FORStandingDeadTreesUncertainty', 'FORUnderstory', 'FORUnderstoryUncertainty' ) ):
             continue
 
         if ( xmlTag == 'ModelRun' ):
@@ -343,6 +353,7 @@ def main():
 
             mapunit = xmlAttribId
             area = xmlAttribArea
+            carbon = root.find('.//Carbon')
 
             # write csv file for scenario per map unit
             writeToCSVFile(elem, mapunit, area, scenario)
