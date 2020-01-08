@@ -18,7 +18,7 @@ gis_dir =  sys.argv[1]
 wb_dir = sys.argv[2]
 
 wb = load_workbook(filename = wb_dir)
-scenario_sheet = wb.get_sheet_by_name('scenario')
+scenario_sheet = wb['scenario']
 
 gis_values = {}
 
@@ -57,17 +57,17 @@ with open(gis_dir) as csv_file:
             if rowName == 'Ccop_name':
                 field_sheet.cell(row=rowNum, column=2).value = row['comet_crop']
             if rowName == 'pre_80':
-                pre_1980_sheet = wb.get_sheet_by_name('pre1980')
+                pre_1980_sheet = wb['pre1980']
                 pre_80_gis_val = row['pre-1980']
                 pre_1980_val = pre_1980_sheet.cell(row=int(pre_80_gis_val), column=1).value
                 field_sheet.cell(row=rowNum, column=2).value = pre_1980_val
             if rowName == 'yr80_2000':
-                year80_sheet = wb.get_sheet_by_name('yr80')
+                year80_sheet = wb['yr80']
                 year80_sheet_val = row['Year1980-2000']
                 yr_80_val = year80_sheet.cell(row=int(year80_sheet_val), column=1).value
                 field_sheet.cell(row=rowNum, column=2).value = yr_80_val
             if rowName == 'till80_200':
-                till_80_sheet = wb.get_sheet_by_name('tillage')
+                till_80_sheet = wb['tillage']
                 till_80_sheet_val = row['Year1980-2000_Tillage']
                 till_80_val = till_80_sheet.cell(row=int(till_80_sheet_val), column=1).value
                 field_sheet.cell(row=rowNum, column=2).value = till_80_val
