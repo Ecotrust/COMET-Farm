@@ -47,7 +47,7 @@ with open(gis_dir) as csv_file:
             if rowName == 'id':
                 field_sheet.cell(row=rowNum, column=2).value = row['field_ID']
             if rowName == 'GEOM':
-                field_sheet.cell(row=rowNum, column=2).value = 'Polygon(' + row['geom'] + ')'
+                field_sheet.cell(row=rowNum, column=2).value = 'Polygon(' + row['GEOM'] + ')'
             if rowName == 'AREA':
                 field_sheet.cell(row=rowNum, column=2).value = row['acres']
             if rowName == 'SRID':

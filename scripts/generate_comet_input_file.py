@@ -17,12 +17,12 @@ if len(sys.argv) < 1:
 
 wb_dir = sys.argv[1]
 wb = load_workbook(filename = wb_dir)
-processed_fields_sheet = wb.get_sheet_by_name('processed')
+processed_fields_sheet = wb['processed']
 processed_sheets = {}
 for row in range(1, processed_fields_sheet.max_row + 1):
     sheet_name = processed_fields_sheet['B' + str(row)].value
 
-    scenario_sheet = wb.get_sheet_by_name(sheet_name)
+    scenario_sheet = wb[sheet_name]
     scenario_values = {}
     # loop through scenario values
     for row in range(2, scenario_sheet.max_row + 1):
