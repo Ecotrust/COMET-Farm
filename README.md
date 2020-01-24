@@ -5,17 +5,43 @@ COMET-Farm API scripts &mdot; merge Excel template and CSV into a XML for feedin
 
 ### Setting up Environment
 
-Here's a brief intro about what a developer must do in order to start developing
-the project further:
+**Get the repo**
 
-```shell
-git clone https://github.com/Ecotrust/COMET-Farm.git
-cd COMET-Farm/
-```
-
-And state what happens step-by-step. If there is any virtual environment, local server or database feeder needed, explain here.
+1. Open a terminal window
+2. Navigate to or create a directory you would like to use.
+  ```shell
+  cd projects/
+  mkdir comet
+  ```
+3. Clone the repo  
+  ```shell
+  git clone https://github.com/Ecotrust/COMET-Farm.git
+  cd COMET-Farm/
+  ```
 
 ## Installing / Getting started
+
+**Dependencies**
+  * Python 3
+  * pip3
+  * openpyxl
+
+**Install Dependencies**
+
+1. Check if you have Python 3 installed
+  ```shell
+  python3
+  ```
+  This should active a python interpreter, otherwise you need to install python3.
+  Download at https://www.python.org/downloads/
+2. pip3 should come installed with Python 3, but run the following to get the latest version
+  ```shell
+  pip install -U pip
+  ```
+3. install openpyxl
+  ```shell
+  pip3 install openpyxl
+  ```
 
 
 ## Generate Input XML
@@ -37,7 +63,7 @@ python3 script combine_data.py <GIS data location> <spreadsheet location>
 Generate XML file from CSV of GIS data and .xlsx file:
 
   - <spreadsheet locatiion> = system location of spreadsheet with input data
-    - *e.g.*, `/usr/local/name/comet/data.xml`
+    - *e.g.*, `/usr/local/name/comet/combined_data.xlsx`
 ```shell
 python3 script generate_comet_input_file.py <spreadsheet location>
 ```
@@ -69,7 +95,7 @@ How to use model run XML:
     `cd COMET-Farm/results/`
   * run the script
     `python3 COMET-Farm/scripts/xml2csv.py COMET-Farm/results/<model_output.xml>`  
-     
+
 
 ## Caveats
 
