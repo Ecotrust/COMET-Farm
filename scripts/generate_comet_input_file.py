@@ -1,5 +1,5 @@
 # import system modules
-import os, sys, pprint
+import os, sys, pprint, time
 
 # import functions for extracting data from excel
 from openpyxl import load_workbook
@@ -30,35 +30,42 @@ for row in range(1, processed_fields_sheet.max_row + 1):
         param_val  = scenario_sheet['B' + str(row)].value
         scenario_values.setdefault(param, param_val)
 
-    # create XML file
-    input_xml_file_name = sheet_name
-    input_xml_file = input_xml_file_name + '.xml'
+    field_number = sheet_name[6:] # assumes sheet_name is 'ready_field#', removes 'ready_'
+    processed_sheets.setdefault(field_number, scenario_values)
 
-    if (os.path.isfile(input_xml_file)):
-        os.remove(input_xml_file)
+# create XML file
+timestamp = time.time()
+input_xml_file_name = 'cometfarm_api_input' + str(timestamp)
+input_xml_file = input_xml_file_name + '.xml'
 
-    # initialize the file content string that will contain the text to be written to the file
-    with open(input_xml_file, 'w') as f:
-        f.write("<Day cometEmailId=\"" + scenario_values['Email'] + "\">")
+if (os.path.isfile(input_xml_file)):
+    os.remove(input_xml_file)
+
+# initialize the file content string that will contain the text to be written to the file
+with open(input_xml_file, 'w') as f:
+
+    for field in processed_sheets:
+        # import ipdb; ipdb.set_trace()
+        f.write("<Day cometEmailId=\"" + processed_sheets[field]['Email'] + "\">")
         # todo: rename cropland something more meaningful
-        f.write("<Cropland name=\"" + scenario_values['crop_scenario_name'] + "\">")
-        f.write("<GEOM SRID=\"" + str(scenario_values['SRID']) + "\" AREA=\"" + str(scenario_values['AREA']) + "\">" + scenario_values['GEOM'] + "</GEOM>")
-        f.write("<Pre-1980>" + scenario_values['pre_80'] + "</Pre-1980>")
+        f.write("<Cropland name=\"" + processed_sheets[field]['crop_scenario_name'] + "\">")
+        f.write("<GEOM SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
+        f.write("<Pre-1980>" + processed_sheets[field]['pre_80'] + "</Pre-1980>")
         # CRP always None
         f.write("<CRP>None</CRP><CRPStartYear></CRPStartYear><CRPEndYear></CRPEndYear><CRPType>None</CRPType>")
         # PreCRPManagement fields always empty
         f.write("<PreCRPManagement></PreCRPManagement><PreCRPTillage></PreCRPTillage><PostCRPManagement></PostCRPManagement><PostCRPTillage></PostCRPTillage>")
         # 1980 - 2000
-        f.write("<Year1980-2000>" + scenario_values['yr80_2000'] + "</Year1980-2000>")
-        f.write("<Year1980-2000_Tillage>" + scenario_values['till80_200'] + "</Year1980-2000_Tillage>")
+        f.write("<Year1980-2000>" + processed_sheets[field]['yr80_2000'] + "</Year1980-2000>")
+        f.write("<Year1980-2000_Tillage>" + processed_sheets[field]['till80_200'] + "</Year1980-2000_Tillage>")
         # start crop scenario
-        f.write("<CropScenario Name=\"" + scenario_values['crop_scenario_name'] + "\">")
+        f.write("<CropScenario Name=\"" + processed_sheets[field]['crop_scenario_name'] + "\">")
         # crop year
-        f.write("<CropYear Year=\"" + str(scenario_values['YEAR']) + "\">")
+        f.write("<CropYear Year=\"" + str(processed_sheets[field]['YEAR']) + "\">")
         f.write("<Crop CropNumber=\"1\">")
-        f.write("<CropName>" + scenario_values['Ccop_name'] + "</CropName>")
-        f.write("<PlantingDate>" + scenario_values['planting_date'].strip('\"') + "</PlantingDate>")
-        f.write("<ContinueFromPreviousYear>" + scenario_values['continue_from_previous_year'] + "</ContinueFromPreviousYear>")
+        f.write("<CropName>" + processed_sheets[field]['Ccop_name'] + "</CropName>")
+        f.write("<PlantingDate>" + processed_sheets[field]['planting_date'].strip('\"') + "</PlantingDate>")
+        f.write("<ContinueFromPreviousYear>" + processed_sheets[field]['continue_from_previous_year'] + "</ContinueFromPreviousYear>")
         f.write("<DidYouPrune></DidYouPrune>") # todo
         f.write("<RenewOrClearYourOrchard></RenewOrClearYourOrchard>") # todo
         # start harvest list
@@ -129,8 +136,9 @@ for row in range(1, processed_fields_sheet.max_row + 1):
         f.write("</CropScenario>")
         # end crop scenario
         f.write("</Cropland>\n")
+
         f.write("</Day>")
         # end daycent
-        f.close()
+    f.close()
 
 print('XML file generated')

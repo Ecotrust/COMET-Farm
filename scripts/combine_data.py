@@ -44,20 +44,21 @@ with open(gis_dir) as csv_file:
         processed_sheet.append(["name", field_sheet.title])
         for rowNum in range(2, field_sheet.max_row):
             rowName = field_sheet.cell(row=rowNum, column=1).value
+            rowName = rowName.lower()
             if rowName == 'id':
                 field_sheet.cell(row=rowNum, column=2).value = row['field_ID']
-            if rowName == 'GEOM':
+            if rowName == 'geom':
                 field_sheet.cell(row=rowNum, column=2).value = 'Polygon' + row['GEOM'] #Dropped parens to eliminate double parens
-            if rowName == 'AREA':
+            if rowName == 'area':
                 field_sheet.cell(row=rowNum, column=2).value = row['AREA'] #changed 'acres' to 'AREA'
-            if rowName == 'SRID':
+            if rowName == 'srid':
                 field_sheet.cell(row=rowNum, column=2).value = '4326'
             if rowName == 'crop_scenario_name':
                 field_sheet.cell(row=rowNum, column=2).value = row['CcopName'] + '_' + field_sheet.cell(row=rowNum, column=2).value + '_' + row['field_ID']
                 #Original: field_sheet.cell(row=rowNum, column=2).value = 'Todo_polygon_id' + row['field_ID'] + 'Todo_scenario_id'  Old Version
-            if rowName == 'Ccop_name':
+            if rowName == 'ccop_name':
                 field_sheet.cell(row=rowNum, column=2).value = row['CcopName'] #CcopName
-            if rowName == 'CROP_NUMBER':
+            if rowName == 'crop_number':
                 field_sheet.cell(row=rowNum, column=2).value = row['CRP_NUM'] #dc added 1/16/20
             if rowName == 'planting_date':
                 field_sheet.cell(row=rowNum, column=2).value = row['planting_date']  #dc added 1/16/20
