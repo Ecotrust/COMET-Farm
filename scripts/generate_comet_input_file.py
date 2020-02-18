@@ -44,9 +44,14 @@ if (os.path.isfile(input_xml_file)):
 # initialize the file content string that will contain the text to be written to the file
 with open(input_xml_file, 'w') as f:
 
+    # email_address = list(processed_sheets.items())[0][1]['Email']
+    # import ipdb; ipdb.set_trace()
+    # f.write("<Day cometEmailId=\"" + email_address + "\">")
+
     for field in processed_sheets:
-        # import ipdb; ipdb.set_trace()
+
         f.write("<Day cometEmailId=\"" + processed_sheets[field]['Email'] + "\">")
+
         # todo: rename cropland something more meaningful
         f.write("<Cropland name=\"" + processed_sheets[field]['crop_scenario_name'] + "\">")
         f.write("<GEOM SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
@@ -136,9 +141,10 @@ with open(input_xml_file, 'w') as f:
         f.write("</CropScenario>")
         # end crop scenario
         f.write("</Cropland>\n")
-
         f.write("</Day>")
+        
+    # f.write("</Day>")
         # end daycent
-    f.close()
+f.close()
 
 print('XML file generated')
