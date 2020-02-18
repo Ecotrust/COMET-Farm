@@ -46,11 +46,9 @@ with open(input_xml_file, 'w') as f:
 
     # email_address = list(processed_sheets.items())[0][1]['Email']
     # import ipdb; ipdb.set_trace()
-    # f.write("<Day cometEmailId=\"" + email_address + "\">")
+    f.write("<Day cometEmailId=\"" + email_address + "\">")
 
     for field in processed_sheets:
-
-        f.write("<Day cometEmailId=\"" + processed_sheets[field]['Email'] + "\">")
 
         # todo: rename cropland something more meaningful
         f.write("<Cropland name=\"" + processed_sheets[field]['crop_scenario_name'] + "\">")
@@ -141,9 +139,8 @@ with open(input_xml_file, 'w') as f:
         f.write("</CropScenario>")
         # end crop scenario
         f.write("</Cropland>\n")
-        f.write("</Day>")
-        
-    # f.write("</Day>")
+
+    f.write("</Day>")
         # end daycent
 f.close()
 
