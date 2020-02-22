@@ -49,7 +49,7 @@ with open(gis_dir) as csv_file:
 
         # field_sheet.cell(row=8, column=2).value = row['CRP_NUM'] #dc added 1/16/20
         field_sheet.cell(row=9, column=2).value = row['field_ID']
-        field_sheet.cell(row=10, column=2).value = 'Polygon' + row['GEOM']
+        field_sheet.cell(row=10, column=2).value = 'POLYGON (' + row['GEOM'] + ')'
         field_sheet.cell(row=11, column=2).value = row['AREA']
         field_sheet.cell(row=12, column=2).value = '4326'
         field_sheet.cell(row=13, column=2).value = field_sheet.cell(row=7, column=2).value + row['CcopName'] + '_' + '_' + row['field_ID']
