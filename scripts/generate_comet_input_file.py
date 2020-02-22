@@ -81,7 +81,7 @@ with open(input_xml_file, 'w') as f:
             # import ipdb; ipdb.set_trace()
             f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
             f.write("<Crop CropNumber=\"1\">")
-            f.write("<CropName>" + str(crop_year['crop_scenario_name']) + "</CropName>")
+            f.write("<CropName>" + str(crop_year['Ccop_name']) + "</CropName>")
             f.write("<PlantingDate>" + str(crop_year['planting_date']).strip('\"') + "</PlantingDate>")
             f.write("<ContinueFromPreviousYear>" + str(crop_year['continue_from_previous_year']) + "</ContinueFromPreviousYear>")
             f.write("<DidYouPrune></DidYouPrune>") # todo
