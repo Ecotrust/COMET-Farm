@@ -63,7 +63,7 @@ with open(input_xml_file, 'w') as f:
     for field in processed_sheets:
 
         # todo: rename cropland something more meaningful
-        f.write("<Cropland name=\"" + processed_sheets[field]['crop_scenario_name'] + "\">")
+        f.write("<Cropland name=\"" + processed_sheets[field]['Name'] + "\">")
         f.write("<GEOM SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
         f.write("<Pre-1980>" + processed_sheets[field]['pre_80'] + "</Pre-1980>")
         # CRP always None
@@ -81,7 +81,7 @@ with open(input_xml_file, 'w') as f:
             # import ipdb; ipdb.set_trace()
             f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
             f.write("<Crop CropNumber=\"1\">")
-            f.write("<CropName>" + str(crop_year['Ccop_name']) + "</CropName>")
+            f.write("<CropName>" + str(crop_year['crop_scenario_name']) + "</CropName>")
             f.write("<PlantingDate>" + str(crop_year['planting_date']).strip('\"') + "</PlantingDate>")
             f.write("<ContinueFromPreviousYear>" + str(crop_year['continue_from_previous_year']) + "</ContinueFromPreviousYear>")
             f.write("<DidYouPrune></DidYouPrune>") # todo
@@ -138,7 +138,7 @@ with open(input_xml_file, 'w') as f:
             # start burning list
             f.write("<BurningList>")
             f.write("<BurningEvent>")
-            f.write("<DidYouBurnCropResidue>" + str(crop_year['did_you_burn_residue']) + "</DidYouBurnCropResidue>")
+            f.write("<DidYouBurnCropResidue>" + 'No' + "</DidYouBurnCropResidue>")
             f.write("</BurningEvent>")
             f.write("</BurningList>")
             # end burning list
