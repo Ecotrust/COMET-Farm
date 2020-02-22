@@ -89,21 +89,21 @@ with open(input_xml_file, 'w') as f:
             # start harvest list
             f.write("<HarvestList>") # todo should i add conditional
             f.write("<HarvestEvent>") # todo
-            f.write("<HarvestDate>10/23/2000</HarvestDate>") # todo
-            f.write("<Grain>Yes</Grain>") # todo
-            f.write("<yield>167.0</yield>") # todo
-            f.write("<StrawStoverHayRemoval>0</StrawStoverHayRemoval>") # todo
+            f.write("<HarvestDate>" + str(crop_year['harvest_date']).strip('\"') + "</HarvestDate>")
+            f.write("<Grain>" + str(crop_year['grain']) + "</Grain>")
+            f.write("<yield>" + str(crop_year['yield']) + "</yield>")
+            f.write("<StrawStoverHayRemoval>" + str(crop_year['straw_stover_hay_removal']) + "</StrawStoverHayRemoval>")
             f.write("</HarvestEvent>")
             f.write("</HarvestList>")
             # end harvest list
             # start fertilizer list
             f.write("<NApplicationList>") # todo should i add conditional
             f.write("<NApplicationEvent>")
-            f.write("<NApplicationDate>05/07/2000</NApplicationDate>") # todo
-            f.write("<NApplicationType>UAN</NApplicationType>") # todo
-            f.write("<NApplicationAmount>116.4</NApplicationAmount>") # todo
-            f.write("<NApplicationMethod>Surface Band / Sidedress</NApplicationMethod>") # todo
-            f.write("<EEP>None</EEP>") # todo
+            f.write("<NApplicationDate>" + str(crop_year['n_application_date']).strip('\"') + "</NApplicationDate>")
+            f.write("<NApplicationType>" + str(crop_year['n_application_type']) + "</NApplicationType>")
+            f.write("<NApplicationAmount>" + str(crop_year['n_application_amount']) + "</NApplicationAmount>")
+            f.write("<NApplicationMethod>" + str(crop_year['n_application_method']) + "</NApplicationMethod>")
+            f.write("<EEP>" + str(crop_year['eep']) + "</EEP>")
             f.write("</NApplicationEvent>")
             f.write("</NApplicationList>")
             # end fertilizer list
@@ -138,7 +138,7 @@ with open(input_xml_file, 'w') as f:
             # start burning list
             f.write("<BurningList>")
             f.write("<BurningEvent>")
-            f.write("<DidYouBurnCropResidue>No Burning</DidYouBurnCropResidue>") # todo
+            f.write("<DidYouBurnCropResidue>" + str(crop_year['did_you_burn_residue']) + "</DidYouBurnCropResidue>")
             f.write("</BurningEvent>")
             f.write("</BurningList>")
             # end burning list
