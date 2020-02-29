@@ -57,14 +57,14 @@ with open(input_xml_file, 'w') as f:
 
     print('Writing XML. This could take a minute...')
 
-    email_address = list(processed_sheets.items())[0][1]['Email']
-    f.write("<Day cometEmailId=\"" + email_address + "\">")
+    # email_address = list(processed_sheets.items())[0][1]['Email']
+    # TODO add ID PNAME and USERID
+    f.write("<CometFarm><Project ID=\"" + "\" PNAME=\"" + "\" USERID=\"" + "\"")
 
     for field in processed_sheets:
-
         # todo: rename cropland something more meaningful
-        f.write("<Cropland name=\"" + processed_sheets[field]['Name'] + "\">")
-        f.write("<GEOM SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
+        f.write("<Cropland>")
+        f.write("<GEOM PARCELNAME=\"" + str(processed_sheets[field]['Name']) + "\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
         f.write("<Pre-1980>" + processed_sheets[field]['pre_80'] + "</Pre-1980>")
         # CRP always None
         f.write("<CRP>None</CRP><CRPStartYear></CRPStartYear><CRPEndYear></CRPEndYear><CRPType>None</CRPType>")
