@@ -23,26 +23,49 @@ for row in range(1, processed_fields_sheet.max_row + 1):
     sheet_name = processed_fields_sheet['B' + str(row)].value
 
     scenario_sheet = wb[sheet_name]
-    scenario_values = {}
+
+    current_values = {}
+    # Current practices - years 2000 - 2019
+    current_yearly = []
+    # Scenario a practices - future years 2020 - 2029
     scenario_yearly = []
+    # Scenario b practices - future years 2020 - 2029
+    scenariob_yearly = []
+
     # loop through scenario values
     for row in range(1, scenario_sheet.max_row + 1):
         if row < 15:
             param  = scenario_sheet['A' + str(row)].value
             param_val  = scenario_sheet['B' + str(row)].value
-            scenario_values.setdefault(param, param_val)
-        elif row > 16:
+            current_values.setdefault(param, param_val)
+        elif row > 16 && row < 36:
+            current_year = {}
+            for col in range(1, scenario_sheet.max_column):
+                year_key = scenario_sheet.cell(row=15, column=col).value
+                year_value = scenario_sheet.cell(row=row, column=col).value
+                current_year.setdefault(year_key, year_value)
+            current_yearly.append(current_year)
+        elif row > 37 && row < 47:
             scenario_year = {}
             for col in range(1, scenario_sheet.max_column):
                 year_key = scenario_sheet.cell(row=15, column=col).value
                 year_value = scenario_sheet.cell(row=row, column=col).value
                 scenario_year.setdefault(year_key, year_value)
             scenario_yearly.append(scenario_year)
+        elif row > 47 && row < 58:
+            scenariob_year = {}
+            for col in range(1, scenario_sheet.max_column):
+                year_key = scenario_sheet.cell(row=15, column=col).value
+                year_value = scenario_sheet.cell(row=row, column=col).value
+                scenariob_year.setdefault(year_key, year_value)
+            scenariob_yearly.append(scenariob_year)
 
-    scenario_values.setdefault('yearly_data', scenario_yearly)
+    current_values.setdefault('yearly_data', current_yearly)
+    current_values.setdefault('yearly_scenario_data', scenario_yearly)
+    current_values.setdefault('yearly_scenariob_data', scenariob_yearly)
 
     field_number = sheet_name[6:] # assumes sheet_name is 'ready_field#', removes 'ready_'
-    processed_sheets.setdefault(field_number, scenario_values)
+    processed_sheets.setdefault(field_number, current_values)
 
 # create XML file
 timestamp = time.time()
@@ -146,7 +169,7 @@ with open(input_xml_file, 'w') as f:
             f.write("</CropYear>")
         # end crop 1
         # begin crop 2
-        # f.write("<CropYear Year=\"" + str(scenario_values['YEAR']) + "\">")
+        # f.write("<CropYear Year=\"" + str(current_values['YEAR']) + "\">")
         # f.write("<Crop CropNumber=\"2\">")
         # f.write("</Crop>")
         # f.write("</CropYear>")
