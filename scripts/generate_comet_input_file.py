@@ -38,21 +38,21 @@ for row in range(1, processed_fields_sheet.max_row + 1):
             param  = scenario_sheet['A' + str(row)].value
             param_val  = scenario_sheet['B' + str(row)].value
             current_values.setdefault(param, param_val)
-        elif row > 16 && row < 36:
+        elif row > 15 and row < 36:
             current_year = {}
             for col in range(1, scenario_sheet.max_column):
                 year_key = scenario_sheet.cell(row=15, column=col).value
                 year_value = scenario_sheet.cell(row=row, column=col).value
                 current_year.setdefault(year_key, year_value)
             current_yearly.append(current_year)
-        elif row > 37 && row < 47:
+        elif row > 36 and row < 47:
             scenario_year = {}
             for col in range(1, scenario_sheet.max_column):
                 year_key = scenario_sheet.cell(row=15, column=col).value
                 year_value = scenario_sheet.cell(row=row, column=col).value
                 scenario_year.setdefault(year_key, year_value)
             scenario_yearly.append(scenario_year)
-        elif row > 47 && row < 58:
+        elif row > 47 and row < 58:
             scenario_b_year = {}
             for col in range(1, scenario_sheet.max_column):
                 year_key = scenario_sheet.cell(row=15, column=col).value
@@ -60,7 +60,7 @@ for row in range(1, processed_fields_sheet.max_row + 1):
                 scenario_b_year.setdefault(year_key, year_value)
             scenario_b_yearly.append(scenario_b_year)
 
-    current_values.setdefault('yearly_data', current_yearly)
+    current_values.setdefault('yearly_current_data', current_yearly)
     current_values.setdefault('yearly_scenario_data', scenario_yearly)
     current_values.setdefault('yearly_scenariob_data', scenario_b_yearly)
 
@@ -82,12 +82,15 @@ with open(input_xml_file, 'w') as f:
 
     # email_address = list(processed_sheets.items())[0][1]['Email']
     # TODO add ID PNAME and USERID
-    f.write("<CometFarm><Project ID=\"" + "\" PNAME=\"" + "\" USERID=\"" + "\">")
+    # f.write("<CometFarm><Project ID=\"" + "\" PNAME=\"" + "\" USERID=\"" + "\">")
+    f.write("<CometFarm><Project ID=\"123\" PNAME=\"Test Project\" USERID=\"123\">")
 
     for field in processed_sheets:
         # todo: rename cropland something more meaningful
         f.write("<Cropland>")
-        f.write("<GEOM PARCELNAME=\"" + str(processed_sheets[field]['Name']) + "\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
+        # f.write("<GEOM PARCELNAME=\"" + str(processed_sheets[field]['Name']) + "\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
+        f.write("<GEOM PARCELNAME=\"New\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
+
         f.write("<Pre-1980>" + processed_sheets[field]['pre_80'] + "</Pre-1980>")
         # CRP always None
         f.write("<CRPStartYear>0</CRPStartYear><CRPEndYear>0</CRPEndYear><CRPType>None</CRPType>")
@@ -100,7 +103,7 @@ with open(input_xml_file, 'w') as f:
         f.write("<CropScenario Name=\"Current\">")
 
         # crop years
-        for crop_year in processed_sheets[field]['yearly_data']:
+        for crop_year in processed_sheets[field]['yearly_current_data']:
             # import ipdb; ipdb.set_trace()
             f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
             f.write("<Crop CropNumber=\"1\">")
@@ -240,11 +243,11 @@ with open(input_xml_file, 'w') as f:
         # f.write("</Crop>")
         # f.write("</CropYear>")
         # end crop 2
-        f.write("</CropScenario>")
+        # f.write("</CropScenario>")
         # end crop scenario
         f.write("</Cropland>\n")
 
-    f.write("</CometFarm>")
+    f.write("</Project></CometFarm>")
         # end daycent
 f.close()
 
