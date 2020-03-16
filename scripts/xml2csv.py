@@ -23,7 +23,7 @@ pp = pprint.PrettyPrinter(indent=4)
 
 '''
 
-# Most results contain duplicate for current year
+# Most results contain duplicate for first year
 def remove_duplicate_years(arr=[]):
     years = [dic["year"] for dic in arr]
     dup_year = ''
@@ -54,6 +54,7 @@ def mapUnitArea(arr=[]):
 def organizeByYear(data):
     main_dic = {}
     for key, value in data.items():
+        import ipdb; ipdb.set_trace()
         variable = ''
         for y in value:
             # y should contain the following keys:
@@ -85,7 +86,7 @@ def writeToCSVFile(elem, mapunit_id, area ,scenario):
         xml_tag = xml_tag.lower()
         xml_text = str(child.text)
 
-        if (xml_tag in ( 'aagdefac', 'abgdefac', 'accrst', 'accrste_1_', 'agcprd', 'aglivc', 'bgdefac', 'bglivcm', 'cgrain', 'cinput', 'crmvst', 'crootc', 'crpval', 'egracc_1_', 'eupacc_1_', 'fbrchc', 'fertac_1_', 'fertot_1_1_', 'frootcm', 'gromin_1_', 'irrtot', 'metabc_1_', 'metabc_2_', 'metabe_1_1_', 'metabe_2_1_', 'nfixac', 'omadac', 'omadae_1_', 'petann', 'rlwodc', 'somsc', 'somse_1_', 'stdedc', 'stdede_1_', 'strmac_1_', 'strmac_2_', 'strmac_6_', 'strucc_1_', 'struce_1_1_', 'struce_2_1_', 'tminrl_1_', 'tnetmn_1_', 'volpac' ) ):
+        if (xml_tag in ( 'aagdefac', 'abgdefac', 'accrst', 'accrste_1_', 'agcprd', 'aglivc', 'bgdefac', 'bglivcm', 'rain', 'cgrain', 'cinput', 'crmvst', 'crootc', 'crpval', 'egracc_1_', 'eupacc_1_', 'fbrchc', 'fertac_1_', 'fertot_1_1_', 'frootcm', 'gromin_1_', 'irrtot', 'metabc_1_', 'metabc_2_', 'metabe_1_1_', 'metabe_2_1_', 'nfixac', 'omadac', 'omadae_1_', 'petann', 'rlwodc', 'somsc', 'somse_1_', 'stdedc', 'stdede_1_', 'strmac_1_', 'strmac_2_', 'strmac_6_', 'strucc_1_', 'struce_1_1_', 'struce_2_1_', 'tminrl_1_', 'tnetmn_1_', 'volpac' ) ):
 
             values = writeEndOfYearDayCentOutput( xml_tag, xml_text, scenario, mapunit_id, area )
             for value in values:
@@ -250,7 +251,7 @@ def main():
     xml_name = sys.argv[1]
 
     start = datetime.now()
-    print("/nStarting script at " + str( time.ctime( int( time.time( ) ) ) ) + "/n")
+    print("\nStarting script at " + str( time.ctime( int( time.time( ) ) ) ) + "\n")
     print("----------------------------------------------------------------------")
 
     xml_file = open(xml_name, 'r+')
