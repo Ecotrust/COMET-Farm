@@ -39,10 +39,10 @@ def remove_duplicate_years(arr=[]):
 def calc_co2_exchange(arr=[{"output": 0, "year": ""}]):
     arr = remove_duplicate_years(arr)
     arr_len = len(arr) - 1
+    print(arr[arr_len]["output"])
     if arr_len > 0:
         area = mapUnitArea(arr)
         calc = ((float(arr[0]["output"]) - float(arr[arr_len]["output"])) / arr_len) * (float(area)) * (1/100) * (44/12)
-        print(calc)
     return
 
 def mapUnitArea(arr=[]):
@@ -54,27 +54,28 @@ def mapUnitArea(arr=[]):
 def organizeByYear(data):
     main_dic = {}
     for key, value in data.items():
-        import ipdb; ipdb.set_trace()
+        print(value)
         variable = ''
-        for y in value:
-            # y should contain the following keys:
-                # year, var, output, {var}, id, area, scenario
-            year = str(y["year"])
-            id = str(y["id"])
-            area = str(y["area"])
-            scenario = str(y["scenario"])
-            if year not in main_dic.keys():
-                main_dic[year] = {
-                    "year": year,
-                    "id": id,
-                    "area": area,
-                    "scenario": scenario,
-                }
-        for v in value:
-            year = str(v["year"])
-            variable = str(v["var"])
-            output = str(v["output"])
-            main_dic[year][variable] = output
+        if value:
+            for y in value:
+                # y should contain the following keys:
+                    # year, var, output, {var}, id, area, scenario
+                year = str(y["year"])
+                id = str(y["id"])
+                area = str(y["area"])
+                scenario = str(y["scenario"])
+                if year not in main_dic.keys():
+                    main_dic[year] = {
+                        "year": year,
+                        "id": id,
+                        "area": area,
+                        "scenario": scenario,
+                    }
+            for v in value:
+                year = str(v["year"])
+                variable = str(v["var"])
+                output = str(v["output"])
+                main_dic[year][variable] = output
     return main_dic
 
 def writeToCSVFile(elem, mapunit_id, area ,scenario):

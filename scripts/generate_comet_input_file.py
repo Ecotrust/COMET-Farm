@@ -83,10 +83,10 @@ with open(input_xml_file, 'w') as f:
     # email_address = list(processed_sheets.items())[0][1]['Email']
     # TODO add ID PNAME and USERID
     # f.write("<CometFarm><Project ID=\"" + "\" PNAME=\"" + "\" USERID=\"" + "\">")
-    f.write("<CometFarm><Project ID=\"123\" PNAME=\"Test Project\" USERID=\"123\">")
+    f.write("<CometFarm>")
+    f.write("<Project ID=\"123\" PNAME=\"Test Project\" USERID=\"123\">")
 
     for field in processed_sheets:
-        # todo: rename cropland something more meaningful
         f.write("<Cropland>")
         # f.write("<GEOM PARCELNAME=\"" + str(processed_sheets[field]['Name']) + "\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
         f.write("<GEOM PARCELNAME=\"New\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
@@ -247,8 +247,9 @@ with open(input_xml_file, 'w') as f:
         # end crop scenario
         f.write("</Cropland>\n")
 
-    f.write("</Project></CometFarm>")
-        # end daycent
+    f.write("</Project>")
+    f.write("</CometFarm>")
+
 f.close()
 
 print('XML file generated')
