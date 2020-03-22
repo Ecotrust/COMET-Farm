@@ -41,20 +41,19 @@ def calc_co2_exchange(arr=[{"output": 0, "year": ""}]):
     arr_len = len(arr) - 1
     print(arr[arr_len]["output"])
     if arr_len > 0:
-        area = mapUnitArea(arr)
+        area = map_unit_area(arr)
         calc = ((float(arr[0]["output"]) - float(arr[arr_len]["output"])) / arr_len) * (float(area)) * (1/100) * (44/12)
     return
 
-def mapUnitArea(arr=[]):
+def map_unit_area(arr=[]):
     # area should be same for each dict in list
     # so we only need the first
     return arr[0]['area']
 
 
-def organizeByYear(data):
+def organize_by_year(data):
     main_dic = {}
     for key, value in data.items():
-        print(value)
         variable = ''
         if value:
             for y in value:
@@ -78,7 +77,53 @@ def organizeByYear(data):
                 main_dic[year][variable] = output
     return main_dic
 
-def writeToCSVFile(elem, mapunit_id, area ,scenario):
+def parse_aggregate(elem, scenario):
+
+    aggregate_data = {}
+    scenario_name = scenario
+
+    for child in elem.iter():
+        xml_tag = str(child.tag)
+        xml_tag = xml_tag.lower()
+
+        if (xml_tag == 'scenario'):
+
+            if xml_tag not in aggregate_data.keys():
+                aggregate_data[xml_tag] = {}
+
+            for child_two in child:
+                child_two_tag = str(child_two.tag)
+                child_two_tag = child_two_tag.lower()
+                if child_two_tag not in aggregate_data[xml_tag].keys():
+                    aggregate_data[xml_tag][child_two_tag] = {}
+
+                # aggregate_data[xml_tag][child_tag].append(child_two)
+
+                for child_3 in child_two:
+                    child_three_tag = str(child_3.tag)
+                    child_three_tag = child_three_tag.lower()
+                    child_three_text = str(child_3.text)
+                    aggregate_data[xml_tag][child_two_tag][child_three_tag] = child_three_text
+
+    # write parsed aggregate to csv
+    csv_file_name = 'aggregate'
+    dir_name = './results/'
+
+    if not os.path.isdir(dir_name):
+        os.mkdir(dir_name)
+
+    aggregate_data_fieldnames = ['scenario', 'carbon', 'co2', 'n2o', 'ch4']
+
+    with open(dir_name + csv_file_name + '.csv', 'wt') as csvFile:
+        writer = csv.DictWriter(csvFile, fieldnames=aggregate_data_fieldnames)
+        writer.writeheader()
+
+        if aggregate_data:
+            for k,v in aggregate_data.items():
+                writer.writerow(v)
+    csvFile.close()
+
+def parse_mapunit(elem, mapunit_id, area ,scenario):
 
     model_run_data = {}
 
@@ -89,7 +134,7 @@ def writeToCSVFile(elem, mapunit_id, area ,scenario):
 
         if (xml_tag in ( 'aagdefac', 'abgdefac', 'accrst', 'accrste_1_', 'agcprd', 'aglivc', 'bgdefac', 'bglivcm', 'rain', 'cgrain', 'cinput', 'crmvst', 'crootc', 'crpval', 'egracc_1_', 'eupacc_1_', 'fbrchc', 'fertac_1_', 'fertot_1_1_', 'frootcm', 'gromin_1_', 'irrtot', 'metabc_1_', 'metabc_2_', 'metabe_1_1_', 'metabe_2_1_', 'nfixac', 'omadac', 'omadae_1_', 'petann', 'rlwodc', 'somsc', 'somse_1_', 'stdedc', 'stdede_1_', 'strmac_1_', 'strmac_2_', 'strmac_6_', 'strucc_1_', 'struce_1_1_', 'struce_2_1_', 'tminrl_1_', 'tnetmn_1_', 'volpac' ) ):
 
-            values = writeEndOfYearDayCentOutput( xml_tag, xml_text, scenario, mapunit_id, area )
+            values = write_end_of_year_daycent_output( xml_tag, xml_text, scenario, mapunit_id, area )
             for value in values:
                 if xml_tag not in model_run_data.keys():
                     model_run_data[xml_tag] = []
@@ -102,7 +147,7 @@ def writeToCSVFile(elem, mapunit_id, area ,scenario):
 
         elif( xml_tag in ('irrigated', 'inputcrop' ) ):
 
-            values = writeYearlyDayCentOutput( xml_tag, xml_text, scenario, mapunit_id, area )
+            values = write_yearly_daycent_output( xml_tag, xml_text, scenario, mapunit_id, area )
             for value in values:
                 if xml_tag not in model_run_data.keys():
                     model_run_data[xml_tag] = []
@@ -110,7 +155,7 @@ def writeToCSVFile(elem, mapunit_id, area ,scenario):
 
         elif( xml_tag in ('noflux', 'n2oflux', 'annppt') ):
 
-            values = writeYearlyDayCentOutput92( xml_tag, xml_text, scenario, mapunit_id, area )
+            values = write_yearly_daycent_output92( xml_tag, xml_text, scenario, mapunit_id, area )
             for value in values:
                 if xml_tag not in model_run_data.keys():
                     model_run_data[xml_tag] = []
@@ -137,7 +182,7 @@ def writeToCSVFile(elem, mapunit_id, area ,scenario):
         writer.writeheader()
 
         if model_run_data:
-            org_by_year = organizeByYear(model_run_data)
+            org_by_year = organize_by_year(model_run_data)
             for k,v in org_by_year.items():
                 writer.writerow(v)
     csvFile.close()
@@ -145,7 +190,7 @@ def writeToCSVFile(elem, mapunit_id, area ,scenario):
 
 # Extract yearly output data from the DayCent variable for end-of-year value
 # This function is used for API data with whole numbers representing the yearly output data
-def writeYearlyDayCentOutput( daycent_variable, arrayText, scenario, mapunit, area ):
+def write_yearly_daycent_output( daycent_variable, arrayText, scenario, mapunit, area ):
 
     if arrayText.endswith(','):
         arrayText = arrayText[:-1]
@@ -174,7 +219,7 @@ def writeYearlyDayCentOutput( daycent_variable, arrayText, scenario, mapunit, ar
 
 # Extract only the end-of-year data from the DayCent variable
 # These are pulled from the year_summary.out and similar files.
-def writeEndOfYearDayCentOutput( daycent_variable, arrayText, scenario, mapunit, area ):
+def write_end_of_year_daycent_output( daycent_variable, arrayText, scenario, mapunit, area ):
 
     if arrayText.endswith(','):
         arrayText = arrayText[:-1]
@@ -205,7 +250,7 @@ def writeEndOfYearDayCentOutput( daycent_variable, arrayText, scenario, mapunit,
 
 # Extract yearly output data from the DayCent variable for end-of-year value
 # These are pulled from the year_summary.out and similar files.
-def writeYearlyDayCentOutput92( daycent_variable, arrayText, scenario, mapunit, area ):
+def write_yearly_daycent_output92( daycent_variable, arrayText, scenario, mapunit, area ):
 
     if arrayText.endswith(','):
         arrayText = arrayText[:-1]
@@ -234,7 +279,7 @@ def writeYearlyDayCentOutput92( daycent_variable, arrayText, scenario, mapunit, 
 
 
 # Update the api_records_cropland table with the summary data produced by COMET-Farm
-def updateGUIdata(name, array_text, model_run_name, scenario):
+def update_gui_data(name, array_text, model_run_name, scenario):
 
     sql = [str(name), str(array_text), str(model_run_name), str(scenario)]
     print(sql)
@@ -344,6 +389,9 @@ def main():
                 # generate the scenario name
                 # used later for DayCent data within mapunit
                 scenario = xmlAttribName[:-15]
+            else:
+                # aggregate results
+                parse_aggregate(elem, scenario)
 
         elif( "current" in scenario.lower() ):
             continue
@@ -358,28 +406,28 @@ def main():
             carbon = root.find('.//Carbon')
 
             # write csv file for scenario per map unit
-            writeToCSVFile(elem, mapunit, area, scenario)
+            parse_mapunit(elem, mapunit, area, scenario)
 
             # give a status update for scipt user
             print("creating records for scenario = [" + str( scenario ) + "] and mapunit = [" + str( mapunit ) + "]")
 
 
         # process the GUI output data
-        # elif( xmlTag == 'SoilCarbon' ):                 updateGUIdata( "soil_carbon_co2", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'SoilCarbonStock2000' ):        updateGUIdata( "soil_carbon_stock_2000", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'SoilCarbonStockBegin' ):       updateGUIdata( "soil_carbon_stock_begin", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'SoilCarbonStockEnd' ):         updateGUIdata( "soil_carbon_stock_end", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'BiomassBurningCarbon' ):       updateGUIdata( "biomass_burning_co2", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'LimingCO2' ):                  updateGUIdata( "liming_co2", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'UreaFertilizationCO2' ):       updateGUIdata( "ureafertilization_co2", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'DrainedOrganicSoilsCO2' ):     updateGUIdata( "drainedorganicsoils_co2", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'SoilN2O' ):                    updateGUIdata( "soil_n2o", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'WetlandRiceCultivationN2O' ):  updateGUIdata( "wetlandricecultivation_n2o", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'BiomassBurningN2O' ):          updateGUIdata( "biomassburning_n2o", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'DrainedOrganicSoilsN2O' ):     updateGUIdata( "drainedorganicsoils_n2o", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'SoilCH4' ):                    updateGUIdata( "soil_ch4", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'WetlandRiceCultivationCH4' ):  updateGUIdata( "wetlandricecultivation_ch4", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'BiomassBurningCH4' ):          updateGUIdata( "biomassburning_ch4", str( xmlText ), modelRunName, scenario)
+        # elif( xmlTag == 'SoilCarbon' ):                 update_gui_data( "soil_carbon_co2", str( xmlText ), modelRunName, scenario)
+        # elif( xmlTag == 'SoilCarbonStock2000' ):        update_gui_data( "soil_carbon_stock_2000", str( xmlText ), modelRunName, scenario)
+        # elif( xmlTag == 'SoilCarbonStockBegin' ):       update_gui_data( "soil_carbon_stock_begin", str( xmlText ), modelRunName, scenario)
+        # elif( xmlTag == 'SoilCarbonStockEnd' ):         update_gui_data( "soil_carbon_stock_end", str( xmlText ), modelRunName, scenario)
+        # elif( xmlTag == 'BiomassBurningCarbon' ):       update_gui_data( "biomass_burning_co2", str( xmlText ), modelRunName, scenario)
+        # elif( xmlTag == 'LimingCO2' ):                  update_gui_data( "liming_co2", str( xmlText ), modelRunName, scenario)
+        # elif( xmlTag == 'UreaFertilizationCO2' ):       update_gui_data( "ureafertilization_co2", str( xmlText ), modelRunName, scenario)
+        # elif( xmlTag == 'DrainedOrganicSoilsCO2' ):     update_gui_data( "drainedorganicsoils_co2", str( xmlText ), modelRunName, scenario)
+        # elif( xmlTag == 'SoilN2O' ):                    update_gui_data( "soil_n2o", str( xmlText ), modelRunName, scenario)
+        # elif( xmlTag == 'WetlandRiceCultivationN2O' ):  update_gui_data( "wetlandricecultivation_n2o", str( xmlText ), modelRunName, scenario)
+        # elif( xmlTag == 'BiomassBurningN2O' ):          update_gui_data( "biomassburning_n2o", str( xmlText ), modelRunName, scenario)
+        # elif( xmlTag == 'DrainedOrganicSoilsN2O' ):     update_gui_data( "drainedorganicsoils_n2o", str( xmlText ), modelRunName, scenario)
+        # elif( xmlTag == 'SoilCH4' ):                    update_gui_data( "soil_ch4", str( xmlText ), modelRunName, scenario)
+        # elif( xmlTag == 'WetlandRiceCultivationCH4' ):  update_gui_data( "wetlandricecultivation_ch4", str( xmlText ), modelRunName, scenario)
+        # elif( xmlTag == 'BiomassBurningCH4' ):          update_gui_data( "biomassburning_ch4", str( xmlText ), modelRunName, scenario)
 
         else:
             continue
