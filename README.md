@@ -85,6 +85,7 @@ results/
   16564/
     baseline.csv
     notill.csv
+  Results_***.aggregate.csv
 ```
 
 How to use model run XML:  

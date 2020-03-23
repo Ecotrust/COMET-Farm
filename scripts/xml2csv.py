@@ -96,7 +96,7 @@ def parse_aggregate(elem, scenario):
 
 def write_aggregate_csv(all_agg, xml_name):
     # write parsed aggregate to csv
-    csv_file_name = xml_name + 'aggregate'
+    csv_file_name = xml_name + '.aggregate'
     dir_name = './results/'
 
     if not os.path.isdir(dir_name):
