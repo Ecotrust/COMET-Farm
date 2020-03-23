@@ -97,4 +97,8 @@ with open(gis_dir) as csv_file:
                     #field_sheet.cell(row=rowNum, column=2).value = till_80_val
 
 wb.save('combined_data.xlsx')
-print("combined_data.xlsx created\n\n")
+
+print("Successfully merged GIS and Excel template.\n")
+print("Creating XML...\n")
+
+os.system("python3 ./scripts/generate_comet_input_file.py combined_data.xlsx")
