@@ -80,47 +80,44 @@ def organize_by_year(data):
 def parse_aggregate(elem, scenario):
 
     aggregate_data = {}
-    scenario_name = scenario
+    scenario_name = scenario.lower()
 
     for child in elem.iter():
         xml_tag = str(child.tag)
         xml_tag = xml_tag.lower()
+        xml_text = str(child.text)
 
         if (xml_tag == 'scenario'):
+            aggregate_data['scenario'] = scenario_name
+        else:
+            aggregate_data[xml_tag] = xml_text
 
-            if xml_tag not in aggregate_data.keys():
-                aggregate_data[xml_tag] = {}
+    return aggregate_data
 
-            for child_two in child:
-                child_two_tag = str(child_two.tag)
-                child_two_tag = child_two_tag.lower()
-                if child_two_tag not in aggregate_data[xml_tag].keys():
-                    aggregate_data[xml_tag][child_two_tag] = {}
-
-                # aggregate_data[xml_tag][child_tag].append(child_two)
-
-                for child_3 in child_two:
-                    child_three_tag = str(child_3.tag)
-                    child_three_tag = child_three_tag.lower()
-                    child_three_text = str(child_3.text)
-                    aggregate_data[xml_tag][child_two_tag][child_three_tag] = child_three_text
-
+def write_aggregate_csv(all_agg, xml_name):
     # write parsed aggregate to csv
-    csv_file_name = 'aggregate'
+    csv_file_name = xml_name + 'aggregate'
     dir_name = './results/'
 
     if not os.path.isdir(dir_name):
         os.mkdir(dir_name)
 
-    aggregate_data_fieldnames = ['scenario', 'carbon', 'co2', 'n2o', 'ch4']
+    aggregate_data_fieldnames = []
 
+    for r in all_agg:
+
+        for k,v in r.items():
+
+            if k not in aggregate_data_fieldnames:
+                aggregate_data_fieldnames.append(k)
+
+        print(r)
     with open(dir_name + csv_file_name + '.csv', 'wt') as csvFile:
         writer = csv.DictWriter(csvFile, fieldnames=aggregate_data_fieldnames)
         writer.writeheader()
+        for r in all_agg:
+            writer.writerow(r)
 
-        if aggregate_data:
-            for k,v in aggregate_data.items():
-                writer.writerow(v)
     csvFile.close()
 
 def parse_mapunit(elem, mapunit_id, area ,scenario):
@@ -300,6 +297,7 @@ def main():
     print("\nStarting script at " + str( time.ctime( int( time.time( ) ) ) ) + "\n")
     print("----------------------------------------------------------------------")
 
+    parsed_agg = []
     xml_file = open(xml_name, 'r+')
 
     # XML Parse
@@ -391,7 +389,8 @@ def main():
                 scenario = xmlAttribName[:-15]
             else:
                 # aggregate results
-                parse_aggregate(elem, scenario)
+                scenario_parsed = parse_aggregate(elem, scenario)
+                parsed_agg.append(scenario_parsed)
 
         elif( "current" in scenario.lower() ):
             continue
@@ -431,6 +430,8 @@ def main():
 
         else:
             continue
+
+    write_aggregate_csv(parsed_agg, xml_name)
 
     # close the XML input file
     xml_file.close()
