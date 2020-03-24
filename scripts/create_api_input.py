@@ -7,7 +7,7 @@ from openpyxl import load_workbook
 
 # check if argument for workbook has been given
 if len(sys.argv) < 2:
-    print("\npython3 script create_api_input.py <GIS data location> <spreadsheet location>\n")
+    print("\npython3 ./script/create_api_input.py <GIS data location> <spreadsheet location>\n")
     print("Command-line arguments are as follows:\n")
     print("  <GIS data location> system location of comma separated data from GIS\n")
     print("    eg /usr/local/name/comet/data.csv\n")
@@ -101,4 +101,7 @@ wb.save('combined_data.xlsx')
 print("Successfully merged GIS and Excel template.\n")
 print("Creating XML...\n")
 
-os.system("python3 ./scripts/generate_comet_input_file.py combined_data.xlsx")
+if sys.platform.startswith('darwin') or sys.platform.startswith('linux'):
+    os.system("python3 ./scripts/generate_comet_input_file.py combined_data.xlsx")
+elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
+    os.system("py -3 ./scripts/generate_comet_input_file.py combined_data.xlsx")
