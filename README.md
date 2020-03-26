@@ -44,11 +44,11 @@ COMET-Farm API scripts &mdot; use an Excel template and GIS data export to creat
   ```
 
 
-## Generate Input XML
+## Generate API input XML file
 
-A quick introduction of the minimal setup you need to get a hello world up &
-running.
+How to generate a COMET-Farm API input XML file
 
+You will need a GIS CSV data file and have completed the template_v2.xlsx
 Combine GIS CSV data and .xlsx template file into xls:
 
   - <GIS data location> = system location of comma separated data from GIS
@@ -57,7 +57,7 @@ Combine GIS CSV data and .xlsx template file into xls:
     - *e.g.*, `/usr/local/name/comet/data.xml`
 
 ```shell
-python3 script combine_data.py <GIS data location> <spreadsheet location>
+python3 script create_api_input.py <GIS data location> <spreadsheet location>
 ```
 
 Generate XML file from CSV of GIS data and .xlsx file:
