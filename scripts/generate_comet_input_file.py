@@ -72,8 +72,8 @@ for row in range(1, processed_fields_sheet.max_row + 1):
         current_values.setdefault('yearly_scenariob_data', '')
 
     # set scenario names
-    current_values.setdefault('scenario_a_name', 'scenario_a_name')
-    current_values.setdefault('scenario_b_name', 'scenario_b_name')
+    current_values.setdefault('scenario_a_name', scenario_a_name)
+    current_values.setdefault('scenario_b_name', scenario_b_name)
 
     field_number = sheet_name[6:] # assumes sheet_name is 'ready_field#', removes 'ready_'
     processed_sheets.setdefault(field_number, current_values)
