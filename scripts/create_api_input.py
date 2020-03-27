@@ -1,6 +1,5 @@
 # import system modules
 import os, sys, csv
-import ipdb
 
 # import functions for extracting data from excel
 from openpyxl import load_workbook
@@ -33,7 +32,6 @@ with open(gis_dir) as csv_file:
     gis_values = csv_dict
 
     # for row in gis_values:
-        # ipdb.set_trace()
         # print(dict(row))
         # param  = scenario_sheet['A' + str(row)].value
         # param_val  = scenario_sheet['B' + str(row)].value

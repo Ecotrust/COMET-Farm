@@ -1,5 +1,5 @@
 # import system modules
-import os, sys, pprint, time
+import os, sys, time
 
 # import functions for extracting data from excel
 from openpyxl import load_workbook
@@ -34,7 +34,7 @@ for row in range(1, processed_fields_sheet.max_row + 1):
 
     # loop through scenario values
     for row in range(1, scenario_sheet.max_row + 1):
-        if row < 15:
+        if row < 14:
             param  = scenario_sheet['A' + str(row)].value
             param_val  = scenario_sheet['B' + str(row)].value
             current_values.setdefault(param, param_val)
@@ -54,7 +54,7 @@ for row in range(1, processed_fields_sheet.max_row + 1):
             scenario_yearly.append(scenario_year)
         elif row > 50 and row < 63:
             scenario_b_year = {}
-            for col in range(2, scenario_sheet.max_column):
+            for col in range(1, scenario_sheet.max_column):
                 year_key = scenario_sheet.cell(row=52, column=col).value
                 year_value = scenario_sheet.cell(row=row, column=col).value
                 scenario_b_year.setdefault(year_key, year_value)
@@ -63,11 +63,17 @@ for row in range(1, processed_fields_sheet.max_row + 1):
     current_values.setdefault('yearly_current_data', current_yearly)
     current_values.setdefault('yearly_scenario_data', scenario_yearly)
 
+    scenario_a_name  = scenario_sheet['B38'].value
+
     scenario_b_name  = scenario_sheet['B51'].value
     if scenario_b_name:
         current_values.setdefault('yearly_scenariob_data', scenario_b_yearly)
     else:
         current_values.setdefault('yearly_scenariob_data', '')
+
+    # set scenario names
+    current_values.setdefault('scenario_a_name', 'scenario_a_name')
+    current_values.setdefault('scenario_b_name', 'scenario_b_name')
 
     field_number = sheet_name[6:] # assumes sheet_name is 'ready_field#', removes 'ready_'
     processed_sheets.setdefault(field_number, current_values)
@@ -104,6 +110,7 @@ with open(input_xml_file, 'w') as f:
         # 1980 - 2000
         f.write("<Year1980-2000>" + processed_sheets[field]['yr80_2000'] + "</Year1980-2000>")
         f.write("<Year1980-2000_Tillage>" + processed_sheets[field]['till80_200'] + "</Year1980-2000_Tillage>")
+
         # start crop scenario
         f.write("<CropScenario Name=\"Current\">")
 
@@ -175,7 +182,7 @@ with open(input_xml_file, 'w') as f:
 
         f.write("</CropScenario>")
 
-        f.write("<CropScenario Name=\"" + processed_sheets[field]['Future_Scenario_A'] + "\">")
+        f.write("<CropScenario Name=\"" + processed_sheets[field]['scenario_a_name'] + "\">")
 
         for crop_year in processed_sheets[field]['yearly_scenario_data']:
             f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
@@ -242,9 +249,9 @@ with open(input_xml_file, 'w') as f:
             f.write("</CropYear>")
         f.write("</CropScenario>")
 
-        if len(processed_sheets[field]['yearly_scenario_data']) > 1:
+        if len(processed_sheets[field]['yearly_scenariob_data']) > 1:
 
-            f.write("<CropScenario Name=\"" + processed_sheets[field]['Future_Scenario_B'] + "\">")
+            f.write("<CropScenario Name=\"" + processed_sheets[field]['scenario_b_name'] + "\">")
 
             for crop_year in processed_sheets[field]['yearly_scenario_data']:
                 f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
