@@ -38,31 +38,36 @@ for row in range(1, processed_fields_sheet.max_row + 1):
             param  = scenario_sheet['A' + str(row)].value
             param_val  = scenario_sheet['B' + str(row)].value
             current_values.setdefault(param, param_val)
-        elif row > 15 and row < 36:
+        elif row > 15 and row < 37:
             current_year = {}
             for col in range(1, scenario_sheet.max_column):
-                year_key = scenario_sheet.cell(row=15, column=col).value
+                year_key = scenario_sheet.cell(row=16, column=col).value
                 year_value = scenario_sheet.cell(row=row, column=col).value
                 current_year.setdefault(year_key, year_value)
             current_yearly.append(current_year)
-        elif row > 36 and row < 47:
+        elif row > 37 and row < 50:
             scenario_year = {}
             for col in range(1, scenario_sheet.max_column):
-                year_key = scenario_sheet.cell(row=15, column=col).value
+                year_key = scenario_sheet.cell(row=39, column=col).value
                 year_value = scenario_sheet.cell(row=row, column=col).value
                 scenario_year.setdefault(year_key, year_value)
             scenario_yearly.append(scenario_year)
-        elif row > 47 and row < 58:
+        elif row > 50 and row < 63:
             scenario_b_year = {}
-            for col in range(1, scenario_sheet.max_column):
-                year_key = scenario_sheet.cell(row=15, column=col).value
+            for col in range(2, scenario_sheet.max_column):
+                year_key = scenario_sheet.cell(row=52, column=col).value
                 year_value = scenario_sheet.cell(row=row, column=col).value
                 scenario_b_year.setdefault(year_key, year_value)
             scenario_b_yearly.append(scenario_b_year)
 
     current_values.setdefault('yearly_current_data', current_yearly)
     current_values.setdefault('yearly_scenario_data', scenario_yearly)
-    current_values.setdefault('yearly_scenariob_data', scenario_b_yearly)
+
+    scenario_b_name  = scenario_sheet['B51'].value
+    if scenario_b_name:
+        current_values.setdefault('yearly_scenariob_data', scenario_b_yearly)
+    else:
+        current_values.setdefault('yearly_scenariob_data', '')
 
     field_number = sheet_name[6:] # assumes sheet_name is 'ready_field#', removes 'ready_'
     processed_sheets.setdefault(field_number, current_values)
@@ -170,7 +175,7 @@ with open(input_xml_file, 'w') as f:
 
         f.write("</CropScenario>")
 
-        f.write("<CropScenario Name=\"" + processed_sheets[field]['crop_scenario_name'] + "\">")
+        f.write("<CropScenario Name=\"" + processed_sheets[field]['Future_Scenario_A'] + "\">")
 
         for crop_year in processed_sheets[field]['yearly_scenario_data']:
             f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
@@ -235,6 +240,75 @@ with open(input_xml_file, 'w') as f:
             # end burning list
             f.write("</Crop>")
             f.write("</CropYear>")
+        f.write("</CropScenario>")
+
+        if len(processed_sheets[field]['yearly_scenario_data']) > 1:
+
+            f.write("<CropScenario Name=\"" + processed_sheets[field]['Future_Scenario_B'] + "\">")
+
+            for crop_year in processed_sheets[field]['yearly_scenario_data']:
+                f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
+                f.write("<Crop CropNumber=\"1\">")
+                f.write("<CropName>" + str(crop_year['Ccop_name']) + "</CropName>")
+                f.write("<CropType>CROPS</CropType>")
+                f.write("<PlantingDate>" + str(crop_year['planting_date']).strip('\"') + "</PlantingDate>")
+                f.write("<ContinueFromPreviousYear>" + str(crop_year['continue_from_previous_year']) + "</ContinueFromPreviousYear>")
+                # f.write("<DidYouPrune></DidYouPrune>") # todo
+                # f.write("<RenewOrClearYourOrchard></RenewOrClearYourOrchard>") # todo
+                # start harvest list
+                f.write("<HarvestList>") # todo should i add conditional
+                f.write("<HarvestEvent>") # todo
+                f.write("<HarvestDate>" + str(crop_year['harvest_date']).strip('\"') + "</HarvestDate>")
+                f.write("<Grain>" + str(crop_year['grain']) + "</Grain>")
+                f.write("<yield>" + str(crop_year['yield']) + "</yield>")
+                f.write("<StrawStoverHayRemoval>" + str(crop_year['straw_stover_hay_removal']) + "</StrawStoverHayRemoval>")
+                f.write("</HarvestEvent>")
+                f.write("</HarvestList>")
+                # end harvest list
+                f.write("<GrazingList />")
+                f.write("<TillageList>")
+                f.write("<TillageEvent>")
+                f.write("<TillageType>" + str(crop_year['tillage_type']) + "</TillageType>")
+                f.write("<TillageDate>" + str(crop_year['tillage_date']).strip('\"') + "</TillageDate>")
+                f.write("</TillageEvent>")
+                f.write("</TillageList>")
+                # start fertilizer list
+                f.write("<NApplicationList>") # todo should i add conditional
+                f.write("<NApplicationEvent>")
+                f.write("<NApplicationType>" + str(crop_year['n_application_type']) + "</NApplicationType>")
+                f.write("<NApplicationMethod>" + str(crop_year['n_application_method']) + "</NApplicationMethod>")
+                f.write("<NApplicationDate>" + str(crop_year['n_application_date']).strip('\"') + "</NApplicationDate>")
+                f.write("<NApplicationAmount>" + str(crop_year['n_application_amount']) + "</NApplicationAmount>")
+                f.write("<PApplicationAmount>" + "0" + "</PApplicationAmount>")
+                f.write("<EEP>" + str(crop_year['eep']) + "</EEP>")
+                f.write("</NApplicationEvent>")
+                f.write("</NApplicationList>")
+                # end fertilizer list
+                # start omad application list
+                f.write("<OMADApplicationList />")
+                # end omad list
+                # start irrigation list
+                f.write("<IrrigationList />")
+                # end irrigation list
+                # start liming list
+                f.write("<LimingList>")
+                f.write("<LimingApplicationEvent>")
+                f.write("<LimingApplicationDate></LimingApplicationDate>")
+                f.write("<LimingMaterial></LimingMaterial>")
+                f.write("<LimingApplicationAmount></LimingApplicationAmount>")
+                f.write("</LimingApplicationEvent>")
+                f.write("</LimingList>")
+                # end liming list
+                # start burning list
+                # f.write("<BurningEvent>")
+                # f.write("<DidYouBurnCropResidue>" + 'No' + "</DidYouBurnCropResidue>")
+                # f.write("</BurningEvent>")
+                f.write("<BurnEvent>")
+                f.write("<BurnTime>No burning</BurnTime>")
+                f.write("</BurnEvent>")
+                # end burning list
+                f.write("</Crop>")
+                f.write("</CropYear>")
 
         f.write("</CropScenario>")
         # begin crop 2

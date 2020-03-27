@@ -57,7 +57,7 @@ Combine GIS CSV data and .xlsx template file into xls:
     - *e.g.*, `/usr/local/name/comet/data.xml`
 
 ```shell
-python3 script create_api_input.py <GIS data location> <spreadsheet location>
+python3 create_api_input.py <GIS data location> <spreadsheet location>
 ```
 
 Generate XML file from CSV of GIS data and .xlsx file:
