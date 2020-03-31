@@ -38,21 +38,21 @@ for row in range(1, processed_fields_sheet.max_row + 1):
             param  = scenario_sheet['A' + str(row)].value
             param_val  = scenario_sheet['B' + str(row)].value
             current_values.setdefault(param, param_val)
-        elif row > 15 and row < 37:
+        elif row > 16 and row < 37:
             current_year = {}
-            for col in range(1, scenario_sheet.max_column):
+            for col in range(2, scenario_sheet.max_column):
                 year_key = scenario_sheet.cell(row=16, column=col).value
                 year_value = scenario_sheet.cell(row=row, column=col).value
                 current_year.setdefault(year_key, year_value)
             current_yearly.append(current_year)
-        elif row > 37 and row < 50:
+        elif row > 39 and row < 50:
             scenario_year = {}
-            for col in range(1, scenario_sheet.max_column):
+            for col in range(2, scenario_sheet.max_column):
                 year_key = scenario_sheet.cell(row=39, column=col).value
                 year_value = scenario_sheet.cell(row=row, column=col).value
                 scenario_year.setdefault(year_key, year_value)
             scenario_yearly.append(scenario_year)
-        elif row > 50 and row < 63:
+        elif row > 52 and row < 63:
             scenario_b_year = {}
             for col in range(1, scenario_sheet.max_column):
                 year_key = scenario_sheet.cell(row=52, column=col).value
