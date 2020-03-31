@@ -247,6 +247,7 @@ with open(input_xml_file, 'w') as f:
             # end burning list
             f.write("</Crop>")
             f.write("</CropYear>")
+
         f.write("</CropScenario>")
 
         if len(processed_sheets[field]['yearly_scenariob_data']) > 1:
@@ -317,7 +318,8 @@ with open(input_xml_file, 'w') as f:
                 f.write("</Crop>")
                 f.write("</CropYear>")
 
-        f.write("</CropScenario>")
+            f.write("</CropScenario>")
+
         # begin crop 2
         # f.write("<CropYear Year=\"" + str(current_values['YEAR']) + "\">")
         # f.write("<Crop CropNumber=\"2\">")
