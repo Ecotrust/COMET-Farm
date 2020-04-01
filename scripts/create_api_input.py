@@ -38,12 +38,11 @@ with open(gis_dir) as csv_file:
         # scenario_values.setdefault(param, param_val)
 
     # add gis data to spreadsheet
+        # field_ID,CRP,CRPType,GEOM,SRID,AREA,pre_80,yr80_2000,CRP_NUM,CcopName,planting_date,harvest_date,grain,till_date,n_app_date
     for row in gis_values:
         field_sheet = wb.copy_worksheet(scenario_sheet)
         field_sheet.title = 'ready_' + row['field_ID']
         processed_sheet.append(["name", field_sheet.title])
-        # for rowNum in range(1, field_sheet.max_row):
-
 
         # field_sheet.cell(row=8, column=2).value = row['CRP_NUM'] #dc added 1/16/20
         field_sheet.cell(row=9, column=2).value = row['field_ID']
@@ -52,20 +51,14 @@ with open(gis_dir) as csv_file:
         field_sheet.cell(row=12, column=2).value = '4326'
         field_sheet.cell(row=13, column=2).value = field_sheet.cell(row=7, column=2).value + row['CcopName'] + '_' + '_' + row['field_ID']
 
-                # rowName = rowName.lower()
-                # if rowName == 'id':
-                    # field_sheet.cell(row=rowNum, column=2).value = row['field_ID']
-                # if rowName == 'geom':
-                #     field_sheet.cell(row=rowNum, column=2).value = 'Polygon' + row['GEOM'] #Dropped parens to eliminate double parens
-                # if rowName == 'area':
-                #     field_sheet.cell(row=rowNum, column=2).value = row['AREA'] #changed 'acres' to 'AREA'
-                # if rowName == 'srid':
-                #     field_sheet.cell(row=rowNum, column=2).value = '4326'
-                # if rowName == 'crop_scenario_name':
-                    # field_sheet.cell(row=rowNum, column=2).value = row['CcopName'] + '_' + field_sheet.cell(row=rowNum, column=2).value + '_' + row['field_ID']
-                    #Original: field_sheet.cell(row=rowNum, column=2).value = 'Todo_polygon_id' + row['field_ID'] + 'Todo_scenario_id'  Old Version
-                # if rowName == 'ccop_name':
-                #     field_sheet.cell(row=rowNum, column=2).value = row['CcopName'] #CcopName
+        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=3,min_row=40,max_row=46):
+            for cell in crop_cell:
+                cell.value = row['CRP']
+
+        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=3,min_row=53,max_row=62):
+            for cell in crop_cell:
+                cell.value = row['CRP']
+
                 # if rowName == 'crop_number':
                 #     field_sheet.cell(row=rowNum, column=2).value = row['CRP_NUM'] #dc added 1/16/20
                 # if rowName == 'planting_date':
