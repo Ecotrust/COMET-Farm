@@ -52,7 +52,7 @@ with open(gis_dir) as csv_file:
         field_sheet.cell(row=12, column=2).value = row['SRID']
         field_sheet.cell(row=13, column=2).value = field_sheet.cell(row=7, column=2).value + row['CcopName'] + '_' + '_' + row['field_ID']
 
-        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=6,min_row=17,max_row=36):
+        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=17,min_row=17,max_row=36):
             for cell in crop_cell:
                 if cell.column == 3:
                     cell.value = row['CRP']
@@ -80,8 +80,6 @@ with open(gis_dir) as csv_file:
                         cell.value = 'TRUE'
                     else:
                         cell.value = 'FALSE'
-
-
 
 
         for crop_cell in field_sheet.iter_cols(min_col=3,max_col=3,min_row=40,max_row=49):
