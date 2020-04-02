@@ -79,11 +79,11 @@ COMET-Farm API scripts &mdot; use an Excel template and GIS data export to creat
     python3 create_api_input.py <GIS data location> <spreadsheet location>
   ```
 
-    * `<GIS data location>` = system location of comma separated data from GIS
-      * *e.g.*, `/usr/local/name/comet/data.csv`
+  * `<GIS data location>` = system location of comma separated data from GIS
+    * *e.g.*, `/usr/local/name/comet/data.csv`
 
-    * `<spreadsheet locatiion>` = system location of spreadsheet to add GIS data
-      * *e.g.*, `/usr/local/name/comet/data.xml`
+  * `<spreadsheet locatiion>` = system location of spreadsheet to add GIS data
+    * *e.g.*, `/usr/local/name/comet/data.xml`
 
 ## Generate CSV from COMET-Farm API Output
 
