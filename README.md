@@ -32,9 +32,10 @@ COMET-Farm API scripts &mdot; use an Excel template and GIS data export to creat
   ```shell
   python3
   ```
-    This should active a python interpreter, otherwise you need to install python3.
+  
+  This should active a python interpreter, otherwise you need to install python3.
 
-    Download at https://www.python.org/downloads/
+  Download at https://www.python.org/downloads/
 
 2. pip3 should come installed with Python 3, but run the following to get the latest version
   ```shell
