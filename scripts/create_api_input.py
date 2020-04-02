@@ -52,9 +52,37 @@ with open(gis_dir) as csv_file:
         field_sheet.cell(row=12, column=2).value = row['SRID']
         field_sheet.cell(row=13, column=2).value = field_sheet.cell(row=7, column=2).value + row['CcopName'] + '_' + '_' + row['field_ID']
 
-        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=3,min_row=17,max_row=36):
+        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=6,min_row=17,max_row=36):
             for cell in crop_cell:
-                cell.value = row['CRP']
+                if cell.column == 3:
+                    cell.value = row['CRP']
+                elif cell.column == 4 or cell.column == 6 or cell.column == 11 or cell.column == 13:
+                    # get year from template spreadsheet
+                    yyyy = cell.value[-5:-1]
+                    # get month and day from GIS data
+                    if cell.column == 4:
+                        month_day = row['planting_date']
+                    elif cell.column == 5:
+                        month_day = row['harvest_date']
+                    elif cell.column == 11:
+                        month_day = row['till_date']
+                    elif cell.column == 13:
+                        month_day = row['n_app_date']
+                    # combine and format
+                    mmddyyyy = month_day + yyyy
+                    mmddyyyy = datetime.strptime(mmddyyyy, '%B %d%Y')
+                    cfarm_format_date = mmddyyyy.strftime('%m/%d/%Y')
+                    # add formated date to template spreadsheet
+                    cell.value = cfarm_format_date
+                elif cell.column == 8:
+                    row_lowercase = row['grain'].lower()
+                    if row_lowercase == 'yes' or row_lowercase == 'true':
+                        cell.value = 'TRUE'
+                    else:
+                        cell.value = 'FALSE'
+
+
+
 
         for crop_cell in field_sheet.iter_cols(min_col=3,max_col=3,min_row=40,max_row=49):
             for cell in crop_cell:
@@ -64,18 +92,6 @@ with open(gis_dir) as csv_file:
             for cell in crop_cell:
                 cell.value = row['CRP']
 
-        for plant_date in field_sheet.iter_cols(min_col=4,max_col=4,min_row=17,max_row=36):
-            for cell in plant_date:
-                # get year from template spreadsheet
-                yyyy = cell.value[-5:-1]
-                # get month and day from GIS data
-                month_day = row['planting_date']
-                # combine and format
-                mmddyyyy = month_day + yyyy
-                mmddyyyy = datetime.strptime(mmddyyyy, '%B %d%Y')
-                cfarm_format_date = mmddyyyy.strftime('%m/%d/%Y')
-                # add formated date to template spreadsheet
-                cell.value = cfarm_format_date
 
                 # if rowName == 'crop_number':
                 #     field_sheet.cell(row=rowNum, column=2).value = row['CRP_NUM'] #dc added 1/16/20
