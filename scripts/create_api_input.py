@@ -1,5 +1,6 @@
 # import system modules
-import os, sys, csv
+import os, sys, csv, datetime
+from datetime import datetime
 
 # import functions for extracting data from excel
 from openpyxl import load_workbook
@@ -48,16 +49,33 @@ with open(gis_dir) as csv_file:
         field_sheet.cell(row=9, column=2).value = row['field_ID']
         field_sheet.cell(row=10, column=2).value = 'POLYGON (' + row['GEOM'] + ')'
         field_sheet.cell(row=11, column=2).value = row['AREA']
-        field_sheet.cell(row=12, column=2).value = '4326'
+        field_sheet.cell(row=12, column=2).value = row['SRID']
         field_sheet.cell(row=13, column=2).value = field_sheet.cell(row=7, column=2).value + row['CcopName'] + '_' + '_' + row['field_ID']
 
-        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=3,min_row=40,max_row=46):
+        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=3,min_row=17,max_row=36):
+            for cell in crop_cell:
+                cell.value = row['CRP']
+
+        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=3,min_row=40,max_row=49):
             for cell in crop_cell:
                 cell.value = row['CRP']
 
         for crop_cell in field_sheet.iter_cols(min_col=3,max_col=3,min_row=53,max_row=62):
             for cell in crop_cell:
                 cell.value = row['CRP']
+
+        for plant_date in field_sheet.iter_cols(min_col=4,max_col=4,min_row=17,max_row=36):
+            for cell in plant_date:
+                # get year from template spreadsheet
+                yyyy = cell.value[-5:-1]
+                # get month and day from GIS data
+                month_day = row['planting_date']
+                # combine and format
+                mmddyyyy = month_day + yyyy
+                mmddyyyy = datetime.strptime(mmddyyyy, '%B %d%Y')
+                cfarm_format_date = mmddyyyy.strftime('%m/%d/%Y')
+                # add formated date to template spreadsheet
+                cell.value = cfarm_format_date
 
                 # if rowName == 'crop_number':
                 #     field_sheet.cell(row=rowNum, column=2).value = row['CRP_NUM'] #dc added 1/16/20
