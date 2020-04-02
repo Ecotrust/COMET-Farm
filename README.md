@@ -53,37 +53,37 @@ COMET-Farm API scripts &mdot; use an Excel template and GIS data export to creat
 
 ### How to generate a COMET-Farm API input XML file:  
 
-  1. Open template_v2 Excel spreadsheet
+1. Open template_v2 Excel spreadsheet
 
-  2. Save a copy of template_v2 for each field you have a scenario for
+2. Save a copy of template_v2 for each field you have a scenario for
 
-    * Save the file using whatever naming convention make sense to you
+  * Save the file using whatever naming convention make sense to you
 
-  3. Add scenario data to each field's spreadsheet
+3. Add scenario data to each field's spreadsheet
 
-    * Input information in column B for rows 2 - 4
+  * Input information in column B for rows 2 - 4
 
-    * Current field practices go in row 17 - 36 columns B - Q
+  * Current field practices go in row 17 - 36 columns B - Q
 
-    * In column B row 38 name your scenario, then add data in rows 40 - 48 columns B - Q
+  * In column B row 38 name your scenario, then add data in rows 40 - 48 columns B - Q
 
-    * If you have a second scenario for the field name it in B51 and fill out rows 53 - 62 columns B - Q
+  * If you have a second scenario for the field name it in B51 and fill out rows 53 - 62 columns B - Q
 
-    * Save the file
+  * Save the file
 
-  4. Export field data from GIS software in a comma separated format (CSV or TXT)
+4. Export field data from GIS software in a comma separated format (CSV or TXT)
 
-  5. Combine GIS CSV data and .xlsx template file into XML:
+5. Combine GIS CSV data and .xlsx template file into XML:
 
-    ```shell
-      python3 create_api_input.py <GIS data location> <spreadsheet location>
-    ```
+  ```shell
+    python3 create_api_input.py <GIS data location> <spreadsheet location>
+  ```
 
-      * `<GIS data location>` = system location of comma separated data from GIS
-        * *e.g.*, `/usr/local/name/comet/data.csv`
+    * `<GIS data location>` = system location of comma separated data from GIS
+      * *e.g.*, `/usr/local/name/comet/data.csv`
 
-      * `<spreadsheet locatiion>` = system location of spreadsheet to add GIS data
-        * *e.g.*, `/usr/local/name/comet/data.xml`
+    * `<spreadsheet locatiion>` = system location of spreadsheet to add GIS data
+      * *e.g.*, `/usr/local/name/comet/data.xml`
 
 ## Generate CSV from COMET-Farm API Output
 
