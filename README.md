@@ -32,7 +32,7 @@ COMET-Farm API scripts &mdot; use an Excel template and GIS data export to creat
   ```shell
   python3
   ```
-  
+
   This should active a python interpreter, otherwise you need to install python3.
 
   Download at https://www.python.org/downloads/
@@ -85,6 +85,18 @@ COMET-Farm API scripts &mdot; use an Excel template and GIS data export to creat
 
   * `<spreadsheet locatiion>` = system location of spreadsheet to add GIS data
     * *e.g.*, `/usr/local/name/comet/data.xml`
+
+  * This script creates a new spreadsheet called combined_data.xls using the template_v*.xls scenario tab as a template
+
+  * A new scenario tab is created in combined_data for each field_ID given in the GIS data CSV. The tab is named ready_<field_ID>
+
+  * Once created the script executes generate_comet_input_file.py (formerly this step was done manually)
+
+  * An XML file is created with a <cropland> scenario for each ready_* tab of combined_data.
+
+  **The script makes assumptions and depends upon certain locations for cells of the template_v*. Any change to template layout, be sure to update both create_api_input.py and generate_comet_input_file.py**
+
+\* use latest version
 
 ## Generate CSV from COMET-Farm API Output
 
