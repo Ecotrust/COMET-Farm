@@ -117,4 +117,18 @@ Sensitiviy analysis will be run through command line and excel. This eliminates 
 </details>  
 
 
+<details>
+  <summary>Challenges</summary>
+
+  - not many oregon crops on comet farm
+  - only top crop in oregon is winter wheat
+    - barley
+    - corn
+    - potatoes
+
+  - Corn will be possible through mike's data as veg and silage.
+  - Approximate grass seed would help a lot for Dwayne
+  - Approximate for hay
+  - Solution will not be a fully automated process
+</details>
 
