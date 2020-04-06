@@ -3,23 +3,75 @@ from datetime import datetime
 import os, sys, csv, time, string
 import xml.etree.ElementTree as ET
 # import ipdb
-import pprint
-
-pp = pprint.PrettyPrinter(indent=4)
 
 '''
     Overview of script
     ==================
 
-    This script inputs XML from a COMET-Farm results email,
-    then outputs a CSV file for each Map Unit.
+    This script takes as arguments XML files from a COMET-Farm results email,
+    then outputs a CSV file containing a table with rows for mapunits and columns for CO2e
+    formulas for CO2e:
+        * area-weighted greenhouse gas balance (soil C stock change + N2O emissions + CH4 emissions)
+
+    Next steps:
+      * Do calculations for greenhouse gas balance in each mapunit
+        `(soil C stock change + N2O emissions + CH4 emissions)`
+
+        * Soil Carbon Stock Change (SCSC) - equation to evaluate changes in soil carbon (C change expressed in CO2e)
+
+            * use `<somsc>` tag
+
+            * units are grams of soil carbon per meter squared
+
+            * `( ( somsc at beginning of model run – somsc at end of model run ) / time period in years of model run ) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams) * (44/12 C to CO2e conversion factor) = change in soil C (Mg CO2e/yr)`
+
+            * a negative value indicates net soil carbon sequestration for this parcel
+
+        * Direct Soil Nitrous Oxide (DSNO) - (N2O expressed in CO2e)
+
+            * use `<n2oflux>` tag
+
+            * units are grams of N2O-N per meter squared per year
+
+            * `( average DayCent yearly N2O emissions over the model run ) * ( 44 / 28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams)`
+
+        * Indirect soil nitrous oxide (ISNO) - product of both volatilized nitrogen and leached nitrogen (N2O expressed in CO2e)
+
+            * use `<volpac>` tag for volatilized N
+
+            * use `<strmac_2>` tag for leached N
+
+            * units are g N m2/yr
+
+            * For example, consider the following output strings for a Current Management model period (identified as “Current”, or 2000-2017) on a 1 hectare parcel:
+
+                <strmac_2_>2009,0.0,2009.08,0.245,2009.17,0.265,2009.25,0.266,2009.33,0.269,2009.42,0.271,2009.5,0.272,2009.58,0.272,2009.67,0.272,2009.75,0.272,2009.83,0.272,2009.92,0.272,2010,0.272,2010.08,0.0,2010.17,0.0,2010.25,0.0,2010.33,0.0,2010.42,0.0,2010.5,0.0,2010.58,0.0,2010.67,0.0,2010.75,0.0,2010.83,0.0,2010.92,0.0,2011,0.0,2011.08,0.0,2011.17,0.0,2011.25,0.0,2011.33,0.0,2011.42,0.0,2011.5,0.0,2011.58,0.0,2011.67,0.0,2011.75,0.0,2011.83,0.0,2011.92,0.0,2012,0.0,2012.08,0.0,2012.17,0.0,2012.25,0.284,2012.33,0.346,2012.42,0.351,2012.5,0.356,2012.58,0.359,2012.67,0.359,2012.75,0.359,2012.83,0.359,2012.92,0.359,2013,0.359,2013.08,0.0,2013.17,1.785,2013.25,2.878,2013.33,2.881,2013.42,2.881,2013.5,2.886,2013.58,2.887,2013.67,2.887,2013.75,2.887,2013.83,2.887,2013.92,2.887,2014,2.887,2014.08,3.031,2014.17,4.010,2014.25,4.083,2014.33,4.093,2014.42,4.094,2014.5,4.094,2014.58,4.094,2014.67,4.094,2014.75,4.094,2014.83,4.094,2014.92,4.094,2015,4.094,2015.08,0.0,2015.17,0.0,2015.25,0.0,2015.33,0.0,2015.42,0.0,2015.5,0.0,2015.58,0.0,2015.67,0.0,2015.75,0.0,2015.83,0.0,2015.92,0.0,2016,0.0,2016.08,3.230,2016.17,3.466,2016.25,4.978,2016.33,4.993,2016.42,4.993,2016.5,4.995,2016.58,4.995,2016.67,4.995,2016.75,4.995,2016.83,4.995,2016.92,4.995,2017,4.995,2017.08,0.184,2017.17,2.175,2017.25,2.880,2017.33,2.882,2017.42,2.884,2017.5,2.884,2017.58,2.884,2017.67,2.884,2017.75,2.884,2017.83,2.889,2017.92,2.891,2018,3.122,2018,0.0,</strmac_2_>
+
+                <volpac>2009,0.313,2009.08,0.0,2009.17,0.0,2009.25,0.0,2009.33,0.0,2009.42,0.0,2009.5,0.0,2009.58,0.0,2009.67,0.0,2009.75,0.0,2009.83,0.318,2009.92,0.318,2010,0.318,2010.08,-8.506E-09,2010.17,6.5631E-06,2010.25,1.4848E-05,2010.33,5.6368E-03,2010.42,1.7234E-02,2010.5,2.6689E-02,2010.58,3.3214E-02,2010.67,3.9155E-02,2010.75,4.2075E-02,2010.83,4.4129E-02,2010.92,4.5445E-02,2011,4.5872E-02,2011.08,7.5126E-05,2011.17,-1.394E-05,2011.25,1.9422E-04,2011.33,5.0168E-04,2011.42,5.0168E-04,2011.5,5.0168E-04,2011.58,0.216,2011.67,0.216,2011.75,0.216,2011.83,0.216,2011.92,0.216,2012,0.216,2012.08,0.0,2012.17,0.0,2012.25,0.0,2012.33,0.0,2012.42,0.0,2012.5,0.0,2012.58,0.0,2012.67,0.0,2012.75,0.0,2012.83,0.335,2012.92,0.335,2013,0.335,2013.08,0.0,2013.17,0.0,2013.25,0.0,2013.33,0.0,2013.42,0.0,2013.5,0.0,2013.58,0.0,2013.67,0.0,2013.75,0.0,2013.83,0.335,2013.92,0.335,2014,0.335,2014.08,0.0,2014.17,0.0,2014.25,0.0,2014.33,0.0,2014.42,0.0,2014.5,0.0,2014.58,0.0,2014.67,0.0,2014.75,0.0,2014.83,0.357,2014.92,0.357,2015,0.357,2015.08,0.0,2015.17,0.0,2015.25,0.0,2015.33,0.0,2015.42,0.0,2015.5,0.0,2015.58,0.0,2015.67,0.0,2015.75,0.0,2015.83,0.320,2015.92,0.320,2016,0.320,2016.08,0.0,2016.17,0.0,2016.25,0.0,2016.33,0.0,2016.42,0.0,2016.5,0.0,2016.58,0.0,2016.67,0.0,2016.75,0.0,2016.83,0.335,2016.92,0.335,2017,0.335,2017.08,-2.711E-08,2017.17,8.9977E-06,2017.25,6.2888E-04,2017.33,3.3137E-03,2017.42,1.0772E-02,2017.5,2.3423E-02,2017.58,3.1529E-02,2017.67,3.8201E-02,2017.75,4.3781E-02,2017.83,4.6393E-02,2017.92,4.6729E-02,2018,4.6745E-02,2018,0.0,</volpac>
+
+
+            * The equation to calculate the soil indirect N2O emissions from volatilization is as follows for the period 2008 to 2017:
+
+                `( 0.0 + 0.272 + 0.0 + 0.0 + 0.359 + 2.887 + 4.094 + 0.0 + 4.995 + 3.122 ) ( 1/10 yrs) * ( 0.01 EFleach) * ( 44/28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams) = 0.074 Mg/ha CO2e`
+
+            * The equation to calculate the soil indirect N2O emissions from leaching is as follows for the period of 2008 to 2017:
+
+                `( average DayCent volpac emissions over the model run ) * ( 0.0075 EFvol) * ( 44/28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams)`
+
+            * The yearly indirect soil N2O emissions predicted by DayCent from leaching would be as follows:
+
+                `( 0.313 + 0.318 + 0.045872 + 0.216 + 0.335 + 0.335 + 0.357 + 0.320 + 0.335 + .046745 ) * ( 1 / 10 years ) * ( 0.01 ) * ( 44/28 ) * ( 298 ) * ( 1 ha ) * ( 10000 / 1000000 ) =  Mg N2O / yr ( in CO2e ) = 0.0092 Mg/ha CO2e`
+
+
+
+
     Steps:
         1. Open results file
         2. Loop through model runs
-        3. Write CSV for each MapUnit for each Scenario
-        4. Extract parameter key and values for each MapUnit parameter:
-        5. Organize parameter values into rows based on year
-        6. Create CSV file for each MapUnit
+        3. Create a CSV file with a row for each map unit and columns for:
+            * Baseline
+            * Baseline +14 days
+            * Baseline -14 days
 
 '''
 
