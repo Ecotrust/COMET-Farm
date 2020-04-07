@@ -94,16 +94,17 @@ def calc_co2_exchange(arr=[{"output": 0, "year": ""}]):
         return calc
 
 def calc_direct_soil_n2o(arr=[{"output": 0, "year": ""}]):
-    arr = remove_duplicate_years(arr) # Most results contain duplicate for first year
-    arr_len = len(arr) - 1 # make sure there is at least 1 year(s) available to measure
-    for i in range(arr_len):
-        print arr[i]
-    if arr_len > 0:
-        area = map_unit_area(arr) # get mapunit area for calc
-        calc = ((float(arr[0]["output"]) - float(arr[arr_len]["output"])) / arr_len) * (float(area)) * (1/100) * (44/12) # see equation at top of doc
+    # n2oflux seems to have 1 less year output than somsc
+    year_count = len(arr)
+    n2o_avg = 0
+    for y in range( year_count ):
+        n2o_avg += float(arr[y]['n2oflux'])
+    if n2o_avg > 0:
+        area = map_unit_area(arr)
+        n2o_avg = n2o_avg/year_count
+        calc = n2o_avg * (44/28) * 298 * float(area) * (10000/1000000)
+        print(calc)
         return calc
-
-        # ( average DayCent yearly N2O emissions over the model run ) * ( 44 / 28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams)
 
 def map_unit_area(arr=[]):
     # area should be same for each dict in list
@@ -189,7 +190,7 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
         xml_tag = xml_tag.lower()
         xml_text = str(child.text)
 
-        if (xml_tag in ( 'aagdefac', 'abgdefac', 'accrst', 'accrste_1_', 'agcprd', 'aglivc', 'bgdefac', 'bglivcm', 'rain', 'cgrain', 'cinput', 'crmvst', 'crootc', 'crpval', 'egracc_1_', 'eupacc_1_', 'fbrchc', 'fertac_1_', 'fertot_1_1_', 'frootcm', 'gromin_1_', 'irrtot', 'metabc_1_', 'metabc_2_', 'metabe_1_1_', 'metabe_2_1_', 'nfixac', 'omadac', 'omadae_1_', 'petann', 'rlwodc', 'somsc', 'somse_1_', 'stdedc', 'stdede_1_', 'strmac_1_', 'strmac_2_', 'strmac_6_', 'strucc_1_', 'struce_1_1_', 'struce_2_1_', 'tminrl_1_', 'tnetmn_1_', 'volpac' ) ):
+        if (xml_tag in ( 'aagdefac', 'abgdefac', 'accrst', 'accrste_1_', 'agcprd', 'aglivc', 'bgdefac', 'bglivcm', 'rain', 'cgrain', 'cinput', 'crmvst', 'crootc', 'crpval', 'egracc_1_', 'eupacc_1_', 'fbrchc', 'fertac_1_', 'fertot_1_1_', 'frootcm', 'gromin_1_', 'irrtot', 'metabc_1_', 'metabc_2_', 'metabe_1_1_', 'metabe_2_1_', 'nfixac', 'omadac', 'omadae_1_', 'petann', 'rlwodc', 'somsc', 'somse_1_', 'stdedc', 'stdede_1_', 'strmac_1_', 'strmac_2_', 'strmac_6_', 'strucc_1_', 'struce_1_1_', 'struce_2_1_', 'tminrl_1_', 'tnetmn_1_', 'volpac',  ) ):
 
             values = write_end_of_year_daycent_output( xml_tag, xml_text, scenario, mapunit_id, area )
             for value in values:
@@ -197,17 +198,12 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
                     model_run_data[xml_tag] = []
                 model_run_data[xml_tag].append(value)
 
-            if (xml_tag == 'somsc' or xml_tag == 'n2oflux') :
+            if ( xml_tag in ('somsc') ) :
+
                 if xml_tag == 'somsc':
                     somsc = model_run_data[xml_tag]
                     calc_value = calc_co2_exchange(somsc)
                     calc_tag = 'soil_carbon_exchange'
-                    if calc_tag not in model_run_data.keys():
-                        model_run_data[calc_tag] = []
-                elif xml_tag == 'n2oflux':
-                    n2oflux = model_run_data[xml_tag]
-                    calc_value = calc_direct_soil_n2o(n2oflux)
-                    calc_tag = 'direct_soil_n2o'
                     if calc_tag not in model_run_data.keys():
                         model_run_data[calc_tag] = []
 
@@ -218,7 +214,7 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
                         "year": model_run_data[xml_tag][y]["year"],
                         "var": calc_tag,
                         "output": calc_value,
-                        "soil_carbon_exchange": calc_value,
+                        calc_tag: calc_value,
                         "id": model_run_data[xml_tag][y]["id"],
                         "area": model_run_data[xml_tag][y]["area"],
                         "scenario": model_run_data[xml_tag][y]["scenario"],
@@ -242,6 +238,29 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
                 if xml_tag not in model_run_data.keys():
                     model_run_data[xml_tag] = []
                 model_run_data[xml_tag].append(value)
+
+            if xml_tag == 'n2oflux':
+                n2oflux = model_run_data[xml_tag]
+                # print(n2oflux)
+                if n2oflux:
+                    calc_value = calc_direct_soil_n2o(n2oflux)
+                calc_tag = 'direct_soil_n2o'
+                if calc_tag not in model_run_data.keys():
+                    model_run_data[calc_tag] = []
+
+            year_count = len(model_run_data[xml_tag])
+
+            for y in range( year_count ):
+                yearly_output = {
+                    "year": model_run_data[xml_tag][y]["year"],
+                    "var": calc_tag,
+                    "output": calc_value,
+                    calc_tag: calc_value,
+                    "id": model_run_data[xml_tag][y]["id"],
+                    "area": model_run_data[xml_tag][y]["area"],
+                    "scenario": model_run_data[xml_tag][y]["scenario"],
+                }
+                model_run_data[calc_tag].append(yearly_output)
 
         else:
             continue
