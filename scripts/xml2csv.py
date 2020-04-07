@@ -37,26 +37,21 @@ import xml.etree.ElementTree as ET
 
         * Indirect soil nitrous oxide (ISNO) - product of both volatilized nitrogen and leached nitrogen (N2O expressed in CO2e)
 
-            * use `<volpac>` tag for volatilized N
+            * Volatilized N: Indirect Soil Nitrous Oxide - `<volpac>`
 
-            * use `<strmac_2>` tag for leached N
+            * Leached N: Indirect Soil Nitrous Oxide - `<strmac_2>`
 
             * units are g N m2/yr
 
             * For example, consider the following output strings for a Current Management model period (identified as “Current”, or 2000-2017) on a 1 hectare parcel:
 
-                <strmac_2_>2009,0.0,2009.08,0.245,2009.17,0.265,2009.25,0.266,2009.33,0.269,2009.42,0.271,2009.5,0.272,2009.58,0.272,2009.67,0.272,2009.75,0.272,2009.83,0.272,2009.92,0.272,2010,0.272,2010.08,0.0,2010.17,0.0,2010.25,0.0,2010.33,0.0,2010.42,0.0,2010.5,0.0,2010.58,0.0,2010.67,0.0,2010.75,0.0,2010.83,0.0,2010.92,0.0,2011,0.0,2011.08,0.0,2011.17,0.0,2011.25,0.0,2011.33,0.0,2011.42,0.0,2011.5,0.0,2011.58,0.0,2011.67,0.0,2011.75,0.0,2011.83,0.0,2011.92,0.0,2012,0.0,2012.08,0.0,2012.17,0.0,2012.25,0.284,2012.33,0.346,2012.42,0.351,2012.5,0.356,2012.58,0.359,2012.67,0.359,2012.75,0.359,2012.83,0.359,2012.92,0.359,2013,0.359,2013.08,0.0,2013.17,1.785,2013.25,2.878,2013.33,2.881,2013.42,2.881,2013.5,2.886,2013.58,2.887,2013.67,2.887,2013.75,2.887,2013.83,2.887,2013.92,2.887,2014,2.887,2014.08,3.031,2014.17,4.010,2014.25,4.083,2014.33,4.093,2014.42,4.094,2014.5,4.094,2014.58,4.094,2014.67,4.094,2014.75,4.094,2014.83,4.094,2014.92,4.094,2015,4.094,2015.08,0.0,2015.17,0.0,2015.25,0.0,2015.33,0.0,2015.42,0.0,2015.5,0.0,2015.58,0.0,2015.67,0.0,2015.75,0.0,2015.83,0.0,2015.92,0.0,2016,0.0,2016.08,3.230,2016.17,3.466,2016.25,4.978,2016.33,4.993,2016.42,4.993,2016.5,4.995,2016.58,4.995,2016.67,4.995,2016.75,4.995,2016.83,4.995,2016.92,4.995,2017,4.995,2017.08,0.184,2017.17,2.175,2017.25,2.880,2017.33,2.882,2017.42,2.884,2017.5,2.884,2017.58,2.884,2017.67,2.884,2017.75,2.884,2017.83,2.889,2017.92,2.891,2018,3.122,2018,0.0,</strmac_2_>
-
-                <volpac>2009,0.313,2009.08,0.0,2009.17,0.0,2009.25,0.0,2009.33,0.0,2009.42,0.0,2009.5,0.0,2009.58,0.0,2009.67,0.0,2009.75,0.0,2009.83,0.318,2009.92,0.318,2010,0.318,2010.08,-8.506E-09,2010.17,6.5631E-06,2010.25,1.4848E-05,2010.33,5.6368E-03,2010.42,1.7234E-02,2010.5,2.6689E-02,2010.58,3.3214E-02,2010.67,3.9155E-02,2010.75,4.2075E-02,2010.83,4.4129E-02,2010.92,4.5445E-02,2011,4.5872E-02,2011.08,7.5126E-05,2011.17,-1.394E-05,2011.25,1.9422E-04,2011.33,5.0168E-04,2011.42,5.0168E-04,2011.5,5.0168E-04,2011.58,0.216,2011.67,0.216,2011.75,0.216,2011.83,0.216,2011.92,0.216,2012,0.216,2012.08,0.0,2012.17,0.0,2012.25,0.0,2012.33,0.0,2012.42,0.0,2012.5,0.0,2012.58,0.0,2012.67,0.0,2012.75,0.0,2012.83,0.335,2012.92,0.335,2013,0.335,2013.08,0.0,2013.17,0.0,2013.25,0.0,2013.33,0.0,2013.42,0.0,2013.5,0.0,2013.58,0.0,2013.67,0.0,2013.75,0.0,2013.83,0.335,2013.92,0.335,2014,0.335,2014.08,0.0,2014.17,0.0,2014.25,0.0,2014.33,0.0,2014.42,0.0,2014.5,0.0,2014.58,0.0,2014.67,0.0,2014.75,0.0,2014.83,0.357,2014.92,0.357,2015,0.357,2015.08,0.0,2015.17,0.0,2015.25,0.0,2015.33,0.0,2015.42,0.0,2015.5,0.0,2015.58,0.0,2015.67,0.0,2015.75,0.0,2015.83,0.320,2015.92,0.320,2016,0.320,2016.08,0.0,2016.17,0.0,2016.25,0.0,2016.33,0.0,2016.42,0.0,2016.5,0.0,2016.58,0.0,2016.67,0.0,2016.75,0.0,2016.83,0.335,2016.92,0.335,2017,0.335,2017.08,-2.711E-08,2017.17,8.9977E-06,2017.25,6.2888E-04,2017.33,3.3137E-03,2017.42,1.0772E-02,2017.5,2.3423E-02,2017.58,3.1529E-02,2017.67,3.8201E-02,2017.75,4.3781E-02,2017.83,4.6393E-02,2017.92,4.6729E-02,2018,4.6745E-02,2018,0.0,</volpac>
-
-
             * The equation to calculate the soil indirect N2O emissions from volatilization is as follows for the period 2008 to 2017:
 
-                `( 0.0 + 0.272 + 0.0 + 0.0 + 0.359 + 2.887 + 4.094 + 0.0 + 4.995 + 3.122 ) ( 1/10 yrs) * ( 0.01 EFleach) * ( 44/28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams) = 0.074 Mg/ha CO2e`
+                `( average DayCent volpac emissions over the model run ) * ( 0.0075 EFvol ) * ( 44/28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams)`
 
             * The equation to calculate the soil indirect N2O emissions from leaching is as follows for the period of 2008 to 2017:
 
-                `( average DayCent volpac emissions over the model run ) * ( 0.0075 EFvol) * ( 44/28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams)`
+                `( average DayCent strmac_2 emissions over the model run ) * ( 0.01 EFleach ) * ( 44/28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams) = Mg/ha CO2e`
 
             * The yearly indirect soil N2O emissions predicted by DayCent from leaching would be as follows:
 
@@ -69,6 +64,7 @@ import xml.etree.ElementTree as ET
         1. Open results file
         2. Loop through model runs
         3. Create a CSV file with a row for each map unit and columns for:
+            * mapunitID
             * Baseline
             * Baseline +14 days
             * Baseline -14 days
@@ -81,6 +77,7 @@ def remove_duplicate_years(arr=[]):
     dup_year = ''
     for year in years:
         if years.count(year) > 1:
+            # only remove if dup year present
             dup_year = year
     if len(dup_year) > 0:
         for i in arr:
@@ -89,13 +86,12 @@ def remove_duplicate_years(arr=[]):
     return arr
 
 def calc_co2_exchange(arr=[{"output": 0, "year": ""}]):
-    arr = remove_duplicate_years(arr)
-    arr_len = len(arr) - 1
-    print(arr[arr_len]["output"])
+    arr = remove_duplicate_years(arr) # Most results contain duplicate for first year
+    arr_len = len(arr) - 1 # make sure there is at least 1 year(s) available to measure
     if arr_len > 0:
-        area = map_unit_area(arr)
-        calc = ((float(arr[0]["output"]) - float(arr[arr_len]["output"])) / arr_len) * (float(area)) * (1/100) * (44/12)
-    return
+        area = map_unit_area(arr) # get mapunit area for calc
+        calc = ((float(arr[0]["output"]) - float(arr[arr_len]["output"])) / arr_len) * (float(area)) * (1/100) * (44/12) # see equation at top of doc
+        return calc
 
 def map_unit_area(arr=[]):
     # area should be same for each dict in list
@@ -192,7 +188,23 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
             if (xml_tag == 'somsc') :
                 somsc = model_run_data[xml_tag]
                 co2exchange = calc_co2_exchange(somsc)
-                model_run_data['soil_carbon_exchange'] = co2exchange
+                if 'soil_carbon_exchange' not in model_run_data.keys():
+                    model_run_data['soil_carbon_exchange'] = []
+
+                year_count = len(model_run_data[xml_tag])
+                for y in range( year_count ):
+                    yearly_output = {
+                        "year": model_run_data[xml_tag][y]["year"],
+                        "var": "soil_carbon_exchange",
+                        "output": co2exchange,
+                        "soil_carbon_exchange": co2exchange,
+                        "id": model_run_data[xml_tag][y]["id"],
+                        "area": model_run_data[xml_tag][y]["area"],
+                        "scenario": model_run_data[xml_tag][y]["scenario"],
+                    }
+                    model_run_data['soil_carbon_exchange'].append(yearly_output)
+
+                # import ipdb; ipdb.set_trace()
 
         elif( xml_tag in ('irrigated', 'inputcrop' ) ):
 
@@ -337,13 +349,16 @@ def update_gui_data(name, array_text, model_run_name, scenario):
 def main():
     # check if argument has been given for xml
     if len(sys.argv) < 1:
-        print("\nMissing argument.")
-        pring("\npython3 script xml2csv.py <XML COMET-Farm Output>\n")
+        print("\nMissing argument\n")
+        pring("\npython3 script xml2csv.py <XML COMET-Farm Output Baseline>.xml <Baseline +14>.xml <Baseline -14>.xml\n")
         print("<XML COMET-Farm Output> system location of XML output file from COMET-Farm\n")
-        print("  eg /usr/local/name/comet/output.xml\n")
+        print("  eg /usr/local/name/comet/baseline.xml\n")
         exit()
 
     xml_name = sys.argv[1]
+    baseline_xml_name = sys.argv[1]
+    baseline_plus_xml_name = sys.argv[2]
+    baesline_minus_xml_name = sys.argv[3]
 
     start = datetime.now()
     print("\nStarting script at " + str( time.ctime( int( time.time( ) ) ) ) + "\n")
