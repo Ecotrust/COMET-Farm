@@ -96,10 +96,14 @@ def calc_co2_exchange(arr=[{"output": 0, "year": ""}]):
 def calc_direct_soil_n2o(arr=[{"output": 0, "year": ""}]):
     arr = remove_duplicate_years(arr) # Most results contain duplicate for first year
     arr_len = len(arr) - 1 # make sure there is at least 1 year(s) available to measure
+    for i in range(arr_len):
+        print arr[i]
     if arr_len > 0:
         area = map_unit_area(arr) # get mapunit area for calc
         calc = ((float(arr[0]["output"]) - float(arr[arr_len]["output"])) / arr_len) * (float(area)) * (1/100) * (44/12) # see equation at top of doc
         return calc
+
+        # ( average DayCent yearly N2O emissions over the model run ) * ( 44 / 28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams)
 
 def map_unit_area(arr=[]):
     # area should be same for each dict in list
@@ -167,7 +171,7 @@ def write_aggregate_csv(all_agg, xml_name):
             if k not in aggregate_data_fieldnames:
                 aggregate_data_fieldnames.append(k)
 
-        print(r)
+        # print(r)
     with open(dir_name + csv_file_name + '.csv', 'wt') as csvFile:
         writer = csv.DictWriter(csvFile, fieldnames=aggregate_data_fieldnames)
         writer.writeheader()
@@ -360,7 +364,7 @@ def write_yearly_daycent_output92( daycent_variable, arrayText, scenario, mapuni
 def update_gui_data(name, array_text, model_run_name, scenario):
 
     sql = [str(name), str(array_text), str(model_run_name), str(scenario)]
-    print(sql)
+    # print(sql)
 
 
 def main():
