@@ -27,7 +27,7 @@ import xml.etree.ElementTree as ET
 
             * a negative value indicates net soil carbon sequestration for this parcel
 
-        * Direct Soil Nitrous Oxide (DSNO) - (N2O expressed in CO2e)
+        * Direct Soil Nitrous Oxide (Direct Soil N2O) - (N2O expressed in CO2e)
 
             * use `<n2oflux>` tag
 
@@ -86,6 +86,14 @@ def remove_duplicate_years(arr=[]):
     return arr
 
 def calc_co2_exchange(arr=[{"output": 0, "year": ""}]):
+    arr = remove_duplicate_years(arr) # Most results contain duplicate for first year
+    arr_len = len(arr) - 1 # make sure there is at least 1 year(s) available to measure
+    if arr_len > 0:
+        area = map_unit_area(arr) # get mapunit area for calc
+        calc = ((float(arr[0]["output"]) - float(arr[arr_len]["output"])) / arr_len) * (float(area)) * (1/100) * (44/12) # see equation at top of doc
+        return calc
+
+def calc_direct_soil_n2o(arr=[{"output": 0, "year": ""}]):
     arr = remove_duplicate_years(arr) # Most results contain duplicate for first year
     arr_len = len(arr) - 1 # make sure there is at least 1 year(s) available to measure
     if arr_len > 0:
@@ -185,24 +193,33 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
                     model_run_data[xml_tag] = []
                 model_run_data[xml_tag].append(value)
 
-            if (xml_tag == 'somsc') :
-                somsc = model_run_data[xml_tag]
-                co2exchange = calc_co2_exchange(somsc)
-                if 'soil_carbon_exchange' not in model_run_data.keys():
-                    model_run_data['soil_carbon_exchange'] = []
+            if (xml_tag == 'somsc' or xml_tag == 'n2oflux') :
+                if xml_tag == 'somsc':
+                    somsc = model_run_data[xml_tag]
+                    calc_value = calc_co2_exchange(somsc)
+                    calc_tag = 'soil_carbon_exchange'
+                    if calc_tag not in model_run_data.keys():
+                        model_run_data[calc_tag] = []
+                elif xml_tag == 'n2oflux':
+                    n2oflux = model_run_data[xml_tag]
+                    calc_value = calc_direct_soil_n2o(n2oflux)
+                    calc_tag = 'direct_soil_n2o'
+                    if calc_tag not in model_run_data.keys():
+                        model_run_data[calc_tag] = []
 
                 year_count = len(model_run_data[xml_tag])
+
                 for y in range( year_count ):
                     yearly_output = {
                         "year": model_run_data[xml_tag][y]["year"],
-                        "var": "soil_carbon_exchange",
-                        "output": co2exchange,
-                        "soil_carbon_exchange": co2exchange,
+                        "var": calc_tag,
+                        "output": calc_value,
+                        "soil_carbon_exchange": calc_value,
                         "id": model_run_data[xml_tag][y]["id"],
                         "area": model_run_data[xml_tag][y]["area"],
                         "scenario": model_run_data[xml_tag][y]["scenario"],
                     }
-                    model_run_data['soil_carbon_exchange'].append(yearly_output)
+                    model_run_data[calc_tag].append(yearly_output)
 
                 # import ipdb; ipdb.set_trace()
 
