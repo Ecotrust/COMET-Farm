@@ -350,7 +350,7 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
 
     with open(ghg_dir_name + ghg_file_name + '.csv', 'wt', newline='') as ghgFile:
         ghg_writer = csv.writer(ghgFile, delimiter=' ', quotechar="|", quoting=csv.QUOTE_MINIMAL)
-        ghg_writer.writerow([ghg_balance])
+        ghg_writer.writerow([ghg_balance, model_run_data['id']])
 
     ghgFile.close()
 
