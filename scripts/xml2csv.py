@@ -261,21 +261,24 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
                 calc_value = calc_co2_exchange(somsc)
                 calc_tag = 'soil_carbon_exchange'
                 if calc_tag not in model_run_data.keys():
-                    model_run_data[calc_tag] = []
+                    # model_run_data[calc_tag] = []
+                    model_run_data[calc_tag] = calc_value
 
             elif xml_tag == 'strmac_2_':
                 strmac_2_ = model_run_data[xml_tag]
                 calc_value = calc_leached_indirect_soil_n2o(strmac_2_)
                 calc_tag = 'indirect_soil_n2o_leached'
                 if calc_tag not in model_run_data.keys():
-                    model_run_data[calc_tag] = []
+                    # model_run_data[calc_tag] = []
+                    model_run_data[calc_tag] = calc_value
 
             elif xml_tag == 'volpac':
                 volpac = model_run_data[xml_tag]
                 calc_value = calc_volatilized_indirect_soil_n2o(volpac)
                 calc_tag = 'indirect_soil_n2o_volatilized'
                 if calc_tag not in model_run_data.keys():
-                    model_run_data[calc_tag] = []
+                    # model_run_data[calc_tag] = []
+                    model_run_data[calc_tag] = calc_value
 
             year_count = len(model_run_data[xml_tag])
 
@@ -317,21 +320,22 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
                     calc_value = calc_direct_soil_n2o(n2oflux)
                 calc_tag = 'direct_soil_n2o'
                 if calc_tag not in model_run_data.keys():
-                    model_run_data[calc_tag] = []
+                    # model_run_data[calc_tag] = []
+                    model_run_data[calc_tag] = calc_value
 
-            year_count = len(model_run_data[xml_tag])
-
-            for y in range( year_count ):
-                yearly_output = {
-                    "year": model_run_data[xml_tag][y]["year"],
-                    "var": calc_tag,
-                    "output": calc_value,
-                    calc_tag: calc_value,
-                    "id": model_run_data[xml_tag][y]["id"],
-                    "area": model_run_data[xml_tag][y]["area"],
-                    "scenario": model_run_data[xml_tag][y]["scenario"],
-                }
-                model_run_data[calc_tag].append(yearly_output)
+            # year_count = len(model_run_data[xml_tag])
+            #
+            # for y in range( year_count ):
+            #     yearly_output = {
+            #         "year": model_run_data[xml_tag][y]["year"],
+            #         "var": calc_tag,
+            #         "output": calc_value,
+            #         calc_tag: calc_value,
+            #         "id": model_run_data[xml_tag][y]["id"],
+            #         "area": model_run_data[xml_tag][y]["area"],
+            #         "scenario": model_run_data[xml_tag][y]["scenario"],
+            #     }
+            #     model_run_data[calc_tag].append(yearly_output)
 
         else:
             continue
