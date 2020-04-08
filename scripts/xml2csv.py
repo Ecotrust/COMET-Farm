@@ -85,6 +85,15 @@ def remove_duplicate_years(arr=[]):
                 el = arr.pop(arr.index(i))
     return arr
 
+def calc_greenhouse_gas_balance(*args):
+    ghg_balance = 0
+    for arg in args:
+        if arg and arg >= 0:
+            ghg_balance += arg
+        else:
+            continue
+    return ghg_balance
+
 def calc_co2_exchange(arr=[{"output": 0, "year": ""}]):
     arr = remove_duplicate_years(arr) # Most results contain duplicate for first year
     arr_len = len(arr) - 1 # make sure there is at least 1 year(s) available to measure
@@ -103,7 +112,54 @@ def calc_direct_soil_n2o(arr=[{"output": 0, "year": ""}]):
         area = map_unit_area(arr)
         n2o_avg = n2o_avg/year_count
         calc = n2o_avg * (44/28) * 298 * float(area) * (10000/1000000)
-        print(calc)
+        return calc
+
+def calc_direct_soil_n2o(arr=[{"output": 0, "year": ""}]):
+    # n2oflux seems to have 1 less year output than somsc
+    year_count = len(arr)
+    n2o_avg = 0
+    for y in range( year_count ):
+        n2o_avg += float(arr[y]['n2oflux'])
+    if n2o_avg > 0:
+        area = map_unit_area(arr)
+        n2o_avg = n2o_avg/year_count
+        calc = n2o_avg * (44/28) * 298 * float(area) * (10000/1000000)
+        return calc
+
+def calc_volatilized_indirect_soil_n2o(arr=[{"output": 0, "year": ""}]):
+    # n2oflux seems to have 1 less year output than somsc
+    year_count = len(arr)
+    n2o_avg = 0
+    for y in range( year_count ):
+        n2o_avg += float(arr[y]['volpac'])
+    if n2o_avg >= 0:
+        area = map_unit_area(arr)
+        n2o_avg = n2o_avg/year_count
+        calc = n2o_avg * 0.0075 * (44/28) * 298 * float(area) * (10000/1000000)
+        return calc
+
+def calc_leached_indirect_soil_n2o(arr=[{"output": 0, "year": ""}]):
+    # n2oflux seems to have 1 less year output than somsc
+    year_count = len(arr)
+    n2o_avg = 0
+    for y in range( year_count ):
+        n2o_avg += float(arr[y]['strmac_2_'])
+    if n2o_avg > 0:
+        area = map_unit_area(arr)
+        n2o_avg = n2o_avg/year_count
+        calc = n2o_avg * 0.01 * (44/28) * 298 * float(area) * (10000/1000000)
+        return calc
+
+def calc_indirect_soil_n2o(arr=[{"output": 0, "year": ""}]):
+    # n2oflux seems to have 1 less year output than somsc
+    year_count = len(arr)
+    n2o_avg = 0
+    for y in range( year_count ):
+        n2o_avg += float(arr[y]['n2oflux'])
+    if n2o_avg > 0:
+        area = map_unit_area(arr)
+        n2o_avg = n2o_avg/year_count
+        calc = n2o_avg * (44/28) * 298 * float(area) * (10000/1000000)
         return calc
 
 def map_unit_area(arr=[]):
@@ -157,7 +213,7 @@ def parse_aggregate(elem, scenario):
 
 def write_aggregate_csv(all_agg, xml_name):
     # write parsed aggregate to csv
-    csv_file_name = xml_name + '.aggregate'
+    csv_file_name = 'aggregate'
     dir_name = './results/'
 
     if not os.path.isdir(dir_name):
@@ -198,12 +254,26 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
                     model_run_data[xml_tag] = []
                 model_run_data[xml_tag].append(value)
 
-            if ( xml_tag in ('somsc') ) :
+            if ( xml_tag in ('somsc', 'strmac_2_', 'volpac') ) :
 
                 if xml_tag == 'somsc':
                     somsc = model_run_data[xml_tag]
                     calc_value = calc_co2_exchange(somsc)
                     calc_tag = 'soil_carbon_exchange'
+                    if calc_tag not in model_run_data.keys():
+                        model_run_data[calc_tag] = []
+
+                elif xml_tag == 'strmac_2_':
+                    strmac_2_ = model_run_data[xml_tag]
+                    calc_value = calc_leached_indirect_soil_n2o(strmac_2_)
+                    calc_tag = 'indirect_soil_n2o_leached'
+                    if calc_tag not in model_run_data.keys():
+                        model_run_data[calc_tag] = []
+
+                elif xml_tag == 'volpac':
+                    volpac = model_run_data[xml_tag]
+                    calc_value = calc_volatilized_indirect_soil_n2o(volpac)
+                    calc_tag = 'indirect_soil_n2o_volatilized'
                     if calc_tag not in model_run_data.keys():
                         model_run_data[calc_tag] = []
 
@@ -264,6 +334,20 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
 
         else:
             continue
+
+    ghg_balance = calc_greenhouse_gas_balance(model_run_data['soil_carbon_exchange'][0]['output'], model_run_data['direct_soil_n2o'][0]['output'], model_run_data['indirect_soil_n2o_leached'][0]['output'], model_run_data['indirect_soil_n2o_volatilized'][0]['output'])
+
+    ghg_file_name = 'ghg_balance'
+    ghg_dir_name = './results/'
+
+    if not os.path.isdir(ghg_dir_name):
+        os.mkdir(ghg_dir_name)
+
+    with open(ghg_dir_name + ghg_file_name + '.csv', 'wt', newline='') as ghgFile:
+        ghg_writer = csv.writer(ghgFile, delimiter=' ', quotechar="|", quoting=csv.QUOTE_MINIMAL)
+        ghg_writer.writerow([ghg_balance])
+
+    ghgFile.close()
 
     #  header fields
     values_array = ['year', 'scenario', 'id', 'area']
