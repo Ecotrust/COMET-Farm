@@ -246,7 +246,9 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
         xml_tag = xml_tag.lower()
         xml_text = str(child.text)
 
-        if (xml_tag in ( 'aagdefac', 'abgdefac', 'accrst', 'accrste_1_', 'agcprd', 'aglivc', 'bgdefac', 'bglivcm', 'rain', 'cgrain', 'cinput', 'crmvst', 'crootc', 'crpval', 'egracc_1_', 'eupacc_1_', 'fbrchc', 'fertac_1_', 'fertot_1_1_', 'frootcm', 'gromin_1_', 'irrtot', 'metabc_1_', 'metabc_2_', 'metabe_1_1_', 'metabe_2_1_', 'nfixac', 'omadac', 'omadae_1_', 'petann', 'rlwodc', 'somsc', 'somse_1_', 'stdedc', 'stdede_1_', 'strmac_1_', 'strmac_2_', 'strmac_6_', 'strucc_1_', 'struce_1_1_', 'struce_2_1_', 'tminrl_1_', 'tnetmn_1_', 'volpac',  ) ):
+        # if (xml_tag in ( 'aagdefac', 'abgdefac', 'accrst', 'accrste_1_', 'agcprd', 'aglivc', 'bgdefac', 'bglivcm', 'rain', 'cgrain', 'cinput', 'crmvst', 'crootc', 'crpval', 'egracc_1_', 'eupacc_1_', 'fbrchc', 'fertac_1_', 'fertot_1_1_', 'frootcm', 'gromin_1_', 'irrtot', 'metabc_1_', 'metabc_2_', 'metabe_1_1_', 'metabe_2_1_', 'nfixac', 'omadac', 'omadae_1_', 'petann', 'rlwodc', 'somsc', 'somse_1_', 'stdedc', 'stdede_1_', 'strmac_1_', 'strmac_2_', 'strmac_6_', 'strucc_1_', 'struce_1_1_', 'struce_2_1_', 'tminrl_1_', 'tnetmn_1_', 'volpac',  ) ):
+
+        if ( xml_tag in ('somsc', 'strmac_2_', 'volpac') ) :
 
             values = write_end_of_year_daycent_output( xml_tag, xml_text, scenario, mapunit_id, area )
             for value in values:
@@ -254,54 +256,53 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
                     model_run_data[xml_tag] = []
                 model_run_data[xml_tag].append(value)
 
-            if ( xml_tag in ('somsc', 'strmac_2_', 'volpac') ) :
+            if xml_tag == 'somsc':
+                somsc = model_run_data[xml_tag]
+                calc_value = calc_co2_exchange(somsc)
+                calc_tag = 'soil_carbon_exchange'
+                if calc_tag not in model_run_data.keys():
+                    model_run_data[calc_tag] = []
 
-                if xml_tag == 'somsc':
-                    somsc = model_run_data[xml_tag]
-                    calc_value = calc_co2_exchange(somsc)
-                    calc_tag = 'soil_carbon_exchange'
-                    if calc_tag not in model_run_data.keys():
-                        model_run_data[calc_tag] = []
+            elif xml_tag == 'strmac_2_':
+                strmac_2_ = model_run_data[xml_tag]
+                calc_value = calc_leached_indirect_soil_n2o(strmac_2_)
+                calc_tag = 'indirect_soil_n2o_leached'
+                if calc_tag not in model_run_data.keys():
+                    model_run_data[calc_tag] = []
 
-                elif xml_tag == 'strmac_2_':
-                    strmac_2_ = model_run_data[xml_tag]
-                    calc_value = calc_leached_indirect_soil_n2o(strmac_2_)
-                    calc_tag = 'indirect_soil_n2o_leached'
-                    if calc_tag not in model_run_data.keys():
-                        model_run_data[calc_tag] = []
+            elif xml_tag == 'volpac':
+                volpac = model_run_data[xml_tag]
+                calc_value = calc_volatilized_indirect_soil_n2o(volpac)
+                calc_tag = 'indirect_soil_n2o_volatilized'
+                if calc_tag not in model_run_data.keys():
+                    model_run_data[calc_tag] = []
 
-                elif xml_tag == 'volpac':
-                    volpac = model_run_data[xml_tag]
-                    calc_value = calc_volatilized_indirect_soil_n2o(volpac)
-                    calc_tag = 'indirect_soil_n2o_volatilized'
-                    if calc_tag not in model_run_data.keys():
-                        model_run_data[calc_tag] = []
+            year_count = len(model_run_data[xml_tag])
 
-                year_count = len(model_run_data[xml_tag])
-
-                for y in range( year_count ):
-                    yearly_output = {
-                        "year": model_run_data[xml_tag][y]["year"],
-                        "var": calc_tag,
-                        "output": calc_value,
-                        calc_tag: calc_value,
-                        "id": model_run_data[xml_tag][y]["id"],
-                        "area": model_run_data[xml_tag][y]["area"],
-                        "scenario": model_run_data[xml_tag][y]["scenario"],
-                    }
-                    model_run_data[calc_tag].append(yearly_output)
+            for y in range( year_count ):
+                yearly_output = {
+                    "year": model_run_data[xml_tag][y]["year"],
+                    "var": calc_tag,
+                    "output": calc_value,
+                    calc_tag: calc_value,
+                    "id": model_run_data[xml_tag][y]["id"],
+                    "area": model_run_data[xml_tag][y]["area"],
+                    "scenario": model_run_data[xml_tag][y]["scenario"],
+                }
+                model_run_data[calc_tag].append(yearly_output)
 
                 # import ipdb; ipdb.set_trace()
 
-        elif( xml_tag in ('irrigated', 'inputcrop' ) ):
+        # elif( xml_tag in ('irrigated', 'inputcrop' ) ):
 
-            values = write_yearly_daycent_output( xml_tag, xml_text, scenario, mapunit_id, area )
-            for value in values:
-                if xml_tag not in model_run_data.keys():
-                    model_run_data[xml_tag] = []
-                model_run_data[xml_tag].append(value)
+            # values = write_yearly_daycent_output( xml_tag, xml_text, scenario, mapunit_id, area )
+            # for value in values:
+                # if xml_tag not in model_run_data.keys():
+                    # model_run_data[xml_tag] = []
+                # model_run_data[xml_tag].append(value)
 
-        elif( xml_tag in ('noflux', 'n2oflux', 'annppt') ):
+        # elif( xml_tag in ('noflux', 'n2oflux', 'annppt') ):
+        elif( xml_tag in ('n2oflux') ):
 
             values = write_yearly_daycent_output92( xml_tag, xml_text, scenario, mapunit_id, area )
             for value in values:
@@ -595,11 +596,13 @@ def main():
             area = xmlAttribArea
             carbon = root.find('.//Carbon')
 
-            # write csv file for scenario per map unit
-            parse_mapunit(elem, mapunit, area, scenario)
+            if scenario.find('Baseline') > -1:
+                # calc for baseline
+                # write csv file for scenario per map unit
+                parse_mapunit(elem, mapunit, area, scenario)
 
-            # give a status update for scipt user
-            print("creating records for scenario = [" + str( scenario ) + "] and mapunit = [" + str( mapunit ) + "]")
+                # give a status update for scipt user
+                print("creating records for scenario = [" + str( scenario ) + "] and mapunit = [" + str( mapunit ) + "]")
 
 
         # process the GUI output data
