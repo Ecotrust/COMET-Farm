@@ -280,19 +280,19 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
                     # model_run_data[calc_tag] = []
                     model_run_data[calc_tag] = calc_value
 
-            year_count = len(model_run_data[xml_tag])
-
-            for y in range( year_count ):
-                yearly_output = {
-                    "year": model_run_data[xml_tag][y]["year"],
-                    "var": calc_tag,
-                    "output": calc_value,
-                    calc_tag: calc_value,
-                    "id": model_run_data[xml_tag][y]["id"],
-                    "area": model_run_data[xml_tag][y]["area"],
-                    "scenario": model_run_data[xml_tag][y]["scenario"],
-                }
-                model_run_data[calc_tag].append(yearly_output)
+            # year_count = len(model_run_data[xml_tag])
+            #
+            # for y in range( year_count ):
+            #     yearly_output = {
+            #         "year": model_run_data[xml_tag][y]["year"],
+            #         "var": calc_tag,
+            #         "output": calc_value,
+            #         calc_tag: calc_value,
+            #         "id": model_run_data[xml_tag][y]["id"],
+            #         "area": model_run_data[xml_tag][y]["area"],
+            #         "scenario": model_run_data[xml_tag][y]["scenario"],
+            #     }
+            #     model_run_data[calc_tag].append(yearly_output)
 
                 # import ipdb; ipdb.set_trace()
 
