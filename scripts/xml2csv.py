@@ -99,8 +99,9 @@ def calc_co2_exchange(arr=[{"output": 0, "year": ""}]):
     arr_len = len(arr) - 1 # make sure there is at least 1 year(s) available to measure
     if arr_len > 0:
         area = map_unit_area(arr) # get mapunit area for calc
-        calc = ((float(arr[0]["output"]) - float(arr[arr_len]["output"])) / arr_len) * (float(area)) * (1/100) * (44/12) # see equation at top of doc
-        return calc
+        if arr[0]["output"] != 'None' and arr[arr_len]["output"] != 'None' and area != 'None':
+            calc = ((float(arr[0]["output"]) - float(arr[arr_len]["output"])) / arr_len) * (float(area)) * (1/100) * (44/12) # see equation at top of doc
+            return calc
 
 def calc_direct_soil_n2o(arr=[{"output": 0, "year": ""}]):
     # n2oflux seems to have 1 less year output than somsc
@@ -237,7 +238,31 @@ def write_aggregate_csv(all_agg, xml_name):
 
     csvFile.close()
 
-def parse_mapunit(elem, mapunit_id, area ,scenario):
+def write_parsed_mapunits(map_units):
+    ghg_file_name = 'ghg_balance'
+    ghg_dir_name = './results/'
+
+    if not os.path.isdir(ghg_dir_name):
+        os.mkdir(ghg_dir_name)
+
+    parsed_mapunit_fieldnames = ['mapunit_id', 'baseline', 'baseline_plus_14', 'baseline_minus_14']
+
+    # for map_unit in map_units:
+        # for k,v in map_unit.items():
+            # print(k)
+            # if k not in parsed_mapunit_fieldnames:
+                # parsed_mapunit_fieldnames.append(k)
+
+    with open(ghg_dir_name + ghg_file_name + '.csv', 'wt') as ghgFile:
+        writer = csv.DictWriter(ghgFile, fieldnames=parsed_mapunit_fieldnames)
+        writer.writeheader()
+        for map_unit in map_units:
+            writer.writerow(map_unit)
+
+    ghgFile.close()
+
+
+def parse_mapunit_baseline(elem, mapunit_id, area, scenario, baseline_date):
 
     model_run_data = {}
 
@@ -292,7 +317,7 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
             #         "area": model_run_data[xml_tag][y]["area"],
             #         "scenario": model_run_data[xml_tag][y]["scenario"],
             #     }
-            #     model_run_data[calc_tag].append(yearly_output)
+                # model_run_data[calc_tag].append(yearly_output)
 
                 # import ipdb; ipdb.set_trace()
 
@@ -340,42 +365,41 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
         else:
             continue
 
-    ghg_balance = calc_greenhouse_gas_balance(model_run_data['soil_carbon_exchange'][0]['output'], model_run_data['direct_soil_n2o'][0]['output'], model_run_data['indirect_soil_n2o_leached'][0]['output'], model_run_data['indirect_soil_n2o_volatilized'][0]['output'])
+    # ghg_balance = calc_greenhouse_gas_balance(model_run_data['soil_carbon_exchange'][0]['output'], model_run_data['direct_soil_n2o'][0]['output'], model_run_data['indirect_soil_n2o_leached'][0]['output'], model_run_data['indirect_soil_n2o_volatilized'][0]['output'])
 
-    ghg_file_name = 'ghg_balance'
-    ghg_dir_name = './results/'
+    ghg_balance = calc_greenhouse_gas_balance(model_run_data['soil_carbon_exchange'], model_run_data['direct_soil_n2o'], model_run_data['indirect_soil_n2o_leached'], model_run_data['indirect_soil_n2o_volatilized'])
 
-    if not os.path.isdir(ghg_dir_name):
-        os.mkdir(ghg_dir_name)
+    ghg_data = {
+        'mapunit_id': mapunit_id,
+        baseline_date: ghg_balance,
+        # 'area': area,
+        # 'scenario': scenario,
+    }
 
-    with open(ghg_dir_name + ghg_file_name + '.csv', 'wt', newline='') as ghgFile:
-        ghg_writer = csv.writer(ghgFile, delimiter=' ', quotechar="|", quoting=csv.QUOTE_MINIMAL)
-        ghg_writer.writerow([ghg_balance, model_run_data['id']])
-
-    ghgFile.close()
+    return ghg_data
 
     #  header fields
-    values_array = ['year', 'scenario', 'id', 'area']
+    # values_array = ['year', 'scenario', 'id', 'area']
+    #
+    # for values in model_run_data:
+    #     values_array.append(values)
 
-    for values in model_run_data:
-        values_array.append(values)
-
-    # write parsed out to csv
-    csv_file_name = scenario
-    dir_name = './results/' + mapunit_id + '/'
-
-    if not os.path.isdir(dir_name):
-        os.mkdir(dir_name)
-
-    with open(dir_name + csv_file_name + '.csv', 'wt') as csvFile:
-        writer = csv.DictWriter(csvFile, fieldnames=values_array)
-        writer.writeheader()
-
-        if model_run_data:
-            org_by_year = organize_by_year(model_run_data)
-            for k,v in org_by_year.items():
-                writer.writerow(v)
-    csvFile.close()
+    # # write parsed out to csv
+    # csv_file_name = scenario
+    # dir_name = './results/' + mapunit_id + '/'
+    #
+    # if not os.path.isdir(dir_name):
+    #     os.mkdir(dir_name)
+    #
+    # with open(dir_name + csv_file_name + '.csv', 'wt') as csvFile:
+    #     writer = csv.DictWriter(csvFile, fieldnames=values_array)
+    #     writer.writeheader()
+    #
+    #     if model_run_data:
+    #         org_by_year = organize_by_year(model_run_data)
+    #         for k,v in org_by_year.items():
+    #             writer.writerow(v)
+    # csvFile.close()
 
 
 # Extract yearly output data from the DayCent variable for end-of-year value
@@ -487,66 +511,19 @@ def main():
     xml_name = sys.argv[1]
     baseline_xml_name = sys.argv[1]
     baseline_plus_xml_name = sys.argv[2]
-    baesline_minus_xml_name = sys.argv[3]
+    baseline_minus_xml_name = sys.argv[3]
 
     start = datetime.now()
     print("\nStarting script at " + str( time.ctime( int( time.time( ) ) ) ) + "\n")
     print("----------------------------------------------------------------------")
 
     parsed_agg = []
+    parsed_mapunits = []
     xml_file = open(xml_name, 'r+')
 
     # XML Parse
     tree = ET.parse(xml_name)
     root = tree.getroot()
-
-    # old var from example script
-    ModelRunNameArray = ''
-    module = ''
-    modelRunId = ''
-    irrigated = ''
-    mlra = ''
-    practice = ''
-    scenario = ''
-    run_name = ''
-
-    # variables thjat will be useful for future reference
-    SoilCarbon = '0'
-    SoilCarbonUncertainty = '0'
-    SoilCarbonStock2000 = '0'
-    SoilCarbonStockBegin = '0'
-    SoilCarbonStockEnd = '0'
-    SoilCarbonStock2000Uncertainty = '0'
-    SoilCarbonStockBeginUncertainty = '0'
-    SoilCarbonStockEndUncertainty = '0'
-    BiomassBurningCarbon = '0'
-    BiomassBurningCarbonUncertainty = '0'
-    LimingCO2 = '0'
-    LimingCO2Uncertainty = '0'
-    UreaFertilizationCO2 = '0'
-    UreaFertilizationCO2Uncertainty = '0'
-    DrainedOrganicSoilsCO2 = '0'
-    DrainedOrganicSoilsCO2Uncertainty = '0'
-    SoilN2O = '0'
-    SoilN2OUncertainty = '0'
-    WetlandRiceCultivationN2O = '0'
-    WetlandRiceCultivationN2OUncertainty = '0'
-    BiomassBurningN2O = '0'
-    BiomassBurningN2OUncertainty = '0'
-    DrainedOrganicSoilsN2O = '0'
-    DrainedOrganicSoilsN2OUncertainty = '0'
-    SoilCH4 = '0'
-    SoilCH4Uncertainty = '0'
-    WetlandRiceCultivationCH4 = '0'
-    WetlandRiceCultivationCH4Uncertainty = '0'
-    BiomassBurningCH4 = '0'
-    BiomassBurningCH4Uncertainty = '0'
-    mapunit = '0'
-    area = '0'
-
-    #the output file is missing the carbon monoxide emissions from biomass burning
-    BiomassBurningCO = '0'
-    BiomassBurningCOUncertainty = '0'
 
     for elem in tree.iter():
         xmlTag = str( elem.tag )
@@ -583,13 +560,11 @@ def main():
                 # generate the scenario name
                 # used later for DayCent data within mapunit
                 scenario = xmlAttribName[:-15]
+
             else:
                 # aggregate results
                 scenario_parsed = parse_aggregate(elem, scenario)
                 parsed_agg.append(scenario_parsed)
-
-        elif( "current" in scenario.lower() ):
-            continue
 
         elif( "current" in scenario.lower() ):
             continue
@@ -603,10 +578,13 @@ def main():
             if scenario.find('Baseline') > -1:
                 # calc for baseline
                 # write csv file for scenario per map unit
-                parse_mapunit(elem, mapunit, area, scenario)
+                # parse_mapunit(elem, mapunit, area, scenario)
+                print(area)
+                parsed_mapunit = parse_mapunit_baseline(elem, mapunit, area, scenario, 'baseline')
+                parsed_mapunits.append(parsed_mapunit)
 
                 # give a status update for scipt user
-                print("creating records for scenario = [" + str( scenario ) + "] and mapunit = [" + str( mapunit ) + "]")
+                print("creating records for scenario = [baseline] and mapunit = [" + str( mapunit ) + "]")
 
 
         # process the GUI output data
@@ -629,10 +607,126 @@ def main():
         else:
             continue
 
-    write_aggregate_csv(parsed_agg, xml_name)
-
     # close the XML input file
     xml_file.close()
+
+    # START Baseline +14 Days
+    baseline_plus_file = open(baseline_plus_xml_name, 'r+')
+
+    # XML Parse
+    tree = ET.parse(baseline_plus_xml_name)
+    root = tree.getroot()
+
+    for elem in tree.iter():
+        xmlTag = str( elem.tag )
+        xmlAttrib = str( elem.attrib )
+        xmlAttribName = str( elem.attrib.get( 'name' ) )
+        xmlAttribId = str( elem.attrib.get( 'id' ) )
+        xmlAttribArea = str( elem.attrib.get( 'area' ) )
+        xmlText = str( elem.text )
+
+        # ====== Scenario
+        if( xmlTag == 'Scenario' ):
+
+            scenarioFullName = xmlAttribName
+            scenario = xmlAttribName
+
+            if scenarioFullName.find( ' : FILE RESULTS' ) > -1:
+                # generate the scenario name
+                # used later for DayCent data within mapunit
+                scenario = xmlAttribName[:-15]
+
+        elif( "current" in scenario.lower() ):
+            continue
+
+        elif( xmlTag == "MapUnit" ):
+
+            mapunit = xmlAttribId
+            area = xmlAttribArea
+            carbon = root.find('.//Carbon')
+
+            if scenario.find('Baseline') > -1:
+                # calc for baseline
+                # write csv file for scenario per map unit
+                # parse_mapunit_baseline(elem, mapunit, area, scenario, 'baseline_plus_14')
+                parsed_mapunit = parse_mapunit_baseline(elem, mapunit, area, scenario, 'baseline_plus_14')
+                parsed_mapunits.append(parsed_mapunit)
+
+                # give a status update for scipt user
+                print("creating records for scenario = [baseline_plus_14] and mapunit = [" + str( mapunit ) + "]")
+
+
+    baseline_plus_file.close()
+
+    # START Baseline -14 Days
+    baseline_minus_file = open(baseline_minus_xml_name, 'r+')
+
+    # XML Parse
+    tree = ET.parse(baseline_minus_xml_name)
+    root = tree.getroot()
+
+    for elem in tree.iter():
+        xmlTag = str( elem.tag )
+        xmlAttrib = str( elem.attrib )
+        xmlAttribName = str( elem.attrib.get( 'name' ) )
+        xmlAttribId = str( elem.attrib.get( 'id' ) )
+        xmlAttribArea = str( elem.attrib.get( 'area' ) )
+        xmlText = str( elem.text )
+
+        # ====== Scenario
+        if( xmlTag == 'Scenario' ):
+
+            scenarioFullName = xmlAttribName
+            scenario = xmlAttribName
+
+            if scenarioFullName.find( ' : FILE RESULTS' ) > -1:
+                # generate the scenario name
+                # used later for DayCent data within mapunit
+                scenario = xmlAttribName[:-15]
+
+        elif( "current" in scenario.lower() ):
+            continue
+
+        elif( xmlTag == "MapUnit" ):
+
+            mapunit = xmlAttribId
+            area = xmlAttribArea
+            carbon = root.find('.//Carbon')
+
+            if scenario.find('Baseline') > -1:
+                # calc for baseline
+                # write csv file for scenario per map unit
+                # parse_mapunit_baseline(elem, mapunit, area, scenario, 'baseline_plus_14')
+                parsed_mapunit = parse_mapunit_baseline(elem, mapunit, area, scenario, 'baseline_minus_14')
+                parsed_mapunits.append(parsed_mapunit)
+
+                # give a status update for scipt user
+                print("creating records for scenario = [baseline_minus_14] and mapunit = [" + str( mapunit ) + "]")
+
+
+    baseline_minus_file.close()
+
+    combined_results = {}
+    for u in parsed_mapunits:
+        print(u)
+        print('\n')
+        unit_id = u['mapunit_id']
+        if unit_id not in combined_results.keys():
+            combined_results[unit_id] = {}
+
+        for k,v in u.items():
+            combined_results[u['mapunit_id']][k] = v
+
+    data_rows = []
+    for res in combined_results.values():
+        data_rows.append(res)
+    print(data_rows)
+        # for k,v in u.items():
+            # print(k)
+            # print(v)
+
+    # write_aggregate_csv()
+    write_parsed_mapunits(data_rows)
 
     print("----------------------------------------------------------------------")
     End = datetime.now( )
