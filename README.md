@@ -102,21 +102,14 @@ COMET-Farm API scripts &mdot; use an Excel template and GIS data export to creat
 
 COMET-Farm API in its current state sends an email with model run results in XML format.
 
-The xml2csv.py script will parse the model run results XML file and create a CSV file for each map unit within a model run scenario. Your final result should look something like:
+The xml2csv.py script will parse the model run results of 3 XML file (baseline, baseline+14, and baseline-14) to create a CSV file that has a row for each mapunit id.  
 
-```
-results/
-  16560/
-    baseline.csv
-    notill.csv
-  16561/
-    baseline.csv
-    notill.csv
-  16564/
-    baseline.csv
-    notill.csv
-  Results_***.aggregate.csv
-```
+Your final result will be in `./results/ghg_balance.csv` and look something like this:
+
+| mapunit_id | baseline | baseline +14 | baseline -14 |
+|------------|----------|--------------|--------------|
+| 12345 | -123.56 | -122.90 | -119.884 |
+| 43289 | 100.200 | 120.45 | 113.1232 |
 
 ### How to generate results CSVs from E-mail results
 
@@ -127,7 +120,65 @@ results/
   * navigate to the saved XML file
     `cd COMET-Farm/results/`
   * run the script
-    `python3 COMET-Farm/scripts/xml2csv.py COMET-Farm/results/<model_output.xml>`  
+    `python3 COMET-Farm/scripts/xml2csv.py COMET-Farm/results/<model_output_baseline.xml> COMET-Farm/results/<model_output_baseline_plus_14>.xml COMET-Farm/results/<model_output_baseline_minus_14.xml>`
+
+### Overview of Script  
+
+This script takes as arguments XML files from a COMET-Farm results email, then outputs a CSV file containing a table with rows for mapunits and columns for CO2e formulas for CO2e:
+    * area-weighted greenhouse gas balance (soil C stock change + N2O emissions + CH4 emissions)
+
+Steps:
+  * Do calculations for greenhouse gas balance in each mapunit
+    `(soil C stock change + N2O emissions + CH4 emissions)`
+
+  * Soil Carbon Stock Change (SCSC) - equation to evaluate changes in soil carbon (C change expressed in CO2e)
+
+    * use `<somsc>` tag
+
+    * units are grams of soil carbon per meter squared
+
+    * `( ( somsc at beginning of model run – somsc at end of model run ) / time period in years of model run ) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams) * (44/12 C to CO2e conversion factor) = change in soil C (Mg CO2e/yr)`
+
+    * a negative value indicates net soil carbon sequestration for this parcel
+
+  * Direct Soil Nitrous Oxide (Direct Soil N2O) - (N2O expressed in CO2e)
+
+    * use `<n2oflux>` tag
+
+    * units are grams of N2O-N per meter squared per year
+
+    * `( average DayCent yearly N2O emissions over the model run ) * ( 44 / 28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams)`
+
+  * Indirect soil nitrous oxide (ISNO) - product of both volatilized nitrogen and leached nitrogen (N2O expressed in CO2e)
+
+    * Volatilized N: Indirect Soil Nitrous Oxide - `<volpac>`
+
+    * Leached N: Indirect Soil Nitrous Oxide - `<strmac_2>`
+
+    * units are g N m2/yr
+
+    * For example, consider the following output strings for a Current Management model period (identified as “Current”, or 2000-2017) on a 1 hectare parcel:
+
+    * The equation to calculate the soil indirect N2O emissions from volatilization is as follows for the period 2008 to 2017:
+
+        `( average DayCent volpac emissions over the model run ) * ( 0.0075 EFvol ) * ( 44/28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams)`
+
+    * The equation to calculate the soil indirect N2O emissions from leaching is as follows for the period of 2008 to 2017:
+
+        `( average DayCent strmac_2 emissions over the model run ) * ( 0.01 EFleach ) * ( 44/28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams) = Mg/ha CO2e`
+
+    * The yearly indirect soil N2O emissions predicted by DayCent from leaching would be as follows:
+
+        `( 0.313 + 0.318 + 0.045872 + 0.216 + 0.335 + 0.335 + 0.357 + 0.320 + 0.335 + .046745 ) * ( 1 / 10 years ) * ( 0.01 ) * ( 44/28 ) * ( 298 ) * ( 1 ha ) * ( 10000 / 1000000 ) =  Mg N2O / yr ( in CO2e ) = 0.0092 Mg/ha CO2e`
+
+Steps:
+    1. Open results file
+    2. Loop through model runs
+    3. Create a CSV file with a row for each map unit and columns for:
+        * mapunitID
+        * Baseline
+        * Baseline +14 days
+        * Baseline -14 days  
 
 
 ## Caveats
