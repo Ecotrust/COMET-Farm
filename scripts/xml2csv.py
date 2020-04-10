@@ -27,7 +27,7 @@ import xml.etree.ElementTree as ET
 
             * a negative value indicates net soil carbon sequestration for this parcel
 
-        * Direct Soil Nitrous Oxide (DSNO) - (N2O expressed in CO2e)
+        * Direct Soil Nitrous Oxide (Direct Soil N2O) - (N2O expressed in CO2e)
 
             * use `<n2oflux>` tag
 
@@ -37,26 +37,21 @@ import xml.etree.ElementTree as ET
 
         * Indirect soil nitrous oxide (ISNO) - product of both volatilized nitrogen and leached nitrogen (N2O expressed in CO2e)
 
-            * use `<volpac>` tag for volatilized N
+            * Volatilized N: Indirect Soil Nitrous Oxide - `<volpac>`
 
-            * use `<strmac_2>` tag for leached N
+            * Leached N: Indirect Soil Nitrous Oxide - `<strmac_2>`
 
             * units are g N m2/yr
 
             * For example, consider the following output strings for a Current Management model period (identified as “Current”, or 2000-2017) on a 1 hectare parcel:
 
-                <strmac_2_>2009,0.0,2009.08,0.245,2009.17,0.265,2009.25,0.266,2009.33,0.269,2009.42,0.271,2009.5,0.272,2009.58,0.272,2009.67,0.272,2009.75,0.272,2009.83,0.272,2009.92,0.272,2010,0.272,2010.08,0.0,2010.17,0.0,2010.25,0.0,2010.33,0.0,2010.42,0.0,2010.5,0.0,2010.58,0.0,2010.67,0.0,2010.75,0.0,2010.83,0.0,2010.92,0.0,2011,0.0,2011.08,0.0,2011.17,0.0,2011.25,0.0,2011.33,0.0,2011.42,0.0,2011.5,0.0,2011.58,0.0,2011.67,0.0,2011.75,0.0,2011.83,0.0,2011.92,0.0,2012,0.0,2012.08,0.0,2012.17,0.0,2012.25,0.284,2012.33,0.346,2012.42,0.351,2012.5,0.356,2012.58,0.359,2012.67,0.359,2012.75,0.359,2012.83,0.359,2012.92,0.359,2013,0.359,2013.08,0.0,2013.17,1.785,2013.25,2.878,2013.33,2.881,2013.42,2.881,2013.5,2.886,2013.58,2.887,2013.67,2.887,2013.75,2.887,2013.83,2.887,2013.92,2.887,2014,2.887,2014.08,3.031,2014.17,4.010,2014.25,4.083,2014.33,4.093,2014.42,4.094,2014.5,4.094,2014.58,4.094,2014.67,4.094,2014.75,4.094,2014.83,4.094,2014.92,4.094,2015,4.094,2015.08,0.0,2015.17,0.0,2015.25,0.0,2015.33,0.0,2015.42,0.0,2015.5,0.0,2015.58,0.0,2015.67,0.0,2015.75,0.0,2015.83,0.0,2015.92,0.0,2016,0.0,2016.08,3.230,2016.17,3.466,2016.25,4.978,2016.33,4.993,2016.42,4.993,2016.5,4.995,2016.58,4.995,2016.67,4.995,2016.75,4.995,2016.83,4.995,2016.92,4.995,2017,4.995,2017.08,0.184,2017.17,2.175,2017.25,2.880,2017.33,2.882,2017.42,2.884,2017.5,2.884,2017.58,2.884,2017.67,2.884,2017.75,2.884,2017.83,2.889,2017.92,2.891,2018,3.122,2018,0.0,</strmac_2_>
-
-                <volpac>2009,0.313,2009.08,0.0,2009.17,0.0,2009.25,0.0,2009.33,0.0,2009.42,0.0,2009.5,0.0,2009.58,0.0,2009.67,0.0,2009.75,0.0,2009.83,0.318,2009.92,0.318,2010,0.318,2010.08,-8.506E-09,2010.17,6.5631E-06,2010.25,1.4848E-05,2010.33,5.6368E-03,2010.42,1.7234E-02,2010.5,2.6689E-02,2010.58,3.3214E-02,2010.67,3.9155E-02,2010.75,4.2075E-02,2010.83,4.4129E-02,2010.92,4.5445E-02,2011,4.5872E-02,2011.08,7.5126E-05,2011.17,-1.394E-05,2011.25,1.9422E-04,2011.33,5.0168E-04,2011.42,5.0168E-04,2011.5,5.0168E-04,2011.58,0.216,2011.67,0.216,2011.75,0.216,2011.83,0.216,2011.92,0.216,2012,0.216,2012.08,0.0,2012.17,0.0,2012.25,0.0,2012.33,0.0,2012.42,0.0,2012.5,0.0,2012.58,0.0,2012.67,0.0,2012.75,0.0,2012.83,0.335,2012.92,0.335,2013,0.335,2013.08,0.0,2013.17,0.0,2013.25,0.0,2013.33,0.0,2013.42,0.0,2013.5,0.0,2013.58,0.0,2013.67,0.0,2013.75,0.0,2013.83,0.335,2013.92,0.335,2014,0.335,2014.08,0.0,2014.17,0.0,2014.25,0.0,2014.33,0.0,2014.42,0.0,2014.5,0.0,2014.58,0.0,2014.67,0.0,2014.75,0.0,2014.83,0.357,2014.92,0.357,2015,0.357,2015.08,0.0,2015.17,0.0,2015.25,0.0,2015.33,0.0,2015.42,0.0,2015.5,0.0,2015.58,0.0,2015.67,0.0,2015.75,0.0,2015.83,0.320,2015.92,0.320,2016,0.320,2016.08,0.0,2016.17,0.0,2016.25,0.0,2016.33,0.0,2016.42,0.0,2016.5,0.0,2016.58,0.0,2016.67,0.0,2016.75,0.0,2016.83,0.335,2016.92,0.335,2017,0.335,2017.08,-2.711E-08,2017.17,8.9977E-06,2017.25,6.2888E-04,2017.33,3.3137E-03,2017.42,1.0772E-02,2017.5,2.3423E-02,2017.58,3.1529E-02,2017.67,3.8201E-02,2017.75,4.3781E-02,2017.83,4.6393E-02,2017.92,4.6729E-02,2018,4.6745E-02,2018,0.0,</volpac>
-
-
             * The equation to calculate the soil indirect N2O emissions from volatilization is as follows for the period 2008 to 2017:
 
-                `( 0.0 + 0.272 + 0.0 + 0.0 + 0.359 + 2.887 + 4.094 + 0.0 + 4.995 + 3.122 ) ( 1/10 yrs) * ( 0.01 EFleach) * ( 44/28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams) = 0.074 Mg/ha CO2e`
+                `( average DayCent volpac emissions over the model run ) * ( 0.0075 EFvol ) * ( 44/28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams)`
 
             * The equation to calculate the soil indirect N2O emissions from leaching is as follows for the period of 2008 to 2017:
 
-                `( average DayCent volpac emissions over the model run ) * ( 0.0075 EFvol) * ( 44/28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams)`
+                `( average DayCent strmac_2 emissions over the model run ) * ( 0.01 EFleach ) * ( 44/28 N2O-N to N2O conversion ) * ( 298 N2O to CO2e conversion) * ( size of parcel in ha ) * ( 10,000 m2/hectare ) * ( 1 Mg / 1,000,000 grams) = Mg/ha CO2e`
 
             * The yearly indirect soil N2O emissions predicted by DayCent from leaching would be as follows:
 
@@ -69,6 +64,7 @@ import xml.etree.ElementTree as ET
         1. Open results file
         2. Loop through model runs
         3. Create a CSV file with a row for each map unit and columns for:
+            * mapunitID
             * Baseline
             * Baseline +14 days
             * Baseline -14 days
@@ -81,6 +77,7 @@ def remove_duplicate_years(arr=[]):
     dup_year = ''
     for year in years:
         if years.count(year) > 1:
+            # only remove if dup year present
             dup_year = year
     if len(dup_year) > 0:
         for i in arr:
@@ -88,14 +85,83 @@ def remove_duplicate_years(arr=[]):
                 el = arr.pop(arr.index(i))
     return arr
 
+def calc_greenhouse_gas_balance(*args):
+    ghg_balance = 0
+    for arg in args:
+        if arg and arg >= 0:
+            ghg_balance += arg
+        else:
+            continue
+    return ghg_balance
+
 def calc_co2_exchange(arr=[{"output": 0, "year": ""}]):
-    arr = remove_duplicate_years(arr)
-    arr_len = len(arr) - 1
-    print(arr[arr_len]["output"])
+    arr = remove_duplicate_years(arr) # Most results contain duplicate for first year
+    arr_len = len(arr) - 1 # make sure there is at least 1 year(s) available to measure
     if arr_len > 0:
+        area = map_unit_area(arr) # get mapunit area for calc
+        if arr[0]["output"] != 'None' and arr[arr_len]["output"] != 'None' and area != 'None':
+            calc = ((float(arr[0]["output"]) - float(arr[arr_len]["output"])) / arr_len) * (float(area)) * (1/100) * (44/12) # see equation at top of doc
+            return calc
+
+def calc_direct_soil_n2o(arr=[{"output": 0, "year": ""}]):
+    # n2oflux seems to have 1 less year output than somsc
+    year_count = len(arr)
+    n2o_avg = 0
+    for y in range( year_count ):
+        n2o_avg += float(arr[y]['n2oflux'])
+    if n2o_avg > 0:
         area = map_unit_area(arr)
-        calc = ((float(arr[0]["output"]) - float(arr[arr_len]["output"])) / arr_len) * (float(area)) * (1/100) * (44/12)
-    return
+        n2o_avg = n2o_avg/year_count
+        calc = n2o_avg * (44/28) * 298 * float(area) * (10000/1000000)
+        return calc
+
+def calc_direct_soil_n2o(arr=[{"output": 0, "year": ""}]):
+    # n2oflux seems to have 1 less year output than somsc
+    year_count = len(arr)
+    n2o_avg = 0
+    for y in range( year_count ):
+        n2o_avg += float(arr[y]['n2oflux'])
+    if n2o_avg > 0:
+        area = map_unit_area(arr)
+        n2o_avg = n2o_avg/year_count
+        calc = n2o_avg * (44/28) * 298 * float(area) * (10000/1000000)
+        return calc
+
+def calc_volatilized_indirect_soil_n2o(arr=[{"output": 0, "year": ""}]):
+    # n2oflux seems to have 1 less year output than somsc
+    year_count = len(arr)
+    n2o_avg = 0
+    for y in range( year_count ):
+        n2o_avg += float(arr[y]['volpac'])
+    if n2o_avg >= 0:
+        area = map_unit_area(arr)
+        n2o_avg = n2o_avg/year_count
+        calc = n2o_avg * 0.0075 * (44/28) * 298 * float(area) * (10000/1000000)
+        return calc
+
+def calc_leached_indirect_soil_n2o(arr=[{"output": 0, "year": ""}]):
+    # n2oflux seems to have 1 less year output than somsc
+    year_count = len(arr)
+    n2o_avg = 0
+    for y in range( year_count ):
+        n2o_avg += float(arr[y]['strmac_2_'])
+    if n2o_avg > 0:
+        area = map_unit_area(arr)
+        n2o_avg = n2o_avg/year_count
+        calc = n2o_avg * 0.01 * (44/28) * 298 * float(area) * (10000/1000000)
+        return calc
+
+def calc_indirect_soil_n2o(arr=[{"output": 0, "year": ""}]):
+    # n2oflux seems to have 1 less year output than somsc
+    year_count = len(arr)
+    n2o_avg = 0
+    for y in range( year_count ):
+        n2o_avg += float(arr[y]['n2oflux'])
+    if n2o_avg > 0:
+        area = map_unit_area(arr)
+        n2o_avg = n2o_avg/year_count
+        calc = n2o_avg * (44/28) * 298 * float(area) * (10000/1000000)
+        return calc
 
 def map_unit_area(arr=[]):
     # area should be same for each dict in list
@@ -148,7 +214,7 @@ def parse_aggregate(elem, scenario):
 
 def write_aggregate_csv(all_agg, xml_name):
     # write parsed aggregate to csv
-    csv_file_name = xml_name + '.aggregate'
+    csv_file_name = 'aggregate'
     dir_name = './results/'
 
     if not os.path.isdir(dir_name):
@@ -163,7 +229,7 @@ def write_aggregate_csv(all_agg, xml_name):
             if k not in aggregate_data_fieldnames:
                 aggregate_data_fieldnames.append(k)
 
-        print(r)
+        # print(r)
     with open(dir_name + csv_file_name + '.csv', 'wt') as csvFile:
         writer = csv.DictWriter(csvFile, fieldnames=aggregate_data_fieldnames)
         writer.writeheader()
@@ -172,7 +238,31 @@ def write_aggregate_csv(all_agg, xml_name):
 
     csvFile.close()
 
-def parse_mapunit(elem, mapunit_id, area ,scenario):
+def write_parsed_mapunits(map_units):
+    ghg_file_name = 'ghg_balance'
+    ghg_dir_name = './results/'
+
+    if not os.path.isdir(ghg_dir_name):
+        os.mkdir(ghg_dir_name)
+
+    parsed_mapunit_fieldnames = ['mapunit_id', 'baseline', 'baseline_plus_14', 'baseline_minus_14']
+
+    # for map_unit in map_units:
+        # for k,v in map_unit.items():
+            # print(k)
+            # if k not in parsed_mapunit_fieldnames:
+                # parsed_mapunit_fieldnames.append(k)
+
+    with open(ghg_dir_name + ghg_file_name + '.csv', 'wt') as ghgFile:
+        writer = csv.DictWriter(ghgFile, fieldnames=parsed_mapunit_fieldnames)
+        writer.writeheader()
+        for map_unit in map_units:
+            writer.writerow(map_unit)
+
+    ghgFile.close()
+
+
+def parse_mapunit_baseline(elem, mapunit_id, area, scenario, baseline_date):
 
     model_run_data = {}
 
@@ -181,7 +271,9 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
         xml_tag = xml_tag.lower()
         xml_text = str(child.text)
 
-        if (xml_tag in ( 'aagdefac', 'abgdefac', 'accrst', 'accrste_1_', 'agcprd', 'aglivc', 'bgdefac', 'bglivcm', 'rain', 'cgrain', 'cinput', 'crmvst', 'crootc', 'crpval', 'egracc_1_', 'eupacc_1_', 'fbrchc', 'fertac_1_', 'fertot_1_1_', 'frootcm', 'gromin_1_', 'irrtot', 'metabc_1_', 'metabc_2_', 'metabe_1_1_', 'metabe_2_1_', 'nfixac', 'omadac', 'omadae_1_', 'petann', 'rlwodc', 'somsc', 'somse_1_', 'stdedc', 'stdede_1_', 'strmac_1_', 'strmac_2_', 'strmac_6_', 'strucc_1_', 'struce_1_1_', 'struce_2_1_', 'tminrl_1_', 'tnetmn_1_', 'volpac' ) ):
+        # if (xml_tag in ( 'aagdefac', 'abgdefac', 'accrst', 'accrste_1_', 'agcprd', 'aglivc', 'bgdefac', 'bglivcm', 'rain', 'cgrain', 'cinput', 'crmvst', 'crootc', 'crpval', 'egracc_1_', 'eupacc_1_', 'fbrchc', 'fertac_1_', 'fertot_1_1_', 'frootcm', 'gromin_1_', 'irrtot', 'metabc_1_', 'metabc_2_', 'metabe_1_1_', 'metabe_2_1_', 'nfixac', 'omadac', 'omadae_1_', 'petann', 'rlwodc', 'somsc', 'somse_1_', 'stdedc', 'stdede_1_', 'strmac_1_', 'strmac_2_', 'strmac_6_', 'strucc_1_', 'struce_1_1_', 'struce_2_1_', 'tminrl_1_', 'tnetmn_1_', 'volpac',  ) ):
+
+        if ( xml_tag in ('somsc', 'strmac_2_', 'volpac') ) :
 
             values = write_end_of_year_daycent_output( xml_tag, xml_text, scenario, mapunit_id, area )
             for value in values:
@@ -189,20 +281,56 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
                     model_run_data[xml_tag] = []
                 model_run_data[xml_tag].append(value)
 
-            if (xml_tag == 'somsc') :
+            if xml_tag == 'somsc':
                 somsc = model_run_data[xml_tag]
-                co2exchange = calc_co2_exchange(somsc)
-                model_run_data['soil_carbon_exchange'] = co2exchange
+                calc_value = calc_co2_exchange(somsc)
+                calc_tag = 'soil_carbon_exchange'
+                if calc_tag not in model_run_data.keys():
+                    # model_run_data[calc_tag] = []
+                    model_run_data[calc_tag] = calc_value
 
-        elif( xml_tag in ('irrigated', 'inputcrop' ) ):
+            elif xml_tag == 'strmac_2_':
+                strmac_2_ = model_run_data[xml_tag]
+                calc_value = calc_leached_indirect_soil_n2o(strmac_2_)
+                calc_tag = 'indirect_soil_n2o_leached'
+                if calc_tag not in model_run_data.keys():
+                    # model_run_data[calc_tag] = []
+                    model_run_data[calc_tag] = calc_value
 
-            values = write_yearly_daycent_output( xml_tag, xml_text, scenario, mapunit_id, area )
-            for value in values:
-                if xml_tag not in model_run_data.keys():
-                    model_run_data[xml_tag] = []
-                model_run_data[xml_tag].append(value)
+            elif xml_tag == 'volpac':
+                volpac = model_run_data[xml_tag]
+                calc_value = calc_volatilized_indirect_soil_n2o(volpac)
+                calc_tag = 'indirect_soil_n2o_volatilized'
+                if calc_tag not in model_run_data.keys():
+                    # model_run_data[calc_tag] = []
+                    model_run_data[calc_tag] = calc_value
 
-        elif( xml_tag in ('noflux', 'n2oflux', 'annppt') ):
+            # year_count = len(model_run_data[xml_tag])
+            #
+            # for y in range( year_count ):
+            #     yearly_output = {
+            #         "year": model_run_data[xml_tag][y]["year"],
+            #         "var": calc_tag,
+            #         "output": calc_value,
+            #         calc_tag: calc_value,
+            #         "id": model_run_data[xml_tag][y]["id"],
+            #         "area": model_run_data[xml_tag][y]["area"],
+            #         "scenario": model_run_data[xml_tag][y]["scenario"],
+            #     }
+                # model_run_data[calc_tag].append(yearly_output)
+
+                # import ipdb; ipdb.set_trace()
+
+        # elif( xml_tag in ('irrigated', 'inputcrop' ) ):
+
+            # values = write_yearly_daycent_output( xml_tag, xml_text, scenario, mapunit_id, area )
+            # for value in values:
+                # if xml_tag not in model_run_data.keys():
+                    # model_run_data[xml_tag] = []
+                # model_run_data[xml_tag].append(value)
+
+        # elif( xml_tag in ('noflux', 'n2oflux', 'annppt') ):
+        elif( xml_tag in ('n2oflux') ):
 
             values = write_yearly_daycent_output92( xml_tag, xml_text, scenario, mapunit_id, area )
             for value in values:
@@ -210,31 +338,68 @@ def parse_mapunit(elem, mapunit_id, area ,scenario):
                     model_run_data[xml_tag] = []
                 model_run_data[xml_tag].append(value)
 
+            if xml_tag == 'n2oflux':
+                n2oflux = model_run_data[xml_tag]
+                # print(n2oflux)
+                if n2oflux:
+                    calc_value = calc_direct_soil_n2o(n2oflux)
+                calc_tag = 'direct_soil_n2o'
+                if calc_tag not in model_run_data.keys():
+                    # model_run_data[calc_tag] = []
+                    model_run_data[calc_tag] = calc_value
+
+            # year_count = len(model_run_data[xml_tag])
+            #
+            # for y in range( year_count ):
+            #     yearly_output = {
+            #         "year": model_run_data[xml_tag][y]["year"],
+            #         "var": calc_tag,
+            #         "output": calc_value,
+            #         calc_tag: calc_value,
+            #         "id": model_run_data[xml_tag][y]["id"],
+            #         "area": model_run_data[xml_tag][y]["area"],
+            #         "scenario": model_run_data[xml_tag][y]["scenario"],
+            #     }
+            #     model_run_data[calc_tag].append(yearly_output)
+
         else:
             continue
 
+    # ghg_balance = calc_greenhouse_gas_balance(model_run_data['soil_carbon_exchange'][0]['output'], model_run_data['direct_soil_n2o'][0]['output'], model_run_data['indirect_soil_n2o_leached'][0]['output'], model_run_data['indirect_soil_n2o_volatilized'][0]['output'])
+
+    ghg_balance = calc_greenhouse_gas_balance(model_run_data['soil_carbon_exchange'], model_run_data['direct_soil_n2o'], model_run_data['indirect_soil_n2o_leached'], model_run_data['indirect_soil_n2o_volatilized'])
+
+    ghg_data = {
+        'mapunit_id': mapunit_id,
+        baseline_date: ghg_balance,
+        # 'area': area,
+        # 'scenario': scenario,
+    }
+
+    return ghg_data
+
     #  header fields
-    values_array = ['year', 'scenario', 'id', 'area']
+    # values_array = ['year', 'scenario', 'id', 'area']
+    #
+    # for values in model_run_data:
+    #     values_array.append(values)
 
-    for values in model_run_data:
-        values_array.append(values)
-
-    # write parsed out to csv
-    csv_file_name = scenario
-    dir_name = './results/' + mapunit_id + '/'
-
-    if not os.path.isdir(dir_name):
-        os.mkdir(dir_name)
-
-    with open(dir_name + csv_file_name + '.csv', 'wt') as csvFile:
-        writer = csv.DictWriter(csvFile, fieldnames=values_array)
-        writer.writeheader()
-
-        if model_run_data:
-            org_by_year = organize_by_year(model_run_data)
-            for k,v in org_by_year.items():
-                writer.writerow(v)
-    csvFile.close()
+    # # write parsed out to csv
+    # csv_file_name = scenario
+    # dir_name = './results/' + mapunit_id + '/'
+    #
+    # if not os.path.isdir(dir_name):
+    #     os.mkdir(dir_name)
+    #
+    # with open(dir_name + csv_file_name + '.csv', 'wt') as csvFile:
+    #     writer = csv.DictWriter(csvFile, fieldnames=values_array)
+    #     writer.writeheader()
+    #
+    #     if model_run_data:
+    #         org_by_year = organize_by_year(model_run_data)
+    #         for k,v in org_by_year.items():
+    #             writer.writerow(v)
+    # csvFile.close()
 
 
 # Extract yearly output data from the DayCent variable for end-of-year value
@@ -331,78 +496,34 @@ def write_yearly_daycent_output92( daycent_variable, arrayText, scenario, mapuni
 def update_gui_data(name, array_text, model_run_name, scenario):
 
     sql = [str(name), str(array_text), str(model_run_name), str(scenario)]
-    print(sql)
+    # print(sql)
 
 
 def main():
     # check if argument has been given for xml
     if len(sys.argv) < 1:
-        print("\nMissing argument.")
-        pring("\npython3 script xml2csv.py <XML COMET-Farm Output>\n")
+        print("\nMissing argument\n")
+        pring("\npython3 script xml2csv.py <XML COMET-Farm Output Baseline>.xml <Baseline +14>.xml <Baseline -14>.xml\n")
         print("<XML COMET-Farm Output> system location of XML output file from COMET-Farm\n")
-        print("  eg /usr/local/name/comet/output.xml\n")
+        print("  eg /usr/local/name/comet/baseline.xml\n")
         exit()
 
     xml_name = sys.argv[1]
+    baseline_xml_name = sys.argv[1]
+    baseline_plus_xml_name = sys.argv[2]
+    baseline_minus_xml_name = sys.argv[3]
 
     start = datetime.now()
     print("\nStarting script at " + str( time.ctime( int( time.time( ) ) ) ) + "\n")
     print("----------------------------------------------------------------------")
 
     parsed_agg = []
+    parsed_mapunits = []
     xml_file = open(xml_name, 'r+')
 
     # XML Parse
     tree = ET.parse(xml_name)
     root = tree.getroot()
-
-    # old var from example script
-    ModelRunNameArray = ''
-    module = ''
-    modelRunId = ''
-    irrigated = ''
-    mlra = ''
-    practice = ''
-    scenario = ''
-    run_name = ''
-
-    # variables thjat will be useful for future reference
-    SoilCarbon = '0'
-    SoilCarbonUncertainty = '0'
-    SoilCarbonStock2000 = '0'
-    SoilCarbonStockBegin = '0'
-    SoilCarbonStockEnd = '0'
-    SoilCarbonStock2000Uncertainty = '0'
-    SoilCarbonStockBeginUncertainty = '0'
-    SoilCarbonStockEndUncertainty = '0'
-    BiomassBurningCarbon = '0'
-    BiomassBurningCarbonUncertainty = '0'
-    LimingCO2 = '0'
-    LimingCO2Uncertainty = '0'
-    UreaFertilizationCO2 = '0'
-    UreaFertilizationCO2Uncertainty = '0'
-    DrainedOrganicSoilsCO2 = '0'
-    DrainedOrganicSoilsCO2Uncertainty = '0'
-    SoilN2O = '0'
-    SoilN2OUncertainty = '0'
-    WetlandRiceCultivationN2O = '0'
-    WetlandRiceCultivationN2OUncertainty = '0'
-    BiomassBurningN2O = '0'
-    BiomassBurningN2OUncertainty = '0'
-    DrainedOrganicSoilsN2O = '0'
-    DrainedOrganicSoilsN2OUncertainty = '0'
-    SoilCH4 = '0'
-    SoilCH4Uncertainty = '0'
-    WetlandRiceCultivationCH4 = '0'
-    WetlandRiceCultivationCH4Uncertainty = '0'
-    BiomassBurningCH4 = '0'
-    BiomassBurningCH4Uncertainty = '0'
-    mapunit = '0'
-    area = '0'
-
-    #the output file is missing the carbon monoxide emissions from biomass burning
-    BiomassBurningCO = '0'
-    BiomassBurningCOUncertainty = '0'
 
     for elem in tree.iter():
         xmlTag = str( elem.tag )
@@ -439,13 +560,11 @@ def main():
                 # generate the scenario name
                 # used later for DayCent data within mapunit
                 scenario = xmlAttribName[:-15]
+
             else:
                 # aggregate results
                 scenario_parsed = parse_aggregate(elem, scenario)
                 parsed_agg.append(scenario_parsed)
-
-        elif( "current" in scenario.lower() ):
-            continue
 
         elif( "current" in scenario.lower() ):
             continue
@@ -456,11 +575,16 @@ def main():
             area = xmlAttribArea
             carbon = root.find('.//Carbon')
 
-            # write csv file for scenario per map unit
-            parse_mapunit(elem, mapunit, area, scenario)
+            if scenario.find('Baseline') > -1:
+                # calc for baseline
+                # write csv file for scenario per map unit
+                # parse_mapunit(elem, mapunit, area, scenario)
+                print(area)
+                parsed_mapunit = parse_mapunit_baseline(elem, mapunit, area, scenario, 'baseline')
+                parsed_mapunits.append(parsed_mapunit)
 
-            # give a status update for scipt user
-            print("creating records for scenario = [" + str( scenario ) + "] and mapunit = [" + str( mapunit ) + "]")
+                # give a status update for scipt user
+                print("creating records for scenario = [baseline] and mapunit = [" + str( mapunit ) + "]")
 
 
         # process the GUI output data
@@ -483,10 +607,126 @@ def main():
         else:
             continue
 
-    write_aggregate_csv(parsed_agg, xml_name)
-
     # close the XML input file
     xml_file.close()
+
+    # START Baseline +14 Days
+    baseline_plus_file = open(baseline_plus_xml_name, 'r+')
+
+    # XML Parse
+    tree = ET.parse(baseline_plus_xml_name)
+    root = tree.getroot()
+
+    for elem in tree.iter():
+        xmlTag = str( elem.tag )
+        xmlAttrib = str( elem.attrib )
+        xmlAttribName = str( elem.attrib.get( 'name' ) )
+        xmlAttribId = str( elem.attrib.get( 'id' ) )
+        xmlAttribArea = str( elem.attrib.get( 'area' ) )
+        xmlText = str( elem.text )
+
+        # ====== Scenario
+        if( xmlTag == 'Scenario' ):
+
+            scenarioFullName = xmlAttribName
+            scenario = xmlAttribName
+
+            if scenarioFullName.find( ' : FILE RESULTS' ) > -1:
+                # generate the scenario name
+                # used later for DayCent data within mapunit
+                scenario = xmlAttribName[:-15]
+
+        elif( "current" in scenario.lower() ):
+            continue
+
+        elif( xmlTag == "MapUnit" ):
+
+            mapunit = xmlAttribId
+            area = xmlAttribArea
+            carbon = root.find('.//Carbon')
+
+            if scenario.find('Baseline') > -1:
+                # calc for baseline
+                # write csv file for scenario per map unit
+                # parse_mapunit_baseline(elem, mapunit, area, scenario, 'baseline_plus_14')
+                parsed_mapunit = parse_mapunit_baseline(elem, mapunit, area, scenario, 'baseline_plus_14')
+                parsed_mapunits.append(parsed_mapunit)
+
+                # give a status update for scipt user
+                print("creating records for scenario = [baseline_plus_14] and mapunit = [" + str( mapunit ) + "]")
+
+
+    baseline_plus_file.close()
+
+    # START Baseline -14 Days
+    baseline_minus_file = open(baseline_minus_xml_name, 'r+')
+
+    # XML Parse
+    tree = ET.parse(baseline_minus_xml_name)
+    root = tree.getroot()
+
+    for elem in tree.iter():
+        xmlTag = str( elem.tag )
+        xmlAttrib = str( elem.attrib )
+        xmlAttribName = str( elem.attrib.get( 'name' ) )
+        xmlAttribId = str( elem.attrib.get( 'id' ) )
+        xmlAttribArea = str( elem.attrib.get( 'area' ) )
+        xmlText = str( elem.text )
+
+        # ====== Scenario
+        if( xmlTag == 'Scenario' ):
+
+            scenarioFullName = xmlAttribName
+            scenario = xmlAttribName
+
+            if scenarioFullName.find( ' : FILE RESULTS' ) > -1:
+                # generate the scenario name
+                # used later for DayCent data within mapunit
+                scenario = xmlAttribName[:-15]
+
+        elif( "current" in scenario.lower() ):
+            continue
+
+        elif( xmlTag == "MapUnit" ):
+
+            mapunit = xmlAttribId
+            area = xmlAttribArea
+            carbon = root.find('.//Carbon')
+
+            if scenario.find('Baseline') > -1:
+                # calc for baseline
+                # write csv file for scenario per map unit
+                # parse_mapunit_baseline(elem, mapunit, area, scenario, 'baseline_plus_14')
+                parsed_mapunit = parse_mapunit_baseline(elem, mapunit, area, scenario, 'baseline_minus_14')
+                parsed_mapunits.append(parsed_mapunit)
+
+                # give a status update for scipt user
+                print("creating records for scenario = [baseline_minus_14] and mapunit = [" + str( mapunit ) + "]")
+
+
+    baseline_minus_file.close()
+
+    combined_results = {}
+    for u in parsed_mapunits:
+        print(u)
+        print('\n')
+        unit_id = u['mapunit_id']
+        if unit_id not in combined_results.keys():
+            combined_results[unit_id] = {}
+
+        for k,v in u.items():
+            combined_results[u['mapunit_id']][k] = v
+
+    data_rows = []
+    for res in combined_results.values():
+        data_rows.append(res)
+    print(data_rows)
+        # for k,v in u.items():
+            # print(k)
+            # print(v)
+
+    # write_aggregate_csv()
+    write_parsed_mapunits(data_rows)
 
     print("----------------------------------------------------------------------")
     End = datetime.now( )
