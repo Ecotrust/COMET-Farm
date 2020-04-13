@@ -60,17 +60,24 @@ with open(gis_dir) as csv_file:
                     # get year from template spreadsheet
                     yyyy = cell.value[-5:-1]
                     # get month and day from GIS data
+                    # formated as number day of year ex: 32
                     if cell.column == 4:
-                        month_day = row['planting_date']
+                        day_num_of_year = row['planting_date']
                     elif cell.column == 5:
-                        month_day = row['harvest_date']
+                        day_num_of_year = row['harvest_date']
                     elif cell.column == 11:
-                        month_day = row['till_date']
+                        day_num_of_year = row['till_date']
                     elif cell.column == 13:
-                        month_day = row['n_app_date']
+                        day_num_of_year = row['n_app_date']
                     # combine and format
+                    month_day = datetime.strptime(day_num_of_year, '%j')
+                    # convert to the orginially expected format of Month, day ex: March 14
+                    month_day = month_day.strftime('%B %d')
+                    # add the year to month day from the template spreadsheet
                     mmddyyyy = month_day + yyyy
+                    # format ex: March 152020
                     mmddyyyy = datetime.strptime(mmddyyyy, '%B %d%Y')
+                    # convert to CF API expected format ex: 03/14/2020
                     cfarm_format_date = mmddyyyy.strftime('%m/%d/%Y')
                     # add formated date to template spreadsheet
                     cell.value = cfarm_format_date
