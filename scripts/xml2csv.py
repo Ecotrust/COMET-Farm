@@ -5,6 +5,14 @@ import xml.etree.ElementTree as ET
 # import ipdb
 
 '''
+Running the script
+Windows
+    py -3 ./scripts/xml2csv.py <XML COMET-Farm Output Baseline>.xml <Baseline +14>.xml <Baseline -14>.xml
+        <XML COMET-Farm Output> system location of XML output file from COMET-Farm
+            eg /usr/local/name/comet/baseline.xml
+'''
+
+'''
     Overview of script
     ==================
 
@@ -501,13 +509,19 @@ def update_gui_data(name, array_text, model_run_name, scenario):
 
 def main():
     # check if argument has been given for xml
-    if len(sys.argv) < 1:
-        print("\nMissing argument\n")
-        pring("\npython3 script xml2csv.py <XML COMET-Farm Output Baseline>.xml <Baseline +14>.xml <Baseline -14>.xml\n")
-        print("<XML COMET-Farm Output> system location of XML output file from COMET-Farm\n")
-        print("  eg /usr/local/name/comet/baseline.xml\n")
+    if len(sys.argv) < 3:
+        print("\nMissing argument")
+        print("expecting 3 arguments")
+        print("  1. Baseline results XML file")
+        print("  2. Baseline +14 days results XML file")
+        print("  3. Baseline -14 days results XML file")
+        print("expected command (windows sub `python3` with `py -3`)")
+        print("`python3 xml2csv.py <XML COMET-Farm Output Baseline>.xml <Baseline +14>.xml <Baseline -14>.xml`")
+        print("     <XML COMET-Farm Output> system location of XML output file from COMET-Farm")
+        print("         e.g., /usr/local/name/comet/baseline.xml\n")
         exit()
 
+    print(len(sys.argv))
     xml_name = sys.argv[1]
     baseline_xml_name = sys.argv[1]
     baseline_plus_xml_name = sys.argv[2]

@@ -7,7 +7,12 @@ from openpyxl import load_workbook
 
 # check if argument for workbook has been given
 if len(sys.argv) < 3:
-    print("\npython3 ./script/create_api_input.py <GIS data location> <spreadsheet location>\n")
+    print("\nMissing arguments")
+    print("expecting 2 arguments")
+    print("  1. GIS data")
+    print("  2. spreadsheet v2")
+    print("\nexpected command (Windows sub `python3` with `py -3`)")
+    print("  `python3 ./script/create_api_input.py <GIS data location> <spreadsheet location>`\n")
     print("Command-line arguments are as follows:\n")
     print("  * <GIS data location> system location of comma separated data from GIS")
     print("      e.g.,  /usr/local/name/comet/data.csv\n")
