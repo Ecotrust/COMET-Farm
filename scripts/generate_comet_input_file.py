@@ -89,7 +89,7 @@ if (os.path.isfile(input_xml_file)):
 # initialize the file content string that will contain the text to be written to the file
 with open(input_xml_file, 'w') as f:
 
-    print('Writing XML. This could take a minute...')
+    print('Writing XML. This could take a minute...\n')
 
     # email_address = list(processed_sheets.items())[0][1]['Email']
     # TODO add ID PNAME and USERID
@@ -335,4 +335,4 @@ with open(input_xml_file, 'w') as f:
 
 f.close()
 
-print('XML file generated')
+print('XML file generated\n')

@@ -6,13 +6,13 @@ from datetime import datetime
 from openpyxl import load_workbook
 
 # check if argument for workbook has been given
-if len(sys.argv) < 2:
+if len(sys.argv) < 3:
     print("\npython3 ./script/create_api_input.py <GIS data location> <spreadsheet location>\n")
     print("Command-line arguments are as follows:\n")
-    print("  <GIS data location> system location of comma separated data from GIS\n")
-    print("    eg /usr/local/name/comet/data.csv\n")
-    print("  <spreadsheet locatiion> system location of spreadsheet to add GIS data\n")
-    print("    eg /usr/local/name/comet/data.xlsx\n\n")
+    print("  * <GIS data location> system location of comma separated data from GIS")
+    print("      e.g.,  /usr/local/name/comet/data.csv\n")
+    print("  * <spreadsheet locatiion> system location of spreadsheet to add GIS data")
+    print("      e.g.,  /usr/local/name/comet/data.xlsx\n")
     exit()
 
 gis_dir =  sys.argv[1]
@@ -128,7 +128,7 @@ with open(gis_dir) as csv_file:
 
 wb.save('combined_data.xlsx')
 
-print("Successfully merged GIS and Excel template.\n")
+print("\nSuccessfully merged GIS and Excel template.\n")
 print("Creating XML...\n")
 
 if sys.platform.startswith('darwin') or sys.platform.startswith('linux'):
