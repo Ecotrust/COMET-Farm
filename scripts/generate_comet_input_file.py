@@ -7,13 +7,15 @@ from openpyxl import load_workbook
 # check if argument for workbook has been given
 if len(sys.argv) < 1:
     print("\n")
-    print("python3 script generate_comet_input_file.py <spreadsheet location>")
+    print("python3 generate_comet_input_file.py <spreadsheet location>")
     print("\n")
     # print("Command-line arguments are as follows:")
     # print("  <spreadsheet locatiion> system location of spreadsheet with input data")
     # print("    eg /usr/local/name/comet/data.xml")
     # print("")
     exit()
+
+script_dir = sys.argv[0]
 
 wb_dir = sys.argv[1]
 wb = load_workbook(filename = wb_dir)
@@ -80,8 +82,10 @@ for row in range(1, processed_fields_sheet.max_row + 1):
 
 # create XML file
 timestamp = time.time()
-input_xml_file_name = 'cometfarm_api_input' + str(timestamp)
-input_xml_file = input_xml_file_name + '.xml'
+script_path = os.path.dirname(os.path.realpath(__file__))
+input_xml_file_name = 'cf_i' + str(timestamp)
+input_xml_file = script_path + '/../inputs/api_inputs/' + input_xml_file_name + '.xml'
+
 
 if (os.path.isfile(input_xml_file)):
     os.remove(input_xml_file)

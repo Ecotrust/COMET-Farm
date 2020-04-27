@@ -6,22 +6,31 @@ from datetime import datetime
 from openpyxl import load_workbook
 
 # check if argument for workbook has been given
-if len(sys.argv) < 3:
+if len(sys.argv) == 1 or len(sys.argv) > 3:
     print("\nMissing arguments")
-    print("expecting 2 arguments")
+    print("expecting 1 or 2 arguments")
     print("  1. GIS data")
-    print("  2. spreadsheet v2")
+    print("  2. spreadsheet v2 (optional)")
     print("\nexpected command (Windows sub `python3` with `py -3`)")
     print("  `python3 ./script/create_api_input.py <GIS data location> <spreadsheet location>`\n")
     print("Command-line arguments are as follows:\n")
     print("  * <GIS data location> system location of comma separated data from GIS")
     print("      e.g.,  /usr/local/name/comet/data.csv\n")
     print("  * <spreadsheet locatiion> system location of spreadsheet to add GIS data")
-    print("      e.g.,  /usr/local/name/comet/data.xlsx\n")
+    print("      e.g.,  /usr/local/name/comet/data.xlsx")
+    print("      ** if not given defaults to template_v2.xlsx at repo root\n")
     exit()
 
-gis_dir =  sys.argv[1]
-wb_dir = sys.argv[2]
+if len(sys.argv) == 2:
+    script_dir =  sys.argv[0]
+    gis_dir =  sys.argv[1]
+    script_path = os.path.dirname(os.path.realpath(__file__))
+    wb_dir = script_path + '/../template_v2.xlsx'
+
+elif len(sys.argv) == 3:
+    script_dir =  sys.argv[0]
+    gis_dir =  sys.argv[1]
+    wb_dir = sys.argv[2]
 
 wb = load_workbook(filename = wb_dir)
 scenario_sheet = wb['scenario']
@@ -131,12 +140,14 @@ with open(gis_dir) as csv_file:
                     #till_80_val = till_80_sheet.cell(row=int(till_80_sheet_val), column=1).value
                     #field_sheet.cell(row=rowNum, column=2).value = till_80_val
 
-wb.save('combined_data.xlsx')
+script_path = os.path.dirname(os.path.realpath(__file__))
+
+wb.save(script_path + "/../combined_data.xlsx")
 
 print("\nSuccessfully merged GIS and Excel template.\n")
 print("Creating XML...\n")
 
 if sys.platform.startswith('darwin') or sys.platform.startswith('linux'):
-    os.system("python3 ./scripts/generate_comet_input_file.py combined_data.xlsx")
+    os.system("python3 " + script_path + "/generate_comet_input_file.py ../combined_data.xlsx")
 elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
-    os.system("py -3 ./scripts/generate_comet_input_file.py combined_data.xlsx")
+    os.system("py -3 " + script_path + "/generate_comet_input_file.py ../combined_data.xlsx")
