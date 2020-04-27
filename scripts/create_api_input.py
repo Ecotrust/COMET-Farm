@@ -148,6 +148,6 @@ print("\nSuccessfully merged GIS and Excel template.\n")
 print("Creating XML...\n")
 
 if sys.platform.startswith('darwin') or sys.platform.startswith('linux'):
-    os.system("python3 " + script_path + "/generate_comet_input_file.py" + script_path + "/../combined_data.xlsx")
+    os.system("python3 " + script_path + "/generate_comet_input_file.py" + " " + script_path + "/../combined_data.xlsx")
 elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
-    os.system("py -3 " + script_path + "/generate_comet_input_file.py" + script_path + "/../combined_data.xlsx")
+    os.system("py -3 " + script_path + "/generate_comet_input_file.py" + " " + script_path + "/../combined_data.xlsx")
