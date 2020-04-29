@@ -40,6 +40,9 @@ gis_values = {}
 # create sheet for list of processed fields
 processed_sheet = wb.create_sheet('processed')
 
+gis_file_name = os.path.basename(gis_dir)
+gis_file_name = gis_file_name.split('.')[0]
+print(gis_file_name)
 # open GIS data file and save it as dict
 with open(gis_dir) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
