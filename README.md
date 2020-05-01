@@ -1,9 +1,10 @@
 # COMET-Farm &middot; [![Build Status](https://img.shields.io/travis/npm/npm/latest.svg?style=flat-square)](https://travis-ci.org/npm/npm) [![npm](https://img.shields.io/npm/v/npm.svg?style=flat-square)](https://www.npmjs.com/package/npm) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/your/your-project/blob/master/LICENSE)
+
 > Place to collect docs, scripts, notes, and deadlines for our work with the COMET-Farm stuff
 
-COMET-Farm API scripts &mdot; use an Excel template and GIS data export to create an XML file for feeding into the COMET-Farm API, then reformat COMET-Farm API results.
+COMET-Farm API scripts - use an Excel template and GIS data export to create an XML file for feeding into the COMET-Farm API, then reformat COMET-Farm API results.  
 
-### Setting up Environment
+## Setting up Environment
 
 **Get the repo**
 
@@ -48,11 +49,11 @@ COMET-Farm API scripts &mdot; use an Excel template and GIS data export to creat
   ```
 
 
-# Create Cropland Data
+## Create Cropland Data
 
-## Generate API input XML file
+### Generate API input XML file
 
-### How to generate a COMET-Farm API input XML file:  
+**How to generate a COMET-Farm API input XML file:**
 
 1. Open template_v2 Excel spreadsheet
 
@@ -98,7 +99,7 @@ COMET-Farm API scripts &mdot; use an Excel template and GIS data export to creat
 
 \* use latest version
 
-## Generate CSV from COMET-Farm API Output
+### Generate CSV from COMET-Farm API Output
 
 COMET-Farm API in its current state sends an email with model run results in XML format.
 
@@ -111,7 +112,7 @@ Your final result will be in `./results/ghg_balance.csv` and look something like
 | 12345 | -123.56 | -122.90 | -119.884 |
 | 43289 | 100.200 | 120.45 | 113.1232 |
 
-### How to generate results CSVs from E-mail results
+**How to generate results CSVs from E-mail results:**
 
 1. Unzipped the compressed results  
   * save XML from COMET-Farm results email to somewhere on your local machine
@@ -122,7 +123,7 @@ Your final result will be in `./results/ghg_balance.csv` and look something like
   * run the script
     `python3 COMET-Farm/scripts/xml2csv.py COMET-Farm/results/<model_output_baseline.xml> COMET-Farm/results/<model_output_baseline_plus_14>.xml COMET-Farm/results/<model_output_baseline_minus_14.xml>`
 
-### Overview of Script  
+**Overview of Script**  
 
 This script takes as arguments XML files from a COMET-Farm results email, then outputs a CSV file containing a table with rows for mapunits and columns for CO2e formulas for CO2e:
     * area-weighted greenhouse gas balance (soil C stock change + N2O emissions + CH4 emissions)
@@ -181,7 +182,7 @@ Steps:
         * Baseline -14 days  
 
 
-## Caveats
+### Caveats
 
 Gotcas and some other things to be aware of:  
 
@@ -191,3 +192,11 @@ Gotcas and some other things to be aware of:
     (*e.g.,* `<agcprd>2000,765.234,2001,86.234,...,2019,55.328,2019,55.328,2020,450,230,...</agcprd`)
     * sometimes on of the parameter values for the current year is 0
       (*e.g.,* `<agcprd>2000,765.234,2001,86.234,...,2019,0,2019,55.328,2020,450,230,...</agcprd`)
+
+### Additional Documenation  
+
+  * https://github.com/Ecotrust/COMET-Farm/issues/1
+  * https://github.com/Ecotrust/COMET-Farm/issues/14
+    
+    
+
