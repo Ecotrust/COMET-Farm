@@ -42,13 +42,19 @@ processed_sheet = wb.create_sheet('processed')
 
 gis_file_name = os.path.basename(gis_dir)
 gis_file_name = gis_file_name.split('.')[0]
-print(gis_file_name)
+gis_file_name = gis_file_name.split('_')
+iso_id = gis_file_name[-1]
+crop_id = gis_file_name[-2]
 
 # open GIS data file and save it as dict
 with open(gis_dir) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     csv_dict = csv.DictReader(csv_file)
     gis_values = csv_dict
+    run_name = 'crop_id_and_iso_id_not_in_gis_file_name'
+
+    if len(crop_id) > 0 and len(iso_id) > 0:
+        run_name = crop_id + '_' + iso_id
 
     # for row in gis_values:
         # print(dict(row))
@@ -63,12 +69,13 @@ with open(gis_dir) as csv_file:
         field_sheet.title = 'ready_' + row['field_ID']
         processed_sheet.append(["name", field_sheet.title])
 
+        field_sheet.cell(row=7, column=2).value = run_name
         # field_sheet.cell(row=8, column=2).value = row['CRP_NUM'] #dc added 1/16/20
         field_sheet.cell(row=9, column=2).value = row['field_ID']
         field_sheet.cell(row=10, column=2).value = 'POLYGON (' + row['GEOM'] + ')'
         field_sheet.cell(row=11, column=2).value = row['AREA']
         field_sheet.cell(row=12, column=2).value = row['SRID']
-        field_sheet.cell(row=13, column=2).value = field_sheet.cell(row=7, column=2).value + row['CcopName'] + '_' + '_' + row['field_ID']
+        field_sheet.cell(row=13, column=2).value = run_name
 
         for crop_cell in field_sheet.iter_cols(min_col=3,max_col=17,min_row=17,max_row=36):
             for cell in crop_cell:

@@ -21,6 +21,7 @@ wb_dir = sys.argv[1]
 wb = load_workbook(filename = wb_dir)
 processed_fields_sheet = wb['processed']
 processed_sheets = {}
+gis_file_name = 'crp_id_iso_id'
 for row in range(1, processed_fields_sheet.max_row + 1):
     sheet_name = processed_fields_sheet['B' + str(row)].value
 
@@ -80,10 +81,12 @@ for row in range(1, processed_fields_sheet.max_row + 1):
     field_number = sheet_name[6:] # assumes sheet_name is 'ready_field#', removes 'ready_'
     processed_sheets.setdefault(field_number, current_values)
 
+    gis_file_name = scenario_sheet['B13'].value
+
 # create XML file
-timestamp = time.time()
+# timestamp = time.time()
 script_path = os.path.dirname(os.path.realpath(__file__))
-input_xml_file_name = 'cf_i' + str(timestamp)
+input_xml_file_name = 'cf_' + str(gis_file_name)
 input_xml_file = script_path + '/../inputs/api_inputs/' + input_xml_file_name + '.xml'
 
 
@@ -104,7 +107,7 @@ with open(input_xml_file, 'w') as f:
     for field in processed_sheets:
         f.write("<Cropland>")
         # f.write("<GEOM PARCELNAME=\"" + str(processed_sheets[field]['Name']) + "\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
-        f.write("<GEOM PARCELNAME=\"New\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
+        f.write("<GEOM PARCELNAME=\"" + str(processed_sheets[field]['Name']) + "\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
 
         f.write("<Pre-1980>" + processed_sheets[field]['pre_80'] + "</Pre-1980>")
         # CRP always None
