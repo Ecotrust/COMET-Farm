@@ -253,7 +253,7 @@ def write_parsed_mapunits(map_units):
     if not os.path.isdir(ghg_dir_name):
         os.mkdir(ghg_dir_name)
 
-    parsed_mapunit_fieldnames = ['mapunit_id', 'baseline', 'baseline_plus_14', 'baseline_minus_14']
+    parsed_mapunit_fieldnames = ['mapunit_id', 'baseline', 'baseline_plus_14', 'baseline_minus_14', 'area']
 
     # for map_unit in map_units:
         # for k,v in map_unit.items():
@@ -380,7 +380,7 @@ def parse_mapunit_baseline(elem, mapunit_id, area, scenario, baseline_date):
     ghg_data = {
         'mapunit_id': mapunit_id,
         baseline_date: ghg_balance,
-        # 'area': area,
+        'area': area,
         # 'scenario': scenario,
     }
 
@@ -722,8 +722,6 @@ def main():
 
     combined_results = {}
     for u in parsed_mapunits:
-        print(u)
-        print('\n')
         unit_id = u['mapunit_id']
         if unit_id not in combined_results.keys():
             combined_results[unit_id] = {}
@@ -734,7 +732,7 @@ def main():
     data_rows = []
     for res in combined_results.values():
         data_rows.append(res)
-    print(data_rows)
+    # print(data_rows)
         # for k,v in u.items():
             # print(k)
             # print(v)
