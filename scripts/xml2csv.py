@@ -123,18 +123,6 @@ def calc_direct_soil_n2o(arr=[{"output": 0, "year": ""}]):
         calc = n2o_avg * (44/28) * 298 * float(area) * (10000/1000000)
         return calc
 
-def calc_direct_soil_n2o(arr=[{"output": 0, "year": ""}]):
-    # n2oflux seems to have 1 less year output than somsc
-    year_count = len(arr)
-    n2o_avg = 0
-    for y in range( year_count ):
-        n2o_avg += float(arr[y]['n2oflux'])
-    if n2o_avg > 0:
-        area = map_unit_area(arr)
-        n2o_avg = n2o_avg/year_count
-        calc = n2o_avg * (44/28) * 298 * float(area) * (10000/1000000)
-        return calc
-
 def calc_volatilized_indirect_soil_n2o(arr=[{"output": 0, "year": ""}]):
     # n2oflux seems to have 1 less year output than somsc
     year_count = len(arr)
