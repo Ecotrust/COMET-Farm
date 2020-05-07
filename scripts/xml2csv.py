@@ -234,7 +234,7 @@ def parse_aggregate(elem, scenario):
 
 def write_parsed_mapunits(map_units):
     script_path = os.path.dirname(os.path.realpath(__file__))
-    results_file_name = 'results_'
+    results_file_name = 'results'
     results_dir_name = script_path + '/../results/'
 
     if not os.path.isdir(results_dir_name):
@@ -249,23 +249,23 @@ def write_parsed_mapunits(map_units):
             if k == 'crop':
                 results_file_name = v
 
-    current_results = []
-    with open(results_dir_name + results_file_name + '.csv') as currentResultsFile:
-        reader = csv.DictReader(currentResultsFile)
-        for row in reader:
-            current_results.append(row)
-    currentResultsFile.close()
-    # for res in combined_results.values():
-    #     data_rows.append(res)
     all_results = []
-    # import ipdb; ipdb.set_trace()
-    # for map_unit in map_units:
+    if os.path.isfile(results_dir_name + results_file_name + '.csv'):
+        with open(results_dir_name + results_file_name + '.csv') as currentResultsFile:
+            reader = csv.DictReader(currentResultsFile)
+            for row in reader:
+                all_results.append(row)
+
+        currentResultsFile.close()
+
+    for map_unit in map_units:
+        all_results.append(map_unit)
 
     with open(results_dir_name + results_file_name + '.csv', 'wt') as resultsFile:
         writer = csv.DictWriter(resultsFile, fieldnames=parsed_mapunit_fieldnames)
         writer.writeheader()
-        for map_unit in map_units:
-            writer.writerow(map_unit)
+        for row in all_results:
+            writer.writerow(row)
 
     resultsFile.close()
 
@@ -439,32 +439,32 @@ def parse_mapunit_baseline(elem, mapunit_id, area, scenario, xml_file_name):
 
 # Extract yearly output data from the DayCent variable for end-of-year value
 # This function is used for API data with whole numbers representing the yearly output data
-def write_yearly_daycent_output( daycent_variable, arrayText, scenario, mapunit, area ):
-
-    if arrayText.endswith(','):
-        arrayText = arrayText[:-1]
-
-    arrayText = arrayText.replace( ':', ',' )
-    array1 = arrayText.split(',')
-    array1Length = len( array1 )
-    daycent_variable = str(daycent_variable).lower()
-    values = []
-
-    for y in range( 0, (array1Length // 2) ):
-        year_value = str( array1[ y * 2 ] )
-        output_value = str( array1[ int(( y * 2 ) + 1) ] )
-        yearly_output = {
-            "year": year_value,
-            "var": daycent_variable,
-            "output": output_value,
-            daycent_variable: output_value,
-            "id": mapunit,
-            "area": area,
-            "scenario": scenario,
-        }
-        values.append(yearly_output)
-
-    return values
+# def write_yearly_daycent_output( daycent_variable, arrayText, scenario, mapunit, area ):
+#
+#     if arrayText.endswith(','):
+#         arrayText = arrayText[:-1]
+#
+#     arrayText = arrayText.replace( ':', ',' )
+#     array1 = arrayText.split(',')
+#     array1Length = len( array1 )
+#     daycent_variable = str(daycent_variable).lower()
+#     values = []
+#
+#     for y in range( 0, (array1Length // 2) ):
+#         year_value = str( array1[ y * 2 ] )
+#         output_value = str( array1[ int(( y * 2 ) + 1) ] )
+#         yearly_output = {
+#             "year": year_value,
+#             "var": daycent_variable,
+#             "output": output_value,
+#             daycent_variable: output_value,
+#             "id": mapunit,
+#             "area": area,
+#             "scenario": scenario,
+#         }
+#         values.append(yearly_output)
+#
+#     return values
 
 # Extract only the end-of-year data from the DayCent variable
 # These are pulled from the year_summary.out and similar files.
@@ -527,13 +527,21 @@ def write_yearly_daycent_output92( daycent_variable, arrayText, scenario, mapuni
 
     return values
 
+def parse_data_rows(parsed_mapunits):
+    combined_results = {}
+    for u in parsed_mapunits:
+        unit_id = u['mapunit_id']
+        if unit_id not in combined_results.keys():
+            combined_results[unit_id] = {}
 
-# Update the api_records_cropland table with the summary data produced by COMET-Farm
-def update_gui_data(name, array_text, model_run_name, scenario):
+        for k,v in u.items():
+            combined_results[u['mapunit_id']][k] = v
 
-    sql = [str(name), str(array_text), str(model_run_name), str(scenario)]
-    # print(sql)
+    data_rows = []
+    for res in combined_results.values():
+        data_rows.append(res)
 
+    return data_rows
 
 def main():
     # check if argument has been given for xml
@@ -632,22 +640,7 @@ def main():
     # close the XML input file
     xml_file.close()
 
-    combined_results = {}
-    for u in parsed_mapunits:
-        unit_id = u['mapunit_id']
-        if unit_id not in combined_results.keys():
-            combined_results[unit_id] = {}
-
-        for k,v in u.items():
-            combined_results[u['mapunit_id']][k] = v
-
-    data_rows = []
-    for res in combined_results.values():
-        data_rows.append(res)
-    # print(data_rows)
-        # for k,v in u.items():
-            # print(k)
-            # print(v)
+    data_rows = parse_data_rows(parsed_mapunits)
 
     # write_aggregate_csv()
     write_parsed_mapunits(data_rows)
