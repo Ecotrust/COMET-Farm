@@ -7,17 +7,18 @@ import xml.etree.ElementTree as ET
 '''
 Running the script
 Windows
-    py -3 ./scripts/xml2csv.py <XML COMET-Farm Output Baseline>.xml <Baseline +14>.xml <Baseline -14>.xml
+    py -3 ./scripts/xml2csv.py <XML COMET-Farm API Output Result>.xml
         <XML COMET-Farm Output> system location of XML output file from COMET-Farm
-            eg /usr/local/name/comet/baseline.xml
+            e.g., /usr/local/name/comet/baseline.xml
 '''
 
 '''
     Overview of script
     ==================
 
-    This script takes as arguments XML files from a COMET-Farm results email,
-    then outputs a CSV file containing a table with rows for mapunits and columns for CO2e
+    This script takes as an argument a XML file from a COMET-Farm result email,
+    then checks if a csv file for crop in results exists, if not creates a csv file for crop,
+    then outputs rows for each mapunit in results file
     formulas for CO2e:
         * area-weighted greenhouse gas balance (soil C stock change + N2O emissions + CH4 emissions)
 
@@ -73,9 +74,7 @@ Windows
         2. Loop through model runs
         3. Create a CSV file with a row for each map unit and columns for:
             * mapunitID
-            * Baseline
-            * Baseline +14 days
-            * Baseline -14 days
+            ...
 
 '''
 
@@ -96,10 +95,8 @@ def remove_duplicate_years(arr=[]):
 def calc_greenhouse_gas_balance(*args):
     ghg_balance = 0
     for arg in args:
-        if arg and arg >= 0:
+        if arg:
             ghg_balance += arg
-        else:
-            continue
     return ghg_balance
 
 def calc_co2_exchange(arr=[{"output": 0, "year": ""}]):
@@ -118,7 +115,7 @@ def calc_direct_soil_n2o(arr=[{"output": 0, "year": ""}]):
     for y in range( year_count ):
         n2o_avg += float(arr[y]['n2oflux'])
     if n2o_avg > 0:
-        area = map_unit_area(arr)
+        area = map_unit_area(arr) # get mapunit area for calc
         n2o_avg = n2o_avg/year_count
         calc = n2o_avg * (44/28) * 298 * float(area) * (10000/1000000)
         return calc
@@ -164,32 +161,33 @@ def map_unit_area(arr=[]):
     # so we only need the first
     return arr[0]['area']
 
-
-def organize_by_year(data):
-    main_dic = {}
-    for key, value in data.items():
-        variable = ''
-        if value:
-            for y in value:
-                # y should contain the following keys:
-                    # year, var, output, {var}, id, area, scenario
-                year = str(y["year"])
-                id = str(y["id"])
-                area = str(y["area"])
-                scenario = str(y["scenario"])
-                if year not in main_dic.keys():
-                    main_dic[year] = {
-                        "year": year,
-                        "id": id,
-                        "area": area,
-                        "scenario": scenario,
-                    }
-            for v in value:
-                year = str(v["year"])
-                variable = str(v["var"])
-                output = str(v["output"])
-                main_dic[year][variable] = output
-    return main_dic
+# no longer organizing by year - DP May 2020
+# def organize_by_year(data):
+#     main_dic = {}
+#     for key, value in data.items():
+#         variable = ''
+#         if value:
+#             for y in value:
+#                 # y should contain the following keys:
+#                     # year, var, output, {var}, id, area, scenario
+#                 print(y)
+#                 year = str(y["year"])
+#                 id = str(y["id"])
+#                 area = str(y["area"])
+#                 scenario = str(y["scenario"])
+#                 if year not in main_dic.keys():
+#                     main_dic[year] = {
+#                         "year": year,
+#                         "id": id,
+#                         "area": area,
+#                         "scenario": scenario,
+#                     }
+#             for v in value:
+#                 year = str(v["year"])
+#                 variable = str(v["var"])
+#                 output = str(v["output"])
+#                 main_dic[year][variable] = output
+#     return main_dic
 
 def parse_aggregate(elem, scenario):
 
@@ -207,58 +205,72 @@ def parse_aggregate(elem, scenario):
             aggregate_data[xml_tag] = xml_text
 
     return aggregate_data
-
-def write_aggregate_csv(all_agg, xml_name):
-    # write parsed aggregate to csv
-    csv_file_name = 'aggregate'
-    dir_name = './results/'
-
-    if not os.path.isdir(dir_name):
-        os.mkdir(dir_name)
-
-    aggregate_data_fieldnames = []
-
-    for r in all_agg:
-
-        for k,v in r.items():
-
-            if k not in aggregate_data_fieldnames:
-                aggregate_data_fieldnames.append(k)
-
-        # print(r)
-    with open(dir_name + csv_file_name + '.csv', 'wt') as csvFile:
-        writer = csv.DictWriter(csvFile, fieldnames=aggregate_data_fieldnames)
-        writer.writeheader()
-        for r in all_agg:
-            writer.writerow(r)
-
-    csvFile.close()
+#
+# def write_aggregate_csv(all_agg, xml_name):
+#     # write parsed aggregate to csv
+#     csv_file_name = 'aggregate'
+#     dir_name = './results/'
+#
+#     if not os.path.isdir(dir_name):
+#         os.mkdir(dir_name)
+#
+#     aggregate_data_fieldnames = []
+#
+#     for r in all_agg:
+#
+#         for k,v in r.items():
+#
+#             if k not in aggregate_data_fieldnames:
+#                 aggregate_data_fieldnames.append(k)
+#
+#         # print(r)
+#     with open(dir_name + csv_file_name + '.csv', 'wt') as csvFile:
+#         writer = csv.DictWriter(csvFile, fieldnames=aggregate_data_fieldnames)
+#         writer.writeheader()
+#         for r in all_agg:
+#             writer.writerow(r)
+#
+#     csvFile.close()
 
 def write_parsed_mapunits(map_units):
-    ghg_file_name = 'ghg_balance'
-    ghg_dir_name = './results/'
+    script_path = os.path.dirname(os.path.realpath(__file__))
+    results_file_name = 'results_'
+    results_dir_name = script_path + '/../results/'
 
-    if not os.path.isdir(ghg_dir_name):
-        os.mkdir(ghg_dir_name)
+    if not os.path.isdir(results_dir_name):
+        os.mkdir(results_dir_name)
 
-    parsed_mapunit_fieldnames = ['mapunit_id', 'baseline', 'baseline_plus_14', 'baseline_minus_14', 'area']
+    parsed_mapunit_fieldnames = ['mapunit_id', 'area']
 
+    for map_unit in map_units:
+        for k,v in map_unit.items():
+            if k not in parsed_mapunit_fieldnames:
+                parsed_mapunit_fieldnames.append(k)
+            if k == 'crop':
+                results_file_name = v
+
+    current_results = []
+    with open(results_dir_name + results_file_name + '.csv') as currentResultsFile:
+        reader = csv.DictReader(currentResultsFile)
+        for row in reader:
+            current_results.append(row)
+    currentResultsFile.close()
+    # for res in combined_results.values():
+    #     data_rows.append(res)
+    all_results = []
+    # import ipdb; ipdb.set_trace()
     # for map_unit in map_units:
-        # for k,v in map_unit.items():
-            # print(k)
-            # if k not in parsed_mapunit_fieldnames:
-                # parsed_mapunit_fieldnames.append(k)
 
-    with open(ghg_dir_name + ghg_file_name + '.csv', 'wt') as ghgFile:
-        writer = csv.DictWriter(ghgFile, fieldnames=parsed_mapunit_fieldnames)
+    with open(results_dir_name + results_file_name + '.csv', 'wt') as resultsFile:
+        writer = csv.DictWriter(resultsFile, fieldnames=parsed_mapunit_fieldnames)
         writer.writeheader()
         for map_unit in map_units:
             writer.writerow(map_unit)
 
-    ghgFile.close()
+    resultsFile.close()
 
 
-def parse_mapunit_baseline(elem, mapunit_id, area, scenario, baseline_date):
+def parse_mapunit_baseline(elem, mapunit_id, area, scenario, xml_file_name):
 
     model_run_data = {}
 
@@ -317,8 +329,12 @@ def parse_mapunit_baseline(elem, mapunit_id, area, scenario, baseline_date):
 
                 # import ipdb; ipdb.set_trace()
 
-        # elif( xml_tag in ('irrigated', 'inputcrop' ) ):
-
+        # elif( xml_tag in ( 'irrigated', 'inputcrop' ) ):
+        elif( xml_tag in ( 'inputcrop' ) ):
+            inputcrop_data = xml_text.split(',')
+            # crop comes in as year,crop,year,crop,etc.
+            crop_tag = 'crop'
+            crop_value = inputcrop_data[1]
             # values = write_yearly_daycent_output( xml_tag, xml_text, scenario, mapunit_id, area )
             # for value in values:
                 # if xml_tag not in model_run_data.keys():
@@ -341,7 +357,6 @@ def parse_mapunit_baseline(elem, mapunit_id, area, scenario, baseline_date):
                     calc_value = calc_direct_soil_n2o(n2oflux)
                 calc_tag = 'direct_soil_n2o'
                 if calc_tag not in model_run_data.keys():
-                    # model_run_data[calc_tag] = []
                     model_run_data[calc_tag] = calc_value
 
             # year_count = len(model_run_data[xml_tag])
@@ -362,14 +377,38 @@ def parse_mapunit_baseline(elem, mapunit_id, area, scenario, baseline_date):
             continue
 
     # ghg_balance = calc_greenhouse_gas_balance(model_run_data['soil_carbon_exchange'][0]['output'], model_run_data['direct_soil_n2o'][0]['output'], model_run_data['indirect_soil_n2o_leached'][0]['output'], model_run_data['indirect_soil_n2o_volatilized'][0]['output'])
-
+    # import ipdb; ipdb.set_trace()
+    # add together for greenhouse gas balance total
     ghg_balance = calc_greenhouse_gas_balance(model_run_data['soil_carbon_exchange'], model_run_data['direct_soil_n2o'], model_run_data['indirect_soil_n2o_leached'], model_run_data['indirect_soil_n2o_volatilized'])
+
+    # get crop id and iso id from file name
+    # assumes input file was named 'cf_<crop_id>_<iso_id>'
+    xml_file_name = xml_file_name.split('_')
+    if len(xml_file_name) > 1:
+        crop_id = xml_file_name[-2]
+        iso_id = xml_file_name[-1]
+        iso_id = iso_id.split('.')[0] # split off the .xml from iso_id.xml
+    else:
+        crop_id = 'not provided'
+        iso_id = 'not provided'
+
+    scenario_emissions_key = scenario + ' ' + 'net emissions'
+    scenario_scse_key = scenario + ' ' + 'soil carbon exchange'
+    scenario_d_n2o_key = scenario + ' ' + 'direct soil n2o'
+    scenario_ind_n2o_l_key = scenario + ' ' + 'indirect soil n2o leached'
+    scenario_ind_n2o_v_key = scenario + ' ' + 'indirect soil n2o volatilized'
 
     ghg_data = {
         'mapunit_id': mapunit_id,
-        baseline_date: ghg_balance,
+        crop_tag: crop_value,
+        scenario_emissions_key: ghg_balance,
+        scenario_scse_key: model_run_data['soil_carbon_exchange'],
+        scenario_d_n2o_key: model_run_data['direct_soil_n2o'],
+        scenario_ind_n2o_l_key: model_run_data['indirect_soil_n2o_leached'],
+        scenario_ind_n2o_v_key: model_run_data['indirect_soil_n2o_volatilized'],
         'area': area,
-        # 'scenario': scenario,
+        'iso_id': iso_id,
+        'crop_id': crop_id,
     }
 
     return ghg_data
@@ -465,6 +504,7 @@ def write_yearly_daycent_output92( daycent_variable, arrayText, scenario, mapuni
     if arrayText.endswith(','):
         arrayText = arrayText[:-1]
 
+    arrayText = arrayText.replace( ':', ',' )
     array1 = arrayText.split(',')
     array1Length = len( array1 )
     daycent_variable = str(daycent_variable).lower()
@@ -497,23 +537,20 @@ def update_gui_data(name, array_text, model_run_name, scenario):
 
 def main():
     # check if argument has been given for xml
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 1:
         print("\nMissing argument")
-        print("expecting 3 arguments")
+        print("expecting 1 argument")
         print("  1. Baseline results XML file")
-        print("  2. Baseline +14 days results XML file")
-        print("  3. Baseline -14 days results XML file")
+        # print("  2. Baseline +14 days results XML file")
+        # print("  3. Baseline -14 days results XML file")
         print("expected command (windows sub `python3` with `py -3`)")
-        print("`python3 xml2csv.py <XML COMET-Farm Output Baseline>.xml <Baseline +14>.xml <Baseline -14>.xml`")
+        print("`python3 xml2csv.py <XML COMET-Farm Output Baseline>.xml`")
         print("     <XML COMET-Farm Output> system location of XML output file from COMET-Farm")
         print("         e.g., /usr/local/name/comet/baseline.xml\n")
         exit()
 
-    print(len(sys.argv))
     xml_name = sys.argv[1]
     baseline_xml_name = sys.argv[1]
-    baseline_plus_xml_name = sys.argv[2]
-    baseline_minus_xml_name = sys.argv[3]
 
     start = datetime.now()
     print("\nStarting script at " + str( time.ctime( int( time.time( ) ) ) ) + "\n")
@@ -555,20 +592,22 @@ def main():
         # ====== Scenario
         elif( xmlTag == 'Scenario' ):
 
+            # get the sceanrio name and store for later
             scenarioFullName = xmlAttribName
             scenario = xmlAttribName
 
+            ### check if this is a result for individual submitted scenario
             if scenarioFullName.find( ' : FILE RESULTS' ) > -1:
                 # generate the scenario name
                 # used later for DayCent data within mapunit
                 scenario = xmlAttribName[:-15]
-
+            ### else it must be a results for aggregate of all submitted scenarios
             else:
-                # aggregate results
                 scenario_parsed = parse_aggregate(elem, scenario)
                 parsed_agg.append(scenario_parsed)
 
         elif( "current" in scenario.lower() ):
+            # will be the same as baseline so no need to duplicate
             continue
 
         elif( xmlTag == "MapUnit" ):
@@ -577,136 +616,21 @@ def main():
             area = xmlAttribArea
             carbon = root.find('.//Carbon')
 
-            if scenario.find('Baseline') > -1:
+            # if scenario.find('Baseline') > -1:
                 # calc for baseline
-                # write csv file for scenario per map unit
+                # add column results for this mapunit id row in ghg csv file
                 # parse_mapunit(elem, mapunit, area, scenario)
-                print(area)
-                parsed_mapunit = parse_mapunit_baseline(elem, mapunit, area, scenario, 'baseline')
-                parsed_mapunits.append(parsed_mapunit)
+            parsed_mapunit = parse_mapunit_baseline(elem, mapunit, area, scenario, baseline_xml_name)
+            parsed_mapunits.append(parsed_mapunit)
 
-                # give a status update for scipt user
-                print("creating records for scenario = [baseline] and mapunit = [" + str( mapunit ) + "]")
-
-
-        # process the GUI output data
-        # elif( xmlTag == 'SoilCarbon' ):                 update_gui_data( "soil_carbon_co2", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'SoilCarbonStock2000' ):        update_gui_data( "soil_carbon_stock_2000", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'SoilCarbonStockBegin' ):       update_gui_data( "soil_carbon_stock_begin", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'SoilCarbonStockEnd' ):         update_gui_data( "soil_carbon_stock_end", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'BiomassBurningCarbon' ):       update_gui_data( "biomass_burning_co2", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'LimingCO2' ):                  update_gui_data( "liming_co2", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'UreaFertilizationCO2' ):       update_gui_data( "ureafertilization_co2", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'DrainedOrganicSoilsCO2' ):     update_gui_data( "drainedorganicsoils_co2", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'SoilN2O' ):                    update_gui_data( "soil_n2o", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'WetlandRiceCultivationN2O' ):  update_gui_data( "wetlandricecultivation_n2o", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'BiomassBurningN2O' ):          update_gui_data( "biomassburning_n2o", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'DrainedOrganicSoilsN2O' ):     update_gui_data( "drainedorganicsoils_n2o", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'SoilCH4' ):                    update_gui_data( "soil_ch4", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'WetlandRiceCultivationCH4' ):  update_gui_data( "wetlandricecultivation_ch4", str( xmlText ), modelRunName, scenario)
-        # elif( xmlTag == 'BiomassBurningCH4' ):          update_gui_data( "biomassburning_ch4", str( xmlText ), modelRunName, scenario)
+            # give a status update for scipt user
+            print("creating records for scenario = [" + str(scenario) + "] and mapunit = [" + str( mapunit ) + "]")
 
         else:
             continue
 
     # close the XML input file
     xml_file.close()
-
-    # START Baseline +14 Days
-    baseline_plus_file = open(baseline_plus_xml_name, 'r+')
-
-    # XML Parse
-    tree = ET.parse(baseline_plus_xml_name)
-    root = tree.getroot()
-
-    for elem in tree.iter():
-        xmlTag = str( elem.tag )
-        xmlAttrib = str( elem.attrib )
-        xmlAttribName = str( elem.attrib.get( 'name' ) )
-        xmlAttribId = str( elem.attrib.get( 'id' ) )
-        xmlAttribArea = str( elem.attrib.get( 'area' ) )
-        xmlText = str( elem.text )
-
-        # ====== Scenario
-        if( xmlTag == 'Scenario' ):
-
-            scenarioFullName = xmlAttribName
-            scenario = xmlAttribName
-
-            if scenarioFullName.find( ' : FILE RESULTS' ) > -1:
-                # generate the scenario name
-                # used later for DayCent data within mapunit
-                scenario = xmlAttribName[:-15]
-
-        elif( "current" in scenario.lower() ):
-            continue
-
-        elif( xmlTag == "MapUnit" ):
-
-            mapunit = xmlAttribId
-            area = xmlAttribArea
-            carbon = root.find('.//Carbon')
-
-            if scenario.find('Baseline') > -1:
-                # calc for baseline
-                # write csv file for scenario per map unit
-                # parse_mapunit_baseline(elem, mapunit, area, scenario, 'baseline_plus_14')
-                parsed_mapunit = parse_mapunit_baseline(elem, mapunit, area, scenario, 'baseline_plus_14')
-                parsed_mapunits.append(parsed_mapunit)
-
-                # give a status update for scipt user
-                print("creating records for scenario = [baseline_plus_14] and mapunit = [" + str( mapunit ) + "]")
-
-
-    baseline_plus_file.close()
-
-    # START Baseline -14 Days
-    baseline_minus_file = open(baseline_minus_xml_name, 'r+')
-
-    # XML Parse
-    tree = ET.parse(baseline_minus_xml_name)
-    root = tree.getroot()
-
-    for elem in tree.iter():
-        xmlTag = str( elem.tag )
-        xmlAttrib = str( elem.attrib )
-        xmlAttribName = str( elem.attrib.get( 'name' ) )
-        xmlAttribId = str( elem.attrib.get( 'id' ) )
-        xmlAttribArea = str( elem.attrib.get( 'area' ) )
-        xmlText = str( elem.text )
-
-        # ====== Scenario
-        if( xmlTag == 'Scenario' ):
-
-            scenarioFullName = xmlAttribName
-            scenario = xmlAttribName
-
-            if scenarioFullName.find( ' : FILE RESULTS' ) > -1:
-                # generate the scenario name
-                # used later for DayCent data within mapunit
-                scenario = xmlAttribName[:-15]
-
-        elif( "current" in scenario.lower() ):
-            continue
-
-        elif( xmlTag == "MapUnit" ):
-
-            mapunit = xmlAttribId
-            area = xmlAttribArea
-            carbon = root.find('.//Carbon')
-
-            if scenario.find('Baseline') > -1:
-                # calc for baseline
-                # write csv file for scenario per map unit
-                # parse_mapunit_baseline(elem, mapunit, area, scenario, 'baseline_plus_14')
-                parsed_mapunit = parse_mapunit_baseline(elem, mapunit, area, scenario, 'baseline_minus_14')
-                parsed_mapunits.append(parsed_mapunit)
-
-                # give a status update for scipt user
-                print("creating records for scenario = [baseline_minus_14] and mapunit = [" + str( mapunit ) + "]")
-
-
-    baseline_minus_file.close()
 
     combined_results = {}
     for u in parsed_mapunits:
