@@ -269,6 +269,13 @@ def write_parsed_mapunits(map_units):
 
     resultsFile.close()
 
+def get_acres_from_m2(meters):
+    meters = float(meters)
+    if meters > 0:
+        acres = meters * 0.0002471054
+    else:
+        acres = 0
+    return acres
 
 def parse_mapunit_baseline(elem, mapunit_id, area, scenario, xml_file_name):
 
@@ -392,13 +399,15 @@ def parse_mapunit_baseline(elem, mapunit_id, area, scenario, xml_file_name):
         crop_id = 'not provided'
         iso_id = 'not provided'
 
+    area = get_acres_from_m2(area)
+
     scenario_emissions_key = scenario + ' ' + 'net emissions'
     scenario_scse_key = scenario + ' ' + 'soil carbon exchange'
     scenario_d_n2o_key = scenario + ' ' + 'direct soil n2o'
     scenario_ind_n2o_l_key = scenario + ' ' + 'indirect soil n2o leached'
     scenario_ind_n2o_v_key = scenario + ' ' + 'indirect soil n2o volatilized'
 
-    ghg_data = {
+    mapunit_row_data = {
         'mapunit_id': mapunit_id,
         crop_tag: crop_value,
         scenario_emissions_key: ghg_balance,
@@ -411,7 +420,7 @@ def parse_mapunit_baseline(elem, mapunit_id, area, scenario, xml_file_name):
         'crop_id': crop_id,
     }
 
-    return ghg_data
+    return mapunit_row_data
 
     #  header fields
     # values_array = ['year', 'scenario', 'id', 'area']
