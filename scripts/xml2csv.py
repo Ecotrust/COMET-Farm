@@ -189,22 +189,22 @@ def map_unit_area(arr=[]):
 #                 main_dic[year][variable] = output
 #     return main_dic
 
-def parse_aggregate(elem, scenario):
-
-    aggregate_data = {}
-    scenario_name = scenario.lower()
-
-    for child in elem.iter():
-        xml_tag = str(child.tag)
-        xml_tag = xml_tag.lower()
-        xml_text = str(child.text)
-
-        if (xml_tag == 'scenario'):
-            aggregate_data['scenario'] = scenario_name
-        else:
-            aggregate_data[xml_tag] = xml_text
-
-    return aggregate_data
+# def parse_aggregate(elem, scenario):
+#
+#     aggregate_data = {}
+#     scenario_name = scenario.lower()
+#
+#     for child in elem.iter():
+#         xml_tag = str(child.tag)
+#         xml_tag = xml_tag.lower()
+#         xml_text = str(child.text)
+#
+#         if (xml_tag == 'scenario'):
+#             aggregate_data['scenario'] = scenario_name
+#         else:
+#             aggregate_data[xml_tag] = xml_text
+#
+#     return aggregate_data
 #
 # def write_aggregate_csv(all_agg, xml_name):
 #     # write parsed aggregate to csv
@@ -245,7 +245,7 @@ def write_parsed_mapunits(map_units):
     for map_unit in map_units:
         for k,v in map_unit.items():
             if k not in parsed_mapunit_fieldnames:
-                parsed_mapunit_fieldnames.append(k)
+                parsed_mapunit_fieldnames.insert(0, k)
             if k == 'crop':
                 results_file_name = v
 
@@ -277,7 +277,7 @@ def get_acres_from_m2(meters):
         acres = 0
     return acres
 
-def parse_mapunit_baseline(elem, mapunit_id, area, scenario, xml_file_name):
+def parse_mapunit(elem, mapunit_id, area, scenario, xml_file_name):
 
     model_run_data = {}
 
@@ -536,6 +536,11 @@ def write_yearly_daycent_output92( daycent_variable, arrayText, scenario, mapuni
 
     return values
 
+def calc_delta_per_scenario(mapunit_results):
+    print('\n', mapunit_results)
+    # delta_per_scenario = mapunit_results['']
+
+
 def parse_data_rows(parsed_mapunits):
     combined_results = {}
     for u in parsed_mapunits:
@@ -545,6 +550,30 @@ def parse_data_rows(parsed_mapunits):
 
         for k,v in u.items():
             combined_results[u['mapunit_id']][k] = v
+
+    # calc delta scenario v baseline
+    for mapunit in combined_results.values():
+        # print(mapunit)
+        dict_net_emissions = dict(filter(lambda item: 'net emissions' in item[0], mapunit.items())) # get dict of items with k containing 'net emissions'
+        for scenario_net in dict_net_emissions.items():
+            # calc tonnes per acre
+            v_tonnes_per_acre = (((float(scenario_net[1]) / (float(mapunit['area']) * 100)) * 100) / 1000000)
+            k_tonnes_per_acre = 'tonnes per acre - ' + str(scenario_net[0])
+            mapunit.update({ str(k_tonnes_per_acre) : v_tonnes_per_acre })
+
+        baseline_net = dict_net_emissions.pop('Baseline net emissions') # get baseline value and remove it from other scenarios
+        for scenario_net in dict_net_emissions.items():
+            # calculate change from baseline in net emissions
+            scenario_delta_baseline = float(scenario_net[1]) - float(baseline_net)
+            k_val = 'delta - ' + str(scenario_net[0])
+            mapunit.update({ str(k_val) : str(scenario_delta_baseline) })
+
+            # calc change in tonnes per acre from baseline in net emissions
+                # note: this script has previously converted area from square meters to acres
+            delta_per_acre = (((float(scenario_delta_baseline) / (float(mapunit['area']) * 100)) * 100) / 1000000)
+            k_val_acre = 'delta per acre - ' + str(scenario_net[0])
+            mapunit.update({ str(k_val_acre) : str(delta_per_acre) })
+
 
     data_rows = []
     for res in combined_results.values():
@@ -567,13 +596,12 @@ def main():
         exit()
 
     xml_name = sys.argv[1]
-    baseline_xml_name = sys.argv[1]
 
     start = datetime.now()
     print("\nStarting script at " + str( time.ctime( int( time.time( ) ) ) ) + "\n")
     print("----------------------------------------------------------------------")
 
-    parsed_agg = []
+    # parsed_agg = []
     parsed_mapunits = []
     xml_file = open(xml_name, 'r+')
 
@@ -619,9 +647,9 @@ def main():
                 # used later for DayCent data within mapunit
                 scenario = xmlAttribName[:-15]
             ### else it must be a results for aggregate of all submitted scenarios
-            else:
-                scenario_parsed = parse_aggregate(elem, scenario)
-                parsed_agg.append(scenario_parsed)
+            # else:
+                # scenario_parsed = parse_aggregate(elem, scenario)
+                # parsed_agg.append(scenario_parsed)
 
         elif( "current" in scenario.lower() ):
             # will be the same as baseline so no need to duplicate
@@ -637,7 +665,7 @@ def main():
                 # calc for baseline
                 # add column results for this mapunit id row in ghg csv file
                 # parse_mapunit(elem, mapunit, area, scenario)
-            parsed_mapunit = parse_mapunit_baseline(elem, mapunit, area, scenario, baseline_xml_name)
+            parsed_mapunit = parse_mapunit(elem, mapunit, area, scenario, xml_name)
             parsed_mapunits.append(parsed_mapunit)
 
             # give a status update for scipt user
