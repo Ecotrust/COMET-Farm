@@ -240,7 +240,7 @@ def write_parsed_mapunits(map_units):
     if not os.path.isdir(results_dir_name):
         os.mkdir(results_dir_name)
 
-    parsed_mapunit_fieldnames = ['mapunit_id', 'area']
+    parsed_mapunit_fieldnames = ['mapunit_id', 'acres']
 
     for map_unit in map_units:
         for k,v in map_unit.items():
@@ -415,7 +415,7 @@ def parse_mapunit(elem, mapunit_id, area, scenario, xml_file_name):
         scenario_d_n2o_key: model_run_data['direct_soil_n2o'],
         scenario_ind_n2o_l_key: model_run_data['indirect_soil_n2o_leached'],
         scenario_ind_n2o_v_key: model_run_data['indirect_soil_n2o_volatilized'],
-        'area': area,
+        'acres': area,
         'iso_id': iso_id,
         'crop_id': crop_id,
     }
@@ -557,7 +557,7 @@ def parse_data_rows(parsed_mapunits):
         dict_net_emissions = dict(filter(lambda item: 'net emissions' in item[0], mapunit.items())) # get dict of items with k containing 'net emissions'
         for scenario_net in dict_net_emissions.items():
             # calc tonnes per acre
-            v_tonnes_per_acre = (((float(scenario_net[1]) / (float(mapunit['area']) * 100)) * 100) / 1000000)
+            v_tonnes_per_acre = (((float(scenario_net[1]) / (float(mapunit['acres']) * 100)) * 100) / 1000000)
             k_tonnes_per_acre = 'tonnes per acre - ' + str(scenario_net[0])
             mapunit.update({ str(k_tonnes_per_acre) : v_tonnes_per_acre })
 
@@ -570,7 +570,7 @@ def parse_data_rows(parsed_mapunits):
 
             # calc change in tonnes per acre from baseline in net emissions
                 # note: this script has previously converted area from square meters to acres
-            delta_per_acre = (((float(scenario_delta_baseline) / (float(mapunit['area']) * 100)) * 100) / 1000000)
+            delta_per_acre = (((float(scenario_delta_baseline) / (float(mapunit['acres']) * 100)) * 100) / 1000000)
             k_val_acre = 'delta per acre - ' + str(scenario_net[0])
             mapunit.update({ str(k_val_acre) : str(delta_per_acre) })
 
