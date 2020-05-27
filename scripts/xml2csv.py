@@ -100,11 +100,14 @@ def calc_greenhouse_gas_balance(*args):
     return ghg_balance
 
 def calc_co2_exchange(arr=[{"output": 0, "year": ""}]):
+    # units are grams of soil carbon per meter squared
+    # one hectare (ha) is 100 meters squared
     arr = remove_duplicate_years(arr) # Most results contain duplicate for first year
     arr_len = len(arr) - 1 # make sure there is at least 1 year(s) available to measure
     if arr_len > 0:
         area = map_unit_area(arr) # get mapunit area for calc
         if arr[0]["output"] != 'None' and arr[arr_len]["output"] != 'None' and area != 'None':
+            import ipdb; ipdb.set_trace()
             calc = ((float(arr[0]["output"]) - float(arr[arr_len]["output"])) / arr_len) * (float(area)) * (1/100) * (44/12) # see equation at top of doc
             return calc
 
@@ -261,7 +264,7 @@ def write_parsed_mapunits(map_units):
     for map_unit in map_units:
         all_results.append(map_unit)
 
-    with open(results_dir_name + results_file_name + '.csv', 'wt') as resultsFile:
+    with open(results_dir_name + results_file_name + '.csv', 'w', newline='') as resultsFile:
         writer = csv.DictWriter(resultsFile, fieldnames=parsed_mapunit_fieldnames)
         writer.writeheader()
         for row in all_results:
