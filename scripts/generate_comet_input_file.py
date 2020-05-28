@@ -68,7 +68,6 @@ for row in range(1, processed_fields_sheet.max_row + 1):
 
     scenario_a_name  = scenario_sheet['B38'].value
     scenario_b_name  = scenario_sheet['B51'].value
-    
     if scenario_b_name:
         current_values.setdefault('yearly_scenariob_data', scenario_b_yearly)
     else:
@@ -85,13 +84,28 @@ for row in range(1, processed_fields_sheet.max_row + 1):
 
 # create XML file
 # timestamp = time.time()
-script_path = os.path.dirname(os.path.realpath(__file__))
-input_xml_file_name = 'cf_' + str(gis_file_name)
-input_xml_file = script_path + '/../inputs/api_inputs/' + input_xml_file_name + '.xml'
 
+# relative path for mac and linux
+script_rel_path = os.path.dirname(os.path.realpath(__file__))
+# absolute path for mike on neoterra
+script_path = "E:\\GIS\\projects\\Moore_Climate2018\\COMET-Farm-master\\scripts\\"
+master_path = "E:\\GIS\\projects\\Moore_Climate2018\\COMET-Farm-master\\"
+
+if sys.platform.startswith('darwin') or sys.platform.startswith('linux'):
+    input_xml_file_name = 'cf_' + str(gis_file_name)
+    input_xml_file = script_rel_path + '/../inputs/api_inputs/' + input_xml_file_name + '.xml'
+elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
+    input_xml_file_name = 'cf_' + str(gis_file_name)
+    input_xml_file = master_path + 'inputs\\api_inputs\\' + input_xml_file_name + '.xml'
 
 if (os.path.isfile(input_xml_file)):
+    print('Saving over previous version\n')
+    print(str(input_xml_file))
     os.remove(input_xml_file)
+else:
+    print('Creating XML file')
+    print(str(input_xml_file))
+
 
 # initialize the file content string that will contain the text to be written to the file
 with open(input_xml_file, 'w') as f:

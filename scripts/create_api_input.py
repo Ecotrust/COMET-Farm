@@ -154,7 +154,9 @@ with open(gis_dir) as csv_file:
 print("\nSuccessfully merged GIS and Excel template.\n")
 print("Creating XML...\n")
 
+# relative path for mac and linux
 script_rel_path = os.path.dirname(os.path.realpath(__file__))
+# absolute path for mike on neoterra
 script_path = "E:\\GIS\\projects\\Moore_Climate2018\\COMET-Farm-master\\scripts\\"
 master_path = "E:\\GIS\\projects\\Moore_Climate2018\\COMET-Farm-master\\"
 
