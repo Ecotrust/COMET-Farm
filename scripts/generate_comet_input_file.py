@@ -116,7 +116,7 @@ with open(input_xml_file, 'w') as f:
     # TODO add ID PNAME and USERID
     # f.write("<CometFarm><Project ID=\"" + "\" PNAME=\"" + "\" USERID=\"" + "\">")
     f.write("<CometFarm>")
-    f.write("<Project ID=\"123\" PNAME=\"" + str(input_xml_file_name) + "\" USERID=\"123\">")
+    f.write("<Project ID=\"\" PNAME=\"" + str(input_xml_file_name) + "\" USERID=\"\">")
 
     for field in processed_sheets:
         f.write("<Cropland>")
