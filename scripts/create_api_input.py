@@ -70,9 +70,8 @@ with open(gis_dir) as csv_file:
         processed_sheet.append(["name", field_sheet.title])
 
         field_sheet.cell(row=7, column=2).value = run_name
-        # field_sheet.cell(row=8, column=2).value = row['CRP_NUM'] #dc added 1/16/20
+        field_sheet.cell(row=8, column=2).value = row['CRP_NUM'] #dc added 1/16/20
         field_sheet.cell(row=9, column=2).value = row['field_ID']
-        print(row['GEOM'], '\n')
         field_sheet.cell(row=10, column=2).value = 'POLYGON (' + row['GEOM'] + ')'
         field_sheet.cell(row=11, column=2).value = row['AREA']
         field_sheet.cell(row=12, column=2).value = row['SRID']
@@ -115,17 +114,17 @@ with open(gis_dir) as csv_file:
                         cell.value = 'FALSE'
 
 
-        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=3,min_row=40,max_row=49):
-            for cell in crop_cell:
-                cell.value = row['CRP']
+        # for crop_cell in field_sheet.iter_cols(min_col=3,max_col=3,min_row=40,max_row=49):
+            # for cell in crop_cell:
+                # cell.value = row['CRP']
 
-        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=3,min_row=53,max_row=62):
-            for cell in crop_cell:
-                cell.value = row['CRP']
+        # for crop_cell in field_sheet.iter_cols(min_col=3,max_col=3,min_row=53,max_row=62):
+            # for cell in crop_cell:
+                # cell.value = row['CRP']
 
 
                 # if rowName == 'crop_number':
-                #     field_sheet.cell(row=rowNum, column=2).value = row['CRP_NUM'] #dc added 1/16/20
+                    # field_sheet.cell(row=rowNum, column=2).value = row['CRP_NUM'] #dc added 1/16/20
                 # if rowName == 'planting_date':
                 #     field_sheet.cell(row=rowNum, column=2).value = row['planting_date']  #dc added 1/16/20
                 # if rowName == 'harvest_date':
@@ -146,20 +145,22 @@ with open(gis_dir) as csv_file:
                 #     year80_sheet_val = row['yr80_2000'] #changed 'Year1980-2000' to 'yr80_2000'
                 #     yr_80_val = year80_sheet.cell(row=int(year80_sheet_val), column=1).value
                 #     field_sheet.cell(row=rowNum, column=2).value = yr_80_val
-                #if rowName == 'till80_200':
-                    #till_80_sheet = wb['tillage']
-                    #till_80_sheet_val = row['Year1980-2000_Tillage']
-                    #till_80_val = till_80_sheet.cell(row=int(till_80_sheet_val), column=1).value
-                    #field_sheet.cell(row=rowNum, column=2).value = till_80_val
-
-script_path = os.path.dirname(os.path.realpath(__file__))
-
-wb.save(script_path + "/../combined_data.xlsx")
+                # if rowName == 'till80_200':
+                #     till_80_sheet = wb['tillage']
+                #     till_80_sheet_val = row['Year1980-2000_Tillage']
+                #     till_80_val = till_80_sheet.cell(row=int(till_80_sheet_val), column=1).value
+                #     field_sheet.cell(row=rowNum, column=2).value = till_80_val
 
 print("\nSuccessfully merged GIS and Excel template.\n")
 print("Creating XML...\n")
 
+script_rel_path = os.path.dirname(os.path.realpath(__file__))
+script_path = "E:\\GIS\\projects\\Moore_Climate2018\\COMET-Farm-master\\scripts\\"
+master_path = "E:\\GIS\\projects\\Moore_Climate2018\\COMET-Farm-master\\"
+
 if sys.platform.startswith('darwin') or sys.platform.startswith('linux'):
-    os.system("python3 " + script_path + "/generate_comet_input_file.py" + " " + script_path + "/../combined_data.xlsx")
+    wb.save(script_rel_path + "/../combined_data.xlsx")
+    os.system("python3 " + script_rel_path + "/generate_comet_input_file.py" + " " + script_rel_path + "/../combined_data.xlsx")
 elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
-    os.system("py -3 " + script_path + "/generate_comet_input_file.py" + " " + script_path + "/../combined_data.xlsx")
+    wb.save(master_path + "combined_data.xlsx")
+    os.system("py -3 " + script_path + "generate_comet_input_file.py" + " " + master_path + "combined_data.xlsx")

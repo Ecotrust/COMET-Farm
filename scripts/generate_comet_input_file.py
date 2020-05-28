@@ -67,8 +67,8 @@ for row in range(1, processed_fields_sheet.max_row + 1):
     current_values.setdefault('yearly_scenario_data', scenario_yearly)
 
     scenario_a_name  = scenario_sheet['B38'].value
-
     scenario_b_name  = scenario_sheet['B51'].value
+    
     if scenario_b_name:
         current_values.setdefault('yearly_scenariob_data', scenario_b_yearly)
     else:
