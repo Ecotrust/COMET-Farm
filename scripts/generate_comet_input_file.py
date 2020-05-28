@@ -69,9 +69,9 @@ for row in range(1, processed_fields_sheet.max_row + 1):
     scenario_a_name  = scenario_sheet['B38'].value
     scenario_b_name  = scenario_sheet['B51'].value
     if scenario_b_name:
-        current_values.setdefault('yearly_scenariob_data', scenario_b_yearly)
+        current_values.setdefault('yearly_scenario_b_data', scenario_b_yearly)
     else:
-        current_values.setdefault('yearly_scenariob_data', '')
+        current_values.setdefault('yearly_scenario_b_data', '')
 
     # set scenario names
     current_values.setdefault('scenario_a_name', scenario_a_name)
@@ -271,11 +271,11 @@ with open(input_xml_file, 'w') as f:
 
         f.write("</CropScenario>")
 
-        if len(processed_sheets[field]['yearly_scenariob_data']) > 1:
+        if len(processed_sheets[field]['yearly_scenario_b_data']) > 1:
 
             f.write("<CropScenario Name=\"" + processed_sheets[field]['scenario_b_name'] + "\">")
 
-            for crop_year in processed_sheets[field]['yearly_scenario_data']:
+            for crop_year in processed_sheets[field]['yearly_scenario_b_data']:
                 f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
                 f.write("<Crop CropNumber=\"1\">")
                 f.write("<CropName>" + str(crop_year['Ccop_name']) + "</CropName>")
