@@ -88,8 +88,9 @@ with open(gis_dir) as csv_file:
                     # formated as number day of year ex: 32
                     if cell.column == 4:
                         day_num_of_year = row['planting_date']
-                    elif cell.column == 5:
+                    elif cell.column == 6:
                         day_num_of_year = row['harvest_date']
+                        print(day_num_of_year)
                     elif cell.column == 11:
                         day_num_of_year = row['till_date']
                     elif cell.column == 13:
