@@ -140,7 +140,7 @@ with open(input_xml_file, 'w') as f:
             f.write("<HarvestList>")
             f.write("<HarvestEvent>")
             f.write("<HarvestDate>" + str(crop_year['harvest_date']).strip('\"') + "</HarvestDate>")
-            f.write("<Grain>" + str(crop_year['grain']) + "</Grain>")
+            f.write("<Grain>" + str(crop_year['grain']).capitalize() + "</Grain>")
             f.write("<yield>" + str(crop_year['yield']) + "</yield>")
             f.write("<StrawStoverHayRemoval>" + str(crop_year['straw_stover_hay_removal']) + "</StrawStoverHayRemoval>")
             f.write("</HarvestEvent>")
