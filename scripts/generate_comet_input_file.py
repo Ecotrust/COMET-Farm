@@ -4,7 +4,7 @@ import os, sys, time
 # import functions for extracting data from excel
 from openpyxl import load_workbook
 
-# check if argument for workbook has been given
+# check if argument for excel workbook has been given
 if len(sys.argv) < 1:
     print("\n")
     print("python3 generate_comet_input_file.py <spreadsheet location>")
@@ -120,42 +120,32 @@ with open(input_xml_file, 'w') as f:
 
     for field in processed_sheets:
         f.write("<Cropland>")
-        # f.write("<GEOM PARCELNAME=\"" + str(processed_sheets[field]['Name']) + "\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
         f.write("<GEOM PARCELNAME=\"" + str(processed_sheets[field]['Name']) + "\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
-
         f.write("<Pre-1980>" + processed_sheets[field]['pre_80'] + "</Pre-1980>")
-        # CRP always None
-        f.write("<CRPStartYear>0</CRPStartYear><CRPEndYear>0</CRPEndYear><CRPType>None</CRPType>")
-        # PreCRPManagement fields always empty
-        # f.write("<PreCRPManagement></PreCRPManagement><PreCRPTillage></PreCRPTillage><PostCRPManagement></PostCRPManagement><PostCRPTillage></PostCRPTillage>")
-        # 1980 - 2000
+        f.write("<CRPStartYear>0</CRPStartYear><CRPEndYear>0</CRPEndYear><CRPType>None</CRPType>") # CRP always None
         f.write("<Year1980-2000>" + processed_sheets[field]['yr80_2000'] + "</Year1980-2000>")
         f.write("<Year1980-2000_Tillage>" + processed_sheets[field]['till80_200'] + "</Year1980-2000_Tillage>")
 
         # start crop scenario
         f.write("<CropScenario Name=\"Current\">")
-
-        # crop years
-        for crop_year in processed_sheets[field]['yearly_current_data']:
-            # import ipdb; ipdb.set_trace()
+        for crop_year in processed_sheets[field]['yearly_current_data']: # crop years
             f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
             f.write("<Crop CropNumber=\"1\">")
             f.write("<CropName>" + str(crop_year['Ccop_name']) + "</CropName>")
             f.write("<CropType>CROPS</CropType>")
             f.write("<PlantingDate>" + str(crop_year['planting_date']).strip('\"') + "</PlantingDate>")
             f.write("<ContinueFromPreviousYear>" + str(crop_year['continue_from_previous_year']) + "</ContinueFromPreviousYear>")
-            # f.write("<DidYouPrune></DidYouPrune>") # todo
-            # f.write("<RenewOrClearYourOrchard></RenewOrClearYourOrchard>") # todo
+
             # start harvest list
-            f.write("<HarvestList>") # todo should i add conditional
-            f.write("<HarvestEvent>") # todo
+            f.write("<HarvestList>")
+            f.write("<HarvestEvent>")
             f.write("<HarvestDate>" + str(crop_year['harvest_date']).strip('\"') + "</HarvestDate>")
             f.write("<Grain>" + str(crop_year['grain']) + "</Grain>")
             f.write("<yield>" + str(crop_year['yield']) + "</yield>")
             f.write("<StrawStoverHayRemoval>" + str(crop_year['straw_stover_hay_removal']) + "</StrawStoverHayRemoval>")
             f.write("</HarvestEvent>")
             f.write("</HarvestList>")
-            # end harvest list
+
             f.write("<GrazingList />")
             f.write("<TillageList>")
             f.write("<TillageEvent>")
@@ -341,14 +331,6 @@ with open(input_xml_file, 'w') as f:
 
             f.write("</CropScenario>")
 
-        # begin crop 2
-        # f.write("<CropYear Year=\"" + str(current_values['YEAR']) + "\">")
-        # f.write("<Crop CropNumber=\"2\">")
-        # f.write("</Crop>")
-        # f.write("</CropYear>")
-        # end crop 2
-        # f.write("</CropScenario>")
-        # end crop scenario
         f.write("</Cropland>\n")
 
     f.write("</Project>")
