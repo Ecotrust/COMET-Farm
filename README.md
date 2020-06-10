@@ -1,6 +1,6 @@
 # COMET-Farm &middot; [![Build Status](https://img.shields.io/travis/npm/npm/latest.svg?style=flat-square)](https://travis-ci.org/npm/npm) [![npm](https://img.shields.io/npm/v/npm.svg?style=flat-square)](https://www.npmjs.com/package/npm) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/your/your-project/blob/master/LICENSE)
 
-> Place to collect docs, scripts, notes, and deadlines for our work with the COMET-Farm stuff
+> :bellhop_bell:  >  **See [Offical API Docs on Gitlab](https://gitlab.com/comet-api/api-docs)**
 
 COMET-Farm API scripts - use an Excel template and GIS data export to create an XML file for feeding into the COMET-Farm API, then reformat COMET-Farm API results.  
 
