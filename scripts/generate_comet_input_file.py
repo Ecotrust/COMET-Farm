@@ -147,12 +147,14 @@ with open(input_xml_file, 'w') as f:
             f.write("</HarvestList>")
 
             f.write("<GrazingList />")
+
             f.write("<TillageList>")
             f.write("<TillageEvent>")
             f.write("<TillageType>" + str(crop_year['tillage_type']) + "</TillageType>")
             f.write("<TillageDate>" + str(crop_year['tillage_date']).strip('\"') + "</TillageDate>")
             f.write("</TillageEvent>")
             f.write("</TillageList>")
+
             # start fertilizer list
             f.write("<NApplicationList>") # todo should i add conditional
             f.write("<NApplicationEvent>")
@@ -164,30 +166,21 @@ with open(input_xml_file, 'w') as f:
             f.write("<EEP>" + str(crop_year['eep']) + "</EEP>")
             f.write("</NApplicationEvent>")
             f.write("</NApplicationList>")
-            # end fertilizer list
-            # start omad application list
+
             f.write("<OMADApplicationList />")
-            # end omad list
-            # start irrigation list
+
             f.write("<IrrigationList />")
-            # end irrigation list
-            # start liming list
-            f.write("<LimingList>")
-            f.write("<LimingApplicationEvent>")
-            f.write("<LimingApplicationDate></LimingApplicationDate>")
-            f.write("<LimingMaterial></LimingMaterial>")
-            f.write("<LimingApplicationAmount></LimingApplicationAmount>")
-            f.write("</LimingApplicationEvent>")
-            f.write("</LimingList>")
-            # end liming list
-            # start burning list
-            # f.write("<BurningEvent>")
-            # f.write("<DidYouBurnCropResidue>" + 'No' + "</DidYouBurnCropResidue>")
-            # f.write("</BurningEvent>")
+
+            f.write("<LimingEvent>")
+            f.write("<LimingDate></LimingDate>")
+            f.write("<LimingMethod>None</LimingMethod>")
+            f.write("<LimingRate>0</LimingRate>")
+            f.write("</LimingEvent>")
+
             f.write("<BurnEvent>")
             f.write("<BurnTime>No burning</BurnTime>")
             f.write("</BurnEvent>")
-            # end burning list
+
             f.write("</Crop>")
             f.write("</CropYear>")
 
