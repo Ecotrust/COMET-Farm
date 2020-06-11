@@ -41,7 +41,7 @@ else:
     wb_dir = script_path + '/../template_v2.xlsx'
 
 
-wb = load_workbook(filename = wb_dir)
+wb = load_workbook(filename = wb_dir, data_only = True)
 scenario_sheet = wb['scenario']
 
 gis_values = {}
@@ -76,55 +76,55 @@ with open(gis_dir) as csv_file:
         if 'pre_80' in row:
             value_to_match = int(row['pre_80'])
             match_value = wb['pre1980'].cell(row=value_to_match, column=1).value
-            field_sheet.cell(row=58, column=2).value = str(match_value)
+            field_sheet.cell(row=89, column=2).value = str(match_value)
         if 'yr80_2000' in row:
             value_to_match = int(row['yr80_2000'])
             match_value = wb['yr80'].cell(row=value_to_match, column=1).value
-            field_sheet.cell(row=59, column=2).value = str(match_value)
+            field_sheet.cell(row=90, column=2).value = str(match_value)
         if 'till80_200' in row:
             value_to_match = int(row['till80_200'])
             match_value = wb['tillage'].cell(row=value_to_match, column=1).value
-            field_sheet.cell(row=60, column=2).value = str(match_value)
+            field_sheet.cell(row=91, column=2).value = str(match_value)
         if 'crop_scenario_name' in row:
-            field_sheet.cell(row=63, column=2).value = row['crop_scenario_name']
+            field_sheet.cell(row=94, column=2).value = row['crop_scenario_name']
         else:
-            field_sheet.cell(row=63, column=2).value = run_name
+            field_sheet.cell(row=94, column=2).value = run_name
         if 'CRP_NUM' in row:
-            field_sheet.cell(row=64, column=2).value = row['CRP_NUM'] #dc added 1/16/20
+            field_sheet.cell(row=95, column=2).value = row['CRP_NUM'] #dc added 1/16/20
         if 'field_ID' in row:
-            field_sheet.cell(row=65, column=2).value = row['field_ID']
+            field_sheet.cell(row=96, column=2).value = row['field_ID']
         if 'GEOM' in row:
-            field_sheet.cell(row=66, column=2).value = 'POLYGON (' + row['GEOM'] + ')'
+            field_sheet.cell(row=97, column=2).value = 'POLYGON (' + row['GEOM'] + ')'
         if 'AREA' in row:
-            field_sheet.cell(row=67, column=2).value = row['AREA']
+            field_sheet.cell(row=98, column=2).value = row['AREA']
         if 'SRID' in row:
-            field_sheet.cell(row=68, column=2).value = row['SRID']
-        if 'Name' in row:
-            field_sheet.cell(row=1, column=2).value = row['Name']
+            field_sheet.cell(row=99, column=2).value = row['SRID']
+        if 'Scenario Name' in row:
+            field_sheet.cell(row=1, column=2).value = row['Scenario Name']
         else:
             field_sheet.cell(row=1, column=2).value = run_name
 
-        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=17,min_row=21,max_row=60):
+        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=19,min_row=21,max_row=60):
             for cell in crop_cell:
                 if cell.row % 2 == 1:
-                    if str(cell.column) == 'C':
+                    if str(cell.column) == 'C' or cell.column == 3:
                         if 'Ccop_name' in row:
                             cell.value = row['Ccop_name']
-                    elif str(cell.column) == 'D' or str(cell.column) == 'F' or str(cell.column) == 'K' or str(cell.column) == 'M':
+                    elif str(cell.column) == 'D' or str(cell.column) == 'F' or str(cell.column) == 'K' or str(cell.column) == 'M' or cell.column == 4 or cell.column == 6 or cell.column == 11 or cell.column == 13:
                         # get year from template spreadsheet
-                        yyyy = cell.value[-5:-1]
+                        yyyy = field_sheet.cell(row=cell.row, column=2).value
                         # get month and day from GIS data
                         # formated as number day of year ex: 32
-                        if cell.column == 'D':
+                        if str(cell.column) == 'D' or cell.column == 4:
                             if 'planting_date' in row:
                                 day_num_of_year = row['planting_date']
-                        elif cell.column == 'F':
+                        elif str(cell.column) == 'F' or cell.column == 6:
                             if 'harvest_date' in row:
                                 day_num_of_year = row['harvest_date']
-                        elif cell.column == 'K':
+                        elif str(cell.column) == 'K' or cell.column == 11:
                             if 'till_date' in row:
                                 day_num_of_year = row['till_date']
-                        elif cell.column == 'M':
+                        elif str(cell.column) == 'M' or cell.column == 13:
                             if 'n_app_date' in row:
                                 day_num_of_year = row['n_app_date']
 
@@ -135,14 +135,14 @@ with open(gis_dir) as csv_file:
                         # convert to the orginially expected format of Month, day ex: March 14
                         month_day = month_day.strftime('%B %d')
                         # add the year to month day from the template spreadsheet
-                        mmddyyyy = month_day + yyyy
+                        mmddyyyy = month_day + str(yyyy)
                         # format ex: March 152020
                         mmddyyyy = datetime.strptime(mmddyyyy, '%B %d%Y')
                         # convert to CF API expected format ex: 03/14/2020
                         cfarm_format_date = mmddyyyy.strftime('%m/%d/%Y')
                         # add formated date to template spreadsheet
                         cell.value = cfarm_format_date
-                    elif cell.column == 'H':
+                    elif str(cell.column) == 'H' or cell.column == 8:
                         row_lowercase = row['grain'].lower()
                         if row_lowercase == 'yes' or row_lowercase == 'true':
                             cell.value = 'TRUE'
@@ -150,21 +150,23 @@ with open(gis_dir) as csv_file:
                             cell.value = 'FALSE'
                 elif cell.row % 2 == 0:
                     cover_crop_name = field_sheet.cell(row=12, column=2).value
-                    if cover_crop_name != 'None':
-                        if cell.column == 3:
+                    if str(cover_crop_name) != 'None':
+                        if str(cell.column) == 'C' or cell.column == 3:
                             if 'Ccop_name' in row:
                                 cell.value = row['Ccop_name']
                         # elif str(cell.column) == 'D' or str(cell.column) == 'F' or str(cell.column) == 'K' or str(cell.column) == 'M':
-                        elif cell.column == 4 or str(cell.column) == 6:
-                            # get month and day from GIS data
+                        elif str(cell.column) == 'D' or str(cell.column) == 'F' or cell.column == 4 or cell.column == 6:
+
+                            yyyy = field_sheet.cell(row=cell.row, column=2).value
+
                             # formated as number day of year ex: 32
-                            if cell.column == 4:
+                            if str(cell.column) == 'D' or cell.column == 4:
                                 if 'planting_date' in row:
                                     date_to_parse = row['planting_date']
                                     diff_column_needed = 6 # The column we will need later for setting cover crop date
                                     date_diff = 5 # if we are planting a cover crop we want to do so 5 days after the previous crop harvest date
-                                    diff_year = -1 # planting a cover crop - we want to know previous crop
-                            elif cell.column == 6:
+                                    diff_year = 0 # planting a cover crop - we want to know previous crop
+                            elif str(cell.column) == 'F' or cell.column == 6:
                                 if 'harvest_date' in row:
                                     date_to_parse = row['harvest_date']
                                     diff_column_needed = 4 # The column we will need later for setting cover crop date
@@ -178,25 +180,33 @@ with open(gis_dir) as csv_file:
                             #         date_to_parse = row['n_app_date']
 
                             diff_row_num = cell.row + diff_year # neg or pos 1 depending on harverst or planting
-                            diff_crop_date = field_sheet.cell(row=diff_row_num, column=diff_column_needed).value # get the crop date
-                            diff_crop_date_to_day_num = datetime.strptime(diff_crop_date, '%B %d') # formate to day number year so we can do some math
+                            diff_crop_date = field_sheet.cell(row=diff_row_num, column=diff_column_needed) # get the crop date
+                            print(cell.row, '')
+                            print(diff_year, '')
+                            print(diff_row_num)
+                            print(date_to_parse)
+                            print(diff_crop_date.value, '\n')
+                            diff_crop_date_val = diff_crop_date.value
+                            if diff_crop_date_val:
+                                diff_crop_date_val = diff_crop_date_val.replace('"','')
+                                diff_crop_date_datetime = datetime.strptime(str(diff_crop_date_val), '%m/%d/%Y') # formate to day number year so we can do some math
+                                diff_crop_date_to_day_num = diff_crop_date_datetime.strftime('%j')
 
                             five_days_diff = int(diff_crop_date_to_day_num) + date_diff # pos or neg day of year diff
-
+                            five_days_diff = datetime.strptime(str(five_days_diff), '%j') # convert back to datetime
                             #-**- See Day of year chart at end of document
 
                             # convert back to CF needed format
                             # convert to the orginially expected format of Month, day ex: March 14
                             month_day = five_days_diff.strftime('%B %d')
                             # get the year from crop (not cover crop)
-                            yyyy = diff_crop_date[-5:-1]
+                            # yyyy = diff_crop_date[-5:-1]
                             # add the year to month day from the template spreadsheet
-                            mmddyyyy = month_day + yyyy
+                            mmddyyyy = month_day + str(yyyy)
                             # format ex: March 152020
                             mmddyyyy = datetime.strptime(mmddyyyy, '%B %d%Y')
                             # convert to CF API expected format ex: 03/14/2020
                             cfarm_format_date = mmddyyyy.strftime('%m/%d/%Y')
-                            print(cfarm_format_date)
                             # add formated date to template spreadsheet
                             cell.value = cfarm_format_date
                         elif cell.column == 'H':
@@ -206,27 +216,27 @@ with open(gis_dir) as csv_file:
                             else:
                                 cell.value = 'FALSE'
 
-        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=17,min_row=65,max_row=84):
+        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=19,min_row=65,max_row=84):
             for cell in crop_cell:
-                if int(cell.row) % 2 == 1:
-                    if str(cell.column) == 3:
+                if cell.row % 2 == 1:
+                    if str(cell.column) == 'C' or cell.column == 3:
                         if 'Ccop_name' in row:
                             cell.value = row['Ccop_name']
-                    elif str(cell.column) == 4 or str(cell.column) == 6 or str(cell.column) == 11 or str(cell.column) == 13:
+                    elif str(cell.column) == 'D' or str(cell.column) == 'F' or str(cell.column) == 'K' or str(cell.column) == 'M' or cell.column == 4 or cell.column == 6 or cell.column == 11 or cell.column == 13:
                         # get year from template spreadsheet
-                        yyyy = cell.value[-5:-1]
+                        yyyy = field_sheet.cell(row=cell.row, column=2).value
                         # get month and day from GIS data
                         # formated as number day of year ex: 32
-                        if cell.column == 4:
+                        if str(cell.column) == 'D' or cell.column == 4:
                             if 'planting_date' in row:
                                 day_num_of_year = row['planting_date']
-                        elif cell.column == 6:
+                        elif str(cell.column) == 'F' or cell.column == 6:
                             if 'harvest_date' in row:
                                 day_num_of_year = row['harvest_date']
-                        elif cell.column == 11:
+                        elif str(cell.column) == 'K' or cell.column == 11:
                             if 'till_date' in row:
                                 day_num_of_year = row['till_date']
-                        elif cell.column == 13:
+                        elif str(cell.column) == 'M' or cell.column == 13:
                             if 'n_app_date' in row:
                                 day_num_of_year = row['n_app_date']
 
@@ -237,38 +247,41 @@ with open(gis_dir) as csv_file:
                         # convert to the orginially expected format of Month, day ex: March 14
                         month_day = month_day.strftime('%B %d')
                         # add the year to month day from the template spreadsheet
-                        mmddyyyy = month_day + yyyy
+                        mmddyyyy = month_day + str(yyyy)
                         # format ex: March 152020
                         mmddyyyy = datetime.strptime(mmddyyyy, '%B %d%Y')
                         # convert to CF API expected format ex: 03/14/2020
                         cfarm_format_date = mmddyyyy.strftime('%m/%d/%Y')
                         # add formated date to template spreadsheet
                         cell.value = cfarm_format_date
-                    elif cell.column == 'H':
+                    elif str(cell.column) == 'H' or cell.column == 8:
                         row_lowercase = row['grain'].lower()
                         if row_lowercase == 'yes' or row_lowercase == 'true':
                             cell.value = 'TRUE'
                         else:
                             cell.value = 'FALSE'
-                elif int(cell.row) % 2 == 0:
-                    if field_sheet.cell(row=12, column=2).value != 'None':
-                        if str(cell.column) == 'C':
+                elif cell.row % 2 == 0:
+                    cover_crop_name = field_sheet.cell(row=12, column=2).value
+                    if str(cover_crop_name) != 'None':
+                        if str(cell.column) == 'C' or cell.column == 3:
                             if 'Ccop_name' in row:
                                 cell.value = row['Ccop_name']
                         # elif str(cell.column) == 'D' or str(cell.column) == 'F' or str(cell.column) == 'K' or str(cell.column) == 'M':
-                        elif str(cell.column) == 'D' or str(cell.column) == 'F':
-                            # get month and day from GIS data
+                        elif str(cell.column) == 'D' or str(cell.column) == 'F' or cell.column == 4 or cell.column == 6:
+
+                            yyyy = field_sheet.cell(row=cell.row, column=2).value
+
                             # formated as number day of year ex: 32
-                            if cell.column == 'D':
+                            if str(cell.column) == 'D' or cell.column == 4:
                                 if 'planting_date' in row:
                                     date_to_parse = row['planting_date']
-                                    diff_column_needed = 'F' # The column we will need later for setting cover crop date
+                                    diff_column_needed = 6 # The column we will need later for setting cover crop date
                                     date_diff = 5 # if we are planting a cover crop we want to do so 5 days after the previous crop harvest date
                                     diff_year = -1 # planting a cover crop - we want to know previous crop
-                            elif cell.column == 'F':
+                            elif str(cell.column) == 'F' or cell.column == 6:
                                 if 'harvest_date' in row:
                                     date_to_parse = row['harvest_date']
-                                    diff_column_needed = 'D' # The column we will need later for setting cover crop date
+                                    diff_column_needed = 4 # The column we will need later for setting cover crop date
                                     date_diff = -5 # if we are harvesting a cover crop we want to do so 5 days before planting next crop
                                     diff_year = 1 # about to plant a new crop - we want to know the next crop
                             # elif cell.column == 'K':
@@ -279,25 +292,28 @@ with open(gis_dir) as csv_file:
                             #         date_to_parse = row['n_app_date']
 
                             diff_row_num = cell.row + diff_year # neg or pos 1 depending on harverst or planting
-                            diff_crop_date = field_sheet.cell(row=int(diff_row_num), column=diff_column_needed).value # get the crop date
-                            diff_crop_date_to_day_num = datetime.strptime(diff_crop_date, '%B %d') # formate to day number year so we can do some math
+                            diff_crop_date = field_sheet.cell(row=diff_row_num, column=diff_column_needed) # get the crop date
+                            diff_crop_date_val = diff_crop_date.value
+                            if diff_crop_date_val:
+                                diff_crop_date_val = diff_crop_date_val.replace('"','')
+                                diff_crop_date_datetime = datetime.strptime(str(diff_crop_date_val), '%m/%d/%Y') # formate to day number year so we can do some math
+                                diff_crop_date_to_day_num = diff_crop_date_datetime.strftime('%j')
 
                             five_days_diff = int(diff_crop_date_to_day_num) + date_diff # pos or neg day of year diff
-
+                            five_days_diff = datetime.strptime(str(five_days_diff), '%j') # convert back to datetime
                             #-**- See Day of year chart at end of document
 
                             # convert back to CF needed format
                             # convert to the orginially expected format of Month, day ex: March 14
                             month_day = five_days_diff.strftime('%B %d')
                             # get the year from crop (not cover crop)
-                            yyyy = diff_crop_date[-5:-1]
+                            # yyyy = diff_crop_date[-5:-1]
                             # add the year to month day from the template spreadsheet
-                            mmddyyyy = month_day + yyyy
+                            mmddyyyy = month_day + str(yyyy)
                             # format ex: March 152020
                             mmddyyyy = datetime.strptime(mmddyyyy, '%B %d%Y')
                             # convert to CF API expected format ex: 03/14/2020
                             cfarm_format_date = mmddyyyy.strftime('%m/%d/%Y')
-                            print(cfarm_format_date)
                             # add formated date to template spreadsheet
                             cell.value = cfarm_format_date
                         elif cell.column == 'H':
