@@ -181,9 +181,8 @@ with open(gis_dir) as csv_file:
 
                             diff_row_num = cell.row + diff_year # neg or pos 1 depending on harverst or planting
                             diff_crop_date = field_sheet.cell(row=diff_row_num, column=diff_column_needed) # get the crop date
-                            print(cell.row, '')
                             print(diff_year, '')
-                            print(diff_row_num)
+                            yyyy = yyyy + diff_year
                             print(date_to_parse)
                             print(diff_crop_date.value, '\n')
                             diff_crop_date_val = diff_crop_date.value
