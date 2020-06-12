@@ -41,16 +41,16 @@ for row in range(1, processed_fields_sheet.max_row + 1):
             param  = scenario_sheet['A' + str(row)].value
             param_val  = scenario_sheet['B' + str(row)].value
             current_values.setdefault(param, param_val)
-        elif row > 20 and row < 60:
+        elif row > 20 and row < 61:
             current_year = {}
-            for col in range(2, scenario_sheet.max_column + 1):
+            for col in range(2, scenario_sheet.max_column + 2): # no sure why max_column is 18 when it shjould be 20, so adding 2
                 year_key = scenario_sheet.cell(row=20, column=col).value
                 year_value = scenario_sheet.cell(row=row, column=col).value
                 current_year.setdefault(year_key, year_value)
             current_yearly.append(current_year)
-        elif row > 65 and row < 84:
+        elif row > 64 and row < 85:
             scenario_year = {}
-            for col in range(2, scenario_sheet.max_column + 1):
+            for col in range(2, scenario_sheet.max_column + 2): # no sure why max_column is 18 when it shjould be 20, so adding 2
                 year_key = scenario_sheet.cell(row=64, column=col).value
                 year_value = scenario_sheet.cell(row=row, column=col).value
                 scenario_year.setdefault(year_key, year_value)
@@ -114,13 +114,11 @@ with open(input_xml_file, 'w') as f:
     print('Writing XML. This could take a minute...\n')
 
     # email_address = list(processed_sheets.items())[0][1]['Email']
-    # TODO add ID PNAME and USERID
-    # f.write("<CometFarm><Project ID=\"" + "\" PNAME=\"" + "\" USERID=\"" + "\">")
     f.write("<CometFarm>")
     f.write("<Project ID=\"\" PNAME=\"" + str(input_xml_file_name) + "\" USERID=\"\">")
-
+    # f.write("<Day cometEmailId=\"dpollard@ecotrust.org\">")
     for field in processed_sheets:
-        f.write("<Cropland>")
+        f.write("<Cropland name=\"" + str(input_xml_file_name) + "\">")
         f.write("<GEOM PARCELNAME=\"" + str(processed_sheets[field]['Scenario Name']) + "\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
         f.write("<Pre-1980>" + processed_sheets[field]['pre_80'] + "</Pre-1980>")
         f.write("<CRPStartYear>0</CRPStartYear><CRPEndYear>0</CRPEndYear><CRPType>None</CRPType>") # CRP always None
@@ -134,7 +132,7 @@ with open(input_xml_file, 'w') as f:
                 f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
                 f.write("<Crop CropNumber=\"" + str(crop_year['crop_number']) + "\">")
                 f.write("<CropName>" + str(crop_year['Ccop_name']) + "</CropName>")
-                f.write("<CropType>CROPS</CropType>")
+                f.write("<CropType>" + str(crop_year['CropType']) + "</CropType>")
                 f.write("<PlantingDate>" + str(crop_year['planting_date']).strip('\"') + "</PlantingDate>")
                 f.write("<ContinueFromPreviousYear>" + str(crop_year['continue_from_previous_year']) + "</ContinueFromPreviousYear>")
 
@@ -172,12 +170,6 @@ with open(input_xml_file, 'w') as f:
                 f.write("<OMADApplicationList />")
 
                 f.write("<IrrigationList />")
-
-                f.write("<LimingEvent>")
-                # f.write("<LimingDate>01/01/" + str(crop_year['Year']) + "</LimingDate>")
-                f.write("<LimingMethod>None</LimingMethod>")
-                f.write("<LimingRate>0</LimingRate>")
-                f.write("</LimingEvent>")
 
                 f.write("<BurnEvent>")
                 f.write("<BurnTime>No burning</BurnTime>")
@@ -195,7 +187,7 @@ with open(input_xml_file, 'w') as f:
                 f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
                 f.write("<Crop CropNumber=\"" + str(crop_year['crop_number']) + "\">")
                 f.write("<CropName>" + str(crop_year['Ccop_name']) + "</CropName>")
-                f.write("<CropType>CROPS</CropType>")
+                f.write("<CropType>" + str(crop_year['CropType']) + "</CropType>")
                 f.write("<PlantingDate>" + str(crop_year['planting_date']).strip('\"') + "</PlantingDate>")
                 f.write("<ContinueFromPreviousYear>" + str(crop_year['continue_from_previous_year']) + "</ContinueFromPreviousYear>")
 
@@ -233,12 +225,6 @@ with open(input_xml_file, 'w') as f:
                 f.write("<OMADApplicationList />")
 
                 f.write("<IrrigationList />")
-
-                f.write("<LimingEvent>")
-                # f.write("<LimingDate>01/01/" + str(crop_year['Year']) + "</LimingDate>")
-                f.write("<LimingMethod>None</LimingMethod>")
-                f.write("<LimingRate>0</LimingRate>")
-                f.write("</LimingEvent>")
 
                 f.write("<BurnEvent>")
                 f.write("<BurnTime>No burning</BurnTime>")
@@ -321,6 +307,7 @@ with open(input_xml_file, 'w') as f:
 
         f.write("</Cropland>\n")
 
+    # f.write("</Day>")
     f.write("</Project>")
     f.write("</CometFarm>")
 

@@ -104,7 +104,7 @@ with open(gis_dir) as csv_file:
         else:
             field_sheet.cell(row=1, column=2).value = run_name
 
-        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=19,min_row=21,max_row=60):
+        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=20,min_row=21,max_row=60):
             for cell in crop_cell:
                 if cell.row % 2 == 1:
                     if str(cell.column) == 'C' or cell.column == 3:
@@ -181,10 +181,7 @@ with open(gis_dir) as csv_file:
 
                             diff_row_num = cell.row + diff_year # neg or pos 1 depending on harverst or planting
                             diff_crop_date = field_sheet.cell(row=diff_row_num, column=diff_column_needed) # get the crop date
-                            print(diff_year, '')
                             yyyy = yyyy + diff_year
-                            print(date_to_parse)
-                            print(diff_crop_date.value, '\n')
                             diff_crop_date_val = diff_crop_date.value
                             if diff_crop_date_val:
                                 diff_crop_date_val = diff_crop_date_val.replace('"','')
@@ -215,7 +212,7 @@ with open(gis_dir) as csv_file:
                             else:
                                 cell.value = 'FALSE'
 
-        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=19,min_row=65,max_row=84):
+        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=20,min_row=65,max_row=84):
             for cell in crop_cell:
                 if cell.row % 2 == 1:
                     if str(cell.column) == 'C' or cell.column == 3:
@@ -276,7 +273,7 @@ with open(gis_dir) as csv_file:
                                     date_to_parse = row['planting_date']
                                     diff_column_needed = 6 # The column we will need later for setting cover crop date
                                     date_diff = 5 # if we are planting a cover crop we want to do so 5 days after the previous crop harvest date
-                                    diff_year = -1 # planting a cover crop - we want to know previous crop
+                                    diff_year = 0 # planting a cover crop - we want to know previous crop
                             elif str(cell.column) == 'F' or cell.column == 6:
                                 if 'harvest_date' in row:
                                     date_to_parse = row['harvest_date']
@@ -292,6 +289,7 @@ with open(gis_dir) as csv_file:
 
                             diff_row_num = cell.row + diff_year # neg or pos 1 depending on harverst or planting
                             diff_crop_date = field_sheet.cell(row=diff_row_num, column=diff_column_needed) # get the crop date
+                            yyyy = yyyy + diff_year
                             diff_crop_date_val = diff_crop_date.value
                             if diff_crop_date_val:
                                 diff_crop_date_val = diff_crop_date_val.replace('"','')
