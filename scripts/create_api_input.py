@@ -76,35 +76,35 @@ with open(gis_dir) as csv_file:
         if 'pre_80' in row:
             value_to_match = int(row['pre_80'])
             match_value = wb['pre1980'].cell(row=value_to_match, column=1).value
-            field_sheet.cell(row=89, column=2).value = str(match_value)
+            field_sheet.cell(row=100, column=2).value = str(match_value)
         if 'yr80_2000' in row:
             value_to_match = int(row['yr80_2000'])
             match_value = wb['yr80'].cell(row=value_to_match, column=1).value
-            field_sheet.cell(row=90, column=2).value = str(match_value)
+            field_sheet.cell(row=101, column=2).value = str(match_value)
         if 'till80_200' in row:
             value_to_match = int(row['till80_200'])
             match_value = wb['tillage'].cell(row=value_to_match, column=1).value
-            field_sheet.cell(row=91, column=2).value = str(match_value)
+            field_sheet.cell(row=102, column=2).value = str(match_value)
         if 'crop_scenario_name' in row:
-            field_sheet.cell(row=94, column=2).value = row['crop_scenario_name']
+            field_sheet.cell(row=105, column=2).value = row['crop_scenario_name']
         else:
-            field_sheet.cell(row=94, column=2).value = run_name
+            field_sheet.cell(row=105, column=2).value = run_name
         if 'CRP_NUM' in row:
-            field_sheet.cell(row=95, column=2).value = row['CRP_NUM'] #dc added 1/16/20
+            field_sheet.cell(row=106, column=2).value = row['CRP_NUM'] #dc added 1/16/20
         if 'field_ID' in row:
-            field_sheet.cell(row=96, column=2).value = row['field_ID']
+            field_sheet.cell(row=107, column=2).value = row['field_ID']
         if 'GEOM' in row:
-            field_sheet.cell(row=97, column=2).value = 'POLYGON (' + row['GEOM'] + ')'
+            field_sheet.cell(row=108, column=2).value = 'POLYGON (' + row['GEOM'] + ')'
         if 'AREA' in row:
-            field_sheet.cell(row=98, column=2).value = row['AREA']
+            field_sheet.cell(row=109, column=2).value = row['AREA']
         if 'SRID' in row:
-            field_sheet.cell(row=99, column=2).value = row['SRID']
+            field_sheet.cell(row=110, column=2).value = row['SRID']
         if 'Scenario Name' in row:
             field_sheet.cell(row=1, column=2).value = row['Scenario Name']
         else:
             field_sheet.cell(row=1, column=2).value = run_name
 
-        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=20,min_row=21,max_row=60):
+        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=23,min_row=32,max_row=71):
             for cell in crop_cell:
                 if cell.row % 2 == 1:
                     if str(cell.column) == 'C' or cell.column == 3:
@@ -142,14 +142,9 @@ with open(gis_dir) as csv_file:
                         cfarm_format_date = mmddyyyy.strftime('%m/%d/%Y')
                         # add formated date to template spreadsheet
                         cell.value = cfarm_format_date
-                    elif str(cell.column) == 'H' or cell.column == 8:
-                        row_lowercase = row['grain'].lower()
-                        if row_lowercase == 'yes' or row_lowercase == 'true':
-                            cell.value = 'TRUE'
-                        else:
-                            cell.value = 'FALSE'
+
                 elif cell.row % 2 == 0:
-                    cover_crop_name = field_sheet.cell(row=12, column=2).value
+                    cover_crop_name = field_sheet.cell(row=4, column=2).value
                     if str(cover_crop_name) != 'None':
                         if str(cell.column) == 'C' or cell.column == 3:
                             if 'Ccop_name' in row:
@@ -205,14 +200,8 @@ with open(gis_dir) as csv_file:
                             cfarm_format_date = mmddyyyy.strftime('%m/%d/%Y')
                             # add formated date to template spreadsheet
                             cell.value = cfarm_format_date
-                        elif cell.column == 'H':
-                            row_lowercase = row['grain'].lower()
-                            if row_lowercase == 'yes' or row_lowercase == 'true':
-                                cell.value = 'TRUE'
-                            else:
-                                cell.value = 'FALSE'
 
-        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=20,min_row=65,max_row=84):
+        for crop_cell in field_sheet.iter_cols(min_col=3,max_col=23,min_row=76,max_row=95):
             for cell in crop_cell:
                 if cell.row % 2 == 1:
                     if str(cell.column) == 'C' or cell.column == 3:
@@ -250,14 +239,9 @@ with open(gis_dir) as csv_file:
                         cfarm_format_date = mmddyyyy.strftime('%m/%d/%Y')
                         # add formated date to template spreadsheet
                         cell.value = cfarm_format_date
-                    elif str(cell.column) == 'H' or cell.column == 8:
-                        row_lowercase = row['grain'].lower()
-                        if row_lowercase == 'yes' or row_lowercase == 'true':
-                            cell.value = 'TRUE'
-                        else:
-                            cell.value = 'FALSE'
+
                 elif cell.row % 2 == 0:
-                    cover_crop_name = field_sheet.cell(row=12, column=2).value
+                    cover_crop_name = field_sheet.cell(row=18, column=2).value
                     if str(cover_crop_name) != 'None':
                         if str(cell.column) == 'C' or cell.column == 3:
                             if 'Ccop_name' in row:
@@ -313,12 +297,6 @@ with open(gis_dir) as csv_file:
                             cfarm_format_date = mmddyyyy.strftime('%m/%d/%Y')
                             # add formated date to template spreadsheet
                             cell.value = cfarm_format_date
-                        elif cell.column == 'H':
-                            row_lowercase = row['grain'].lower()
-                            if row_lowercase == 'yes' or row_lowercase == 'true':
-                                cell.value = 'TRUE'
-                            else:
-                                cell.value = 'FALSE'
 
 print("\nSuccessfully merged GIS and Excel template.\n")
 print("Creating XML...\n")

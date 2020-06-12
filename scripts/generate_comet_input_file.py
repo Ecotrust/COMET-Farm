@@ -37,21 +37,21 @@ for row in range(1, processed_fields_sheet.max_row + 1):
 
     # loop through scenario values
     for row in range(1, scenario_sheet.max_row + 1):
-        if row < 18 or row > 87:
+        if row < 28 or row > 98:
             param  = scenario_sheet['A' + str(row)].value
             param_val  = scenario_sheet['B' + str(row)].value
             current_values.setdefault(param, param_val)
-        elif row > 20 and row < 61:
+        elif row > 31 and row < 72:
             current_year = {}
-            for col in range(2, scenario_sheet.max_column + 2): # no sure why max_column is 18 when it shjould be 20, so adding 2
-                year_key = scenario_sheet.cell(row=20, column=col).value
+            for col in range(2, scenario_sheet.max_column + 5): # no sure why max_column is 18 when it should be more
+                year_key = scenario_sheet.cell(row=31, column=col).value
                 year_value = scenario_sheet.cell(row=row, column=col).value
                 current_year.setdefault(year_key, year_value)
             current_yearly.append(current_year)
-        elif row > 64 and row < 85:
+        elif row > 75 and row < 96:
             scenario_year = {}
-            for col in range(2, scenario_sheet.max_column + 2): # no sure why max_column is 18 when it shjould be 20, so adding 2
-                year_key = scenario_sheet.cell(row=64, column=col).value
+            for col in range(2, scenario_sheet.max_column + 5): # no sure why max_column is 18 when it shjould be more
+                year_key = scenario_sheet.cell(row=75, column=col).value
                 year_value = scenario_sheet.cell(row=row, column=col).value
                 scenario_year.setdefault(year_key, year_value)
             scenario_yearly.append(scenario_year)
@@ -66,7 +66,7 @@ for row in range(1, processed_fields_sheet.max_row + 1):
     current_values.setdefault('yearly_current_data', current_yearly)
     current_values.setdefault('yearly_scenario_data', scenario_yearly)
 
-    scenario_a_name  = str(scenario_sheet['B63'].value)
+    scenario_a_name  = str(scenario_sheet['B74'].value)
     # scenario_b_name  = scenario_sheet['B51'].value
     scenario_b_name = '' # no scenario b possible at this time DP 6.10.20
     # if scenario_b_name:
@@ -81,7 +81,7 @@ for row in range(1, processed_fields_sheet.max_row + 1):
     field_number = sheet_name[6:] # assumes sheet_name is 'ready_field#', removes 'ready_'
     processed_sheets.setdefault(field_number, current_values)
 
-    gis_file_name = scenario_sheet['B94'].value
+    gis_file_name = scenario_sheet['B105'].value
 
 # create XML file
 # timestamp = time.time()
@@ -140,7 +140,7 @@ with open(input_xml_file, 'w') as f:
                 f.write("<HarvestList>")
                 f.write("<HarvestEvent>")
                 f.write("<HarvestDate>" + str(crop_year['harvest_date']).strip('\"') + "</HarvestDate>")
-                f.write("<Grain>" + str(crop_year['grain']).capitalize() + "</Grain>")
+                f.write("<Grain>" + str(crop_year['grain']) + "</Grain>")
                 f.write("<yield>" + str(crop_year['yield']) + "</yield>")
                 f.write("<StrawStoverHayRemoval>" + str(crop_year['straw_stover_hay_removal']) + "</StrawStoverHayRemoval>")
                 f.write("</HarvestEvent>")
@@ -162,12 +162,20 @@ with open(input_xml_file, 'w') as f:
                 f.write("<NApplicationMethod>" + str(crop_year['n_application_method']) + "</NApplicationMethod>")
                 f.write("<NApplicationDate>" + str(crop_year['n_application_date']).strip('\"') + "</NApplicationDate>")
                 f.write("<NApplicationAmount>" + str(crop_year['n_application_amount']) + "</NApplicationAmount>")
-                f.write("<PApplicationAmount>" + "0" + "</PApplicationAmount>")
+                f.write("<PApplicationAmount>" + str(crop_year['p_application_amount']) + "</PApplicationAmount>")
                 f.write("<EEP>" + str(crop_year['eep']) + "</EEP>")
                 f.write("</NApplicationEvent>")
                 f.write("</NApplicationList>")
 
-                f.write("<OMADApplicationList />")
+                f.write("<OMADApplicationList>")
+                f.write("<OMADApplicationEvent>")
+                f.write("<OMADApplicationDate>\"" + str(crop_year['']) + "\"</OMADApplicationDate>")
+                f.write("<OMADType>\"" + str(crop_year['compost_type']) + "\"</OMADType>")
+                f.write("<OMADAmount>\"" + str(crop_year['compost_amount']) + "\"</OMADAmount>")
+                f.write("<OMADPercentN>\"" + str(crop_year['']) + "\"</OMADPercentN>")
+                f.write("<OMADCNRatio>\"" + str(crop_year['compost_cn_ratio']) + "\"</OMADCNRatio>")
+                f.write("</OMADApplicationEvent>")
+                f.write("</OMADApplicationList>")
 
                 f.write("<IrrigationList />")
 
@@ -195,7 +203,7 @@ with open(input_xml_file, 'w') as f:
                 f.write("<HarvestList>")
                 f.write("<HarvestEvent>")
                 f.write("<HarvestDate>" + str(crop_year['harvest_date']).strip('\"') + "</HarvestDate>")
-                f.write("<Grain>" + str(crop_year['grain']).capitalize() + "</Grain>")
+                f.write("<Grain>" + str(crop_year['grain']) + "</Grain>")
                 f.write("<yield>" + str(crop_year['yield']) + "</yield>")
                 f.write("<StrawStoverHayRemoval>" + str(crop_year['straw_stover_hay_removal']) + "</StrawStoverHayRemoval>")
                 f.write("</HarvestEvent>")
@@ -217,12 +225,20 @@ with open(input_xml_file, 'w') as f:
                 f.write("<NApplicationMethod>" + str(crop_year['n_application_method']) + "</NApplicationMethod>")
                 f.write("<NApplicationDate>" + str(crop_year['n_application_date']).strip('\"') + "</NApplicationDate>")
                 f.write("<NApplicationAmount>" + str(crop_year['n_application_amount']) + "</NApplicationAmount>")
-                f.write("<PApplicationAmount>" + "0" + "</PApplicationAmount>")
+                f.write("<PApplicationAmount>" + str(crop_year['p_application_amount']) + "</PApplicationAmount>")
                 f.write("<EEP>" + str(crop_year['eep']) + "</EEP>")
                 f.write("</NApplicationEvent>")
                 f.write("</NApplicationList>")
 
-                f.write("<OMADApplicationList />")
+                f.write("<OMADApplicationList>")
+                f.write("<OMADApplicationEvent>")
+                f.write("<OMADApplicationDate>\"" + str(crop_year['']) + "\"</OMADApplicationDate>")
+                f.write("<OMADType>\"" + str(crop_year['compost_type']) + "\"</OMADType>")
+                f.write("<OMADAmount>\"" + str(crop_year['compost_amount']) + "\"</OMADAmount>")
+                f.write("<OMADPercentN>\"" + str(crop_year['']) + "\"</OMADPercentN>")
+                f.write("<OMADCNRatio>\"" + str(crop_year['compost_cn_ratio']) + "\"</OMADCNRatio>")
+                f.write("</OMADApplicationEvent>")
+                f.write("</OMADApplicationList>")
 
                 f.write("<IrrigationList />")
 
