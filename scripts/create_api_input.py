@@ -106,7 +106,7 @@ with open(gis_dir) as csv_file:
 
         for crop_cell in field_sheet.iter_cols(min_col=3,max_col=23,min_row=32,max_row=71):
             for cell in crop_cell:
-                if cell.row % 2 == 1:
+                if cell.row % 2 == 0:
                     if str(cell.column) == 'C' or cell.column == 3:
                         if 'Ccop_name' in row:
                             cell.value = row['Ccop_name']
@@ -137,13 +137,14 @@ with open(gis_dir) as csv_file:
                         # add the year to month day from the template spreadsheet
                         mmddyyyy = month_day + str(yyyy)
                         # format ex: March 152020
+                        import ipdb; ipdb.set_trace()
                         mmddyyyy = datetime.strptime(mmddyyyy, '%B %d%Y')
                         # convert to CF API expected format ex: 03/14/2020
                         cfarm_format_date = mmddyyyy.strftime('%m/%d/%Y')
                         # add formated date to template spreadsheet
                         cell.value = cfarm_format_date
 
-                elif cell.row % 2 == 0:
+                elif cell.row % 2 == 1:
                     cover_crop_name = field_sheet.cell(row=4, column=2).value
                     if str(cover_crop_name) != 'None':
                         if str(cell.column) == 'C' or cell.column == 3:
@@ -203,7 +204,7 @@ with open(gis_dir) as csv_file:
 
         for crop_cell in field_sheet.iter_cols(min_col=3,max_col=23,min_row=76,max_row=95):
             for cell in crop_cell:
-                if cell.row % 2 == 1:
+                if cell.row % 2 == 0:
                     if str(cell.column) == 'C' or cell.column == 3:
                         if 'Ccop_name' in row:
                             cell.value = row['Ccop_name']
@@ -240,7 +241,7 @@ with open(gis_dir) as csv_file:
                         # add formated date to template spreadsheet
                         cell.value = cfarm_format_date
 
-                elif cell.row % 2 == 0:
+                elif cell.row % 2 == 1:
                     cover_crop_name = field_sheet.cell(row=18, column=2).value
                     if str(cover_crop_name) != 'None':
                         if str(cell.column) == 'C' or cell.column == 3:
