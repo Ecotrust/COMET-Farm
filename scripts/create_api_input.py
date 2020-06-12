@@ -137,7 +137,6 @@ with open(gis_dir) as csv_file:
                         # add the year to month day from the template spreadsheet
                         mmddyyyy = month_day + str(yyyy)
                         # format ex: March 152020
-                        import ipdb; ipdb.set_trace()
                         mmddyyyy = datetime.strptime(mmddyyyy, '%B %d%Y')
                         # convert to CF API expected format ex: 03/14/2020
                         cfarm_format_date = mmddyyyy.strftime('%m/%d/%Y')
