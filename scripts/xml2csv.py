@@ -146,77 +146,6 @@ def map_unit_area(arr=[]):
     # so we only need the first
     return arr[0]['area']
 
-# no longer organizing by year - DP May 2020
-# def organize_by_year(data):
-#     main_dic = {}
-#     for key, value in data.items():
-#         variable = ''
-#         if value:
-#             for y in value:
-#                 # y should contain the following keys:
-#                     # year, var, output, {var}, id, area, scenario
-#                 print(y)
-#                 year = str(y["year"])
-#                 id = str(y["id"])
-#                 area = str(y["area"])
-#                 scenario = str(y["scenario"])
-#                 if year not in main_dic.keys():
-#                     main_dic[year] = {
-#                         "year": year,
-#                         "id": id,
-#                         "area": area,
-#                         "scenario": scenario,
-#                     }
-#             for v in value:
-#                 year = str(v["year"])
-#                 variable = str(v["var"])
-#                 output = str(v["output"])
-#                 main_dic[year][variable] = output
-#     return main_dic
-
-# def parse_aggregate(elem, scenario):
-#
-#     aggregate_data = {}
-#     scenario_name = scenario.lower()
-#
-#     for child in elem.iter():
-#         xml_tag = str(child.tag)
-#         xml_tag = xml_tag.lower()
-#         xml_text = str(child.text)
-#
-#         if (xml_tag == 'scenario'):
-#             aggregate_data['scenario'] = scenario_name
-#         else:
-#             aggregate_data[xml_tag] = xml_text
-#
-#     return aggregate_data
-#
-# def write_aggregate_csv(all_agg, xml_name):
-#     # write parsed aggregate to csv
-#     csv_file_name = 'aggregate'
-#     dir_name = './results/'
-#
-#     if not os.path.isdir(dir_name):
-#         os.mkdir(dir_name)
-#
-#     aggregate_data_fieldnames = []
-#
-#     for r in all_agg:
-#
-#         for k,v in r.items():
-#
-#             if k not in aggregate_data_fieldnames:
-#                 aggregate_data_fieldnames.append(k)
-#
-#         # print(r)
-#     with open(dir_name + csv_file_name + '.csv', 'wt') as csvFile:
-#         writer = csv.DictWriter(csvFile, fieldnames=aggregate_data_fieldnames)
-#         writer.writeheader()
-#         for r in all_agg:
-#             writer.writerow(r)
-#
-#     csvFile.close()
-
 def write_parsed_mapunits(map_units):
     script_path = os.path.dirname(os.path.realpath(__file__))
     results_file_name = ''
@@ -258,7 +187,7 @@ def get_acres_from_m2(meters):
 
 def parse_mapunit(elem, mapunit_id, field_size, scenario, xml_file_name):
 
-    model_run_data = {}
+    # model_run_data = {}
 
     for child in elem.iter():
         xml_tag = str(child.tag)
@@ -267,100 +196,103 @@ def parse_mapunit(elem, mapunit_id, field_size, scenario, xml_file_name):
 
         # if (xml_tag in ( 'aagdefac', 'abgdefac', 'accrst', 'accrste_1_', 'agcprd', 'aglivc', 'bgdefac', 'bglivcm', 'rain', 'cgrain', 'cinput', 'crmvst', 'crootc', 'crpval', 'egracc_1_', 'eupacc_1_', 'fbrchc', 'fertac_1_', 'fertot_1_1_', 'frootcm', 'gromin_1_', 'irrtot', 'metabc_1_', 'metabc_2_', 'metabe_1_1_', 'metabe_2_1_', 'nfixac', 'omadac', 'omadae_1_', 'petann', 'rlwodc', 'somsc', 'somse_1_', 'stdedc', 'stdede_1_', 'strmac_1_', 'strmac_2_', 'strmac_6_', 'strucc_1_', 'struce_1_1_', 'struce_2_1_', 'tminrl_1_', 'tnetmn_1_', 'volpac',  ) ):
 
-        if ( xml_tag in ('somsc', 'strmac_2_', 'volpac') ) :
+        # if ( xml_tag in ('somsc', 'strmac_2_', 'volpac') ) :
 
-            values = write_end_of_year_daycent_output( xml_tag, xml_text, scenario, mapunit_id, field_size )
-            for value in values:
-                if xml_tag not in model_run_data.keys():
-                    model_run_data[xml_tag] = []
-                model_run_data[xml_tag].append(value)
-
-            if xml_tag == 'somsc':
-                somsc = model_run_data[xml_tag]
-                calc_value = calc_co2_exchange(somsc)
-                calc_tag = 'soil_carbon_exchange'
-                if calc_tag not in model_run_data.keys():
-                    # model_run_data[calc_tag] = []
-                    model_run_data[calc_tag] = calc_value
-
-            elif xml_tag == 'strmac_2_':
-                strmac_2_ = model_run_data[xml_tag]
-                calc_value = calc_leached_indirect_soil_n2o(strmac_2_)
-                calc_tag = 'indirect_soil_n2o_leached'
-                if calc_tag not in model_run_data.keys():
-                    # model_run_data[calc_tag] = []
-                    model_run_data[calc_tag] = calc_value
-
-            elif xml_tag == 'volpac':
-                volpac = model_run_data[xml_tag]
-                calc_value = calc_volatilized_indirect_soil_n2o(volpac)
-                calc_tag = 'indirect_soil_n2o_volatilized'
-                if calc_tag not in model_run_data.keys():
-                    # model_run_data[calc_tag] = []
-                    model_run_data[calc_tag] = calc_value
+            # values = write_end_of_year_daycent_output( xml_tag, xml_text, scenario, mapunit_id, field_size )
+            # for value in values:
+            #     if xml_tag not in model_run_data.keys():
+            #         model_run_data[xml_tag] = []
+            #     model_run_data[xml_tag].append(value)
+            #
+            # if xml_tag == 'somsc':
+            #     somsc = model_run_data[xml_tag]
+            #     calc_value = calc_co2_exchange(somsc)
+            #     calc_tag = 'soil_carbon_exchange'
+            #     if calc_tag not in model_run_data.keys():
+            #         # model_run_data[calc_tag] = []
+            #         model_run_data[calc_tag] = calc_value
+            #
+            # elif xml_tag == 'strmac_2_':
+            #     strmac_2_ = model_run_data[xml_tag]
+            #     calc_value = calc_leached_indirect_soil_n2o(strmac_2_)
+            #     calc_tag = 'indirect_soil_n2o_leached'
+            #     if calc_tag not in model_run_data.keys():
+            #         # model_run_data[calc_tag] = []
+            #         model_run_data[calc_tag] = calc_value
+            #
+            # elif xml_tag == 'volpac':
+            #     volpac = model_run_data[xml_tag]
+            #     calc_value = calc_volatilized_indirect_soil_n2o(volpac)
+            #     calc_tag = 'indirect_soil_n2o_volatilized'
+            #     if calc_tag not in model_run_data.keys():
+            #         # model_run_data[calc_tag] = []
+            #         model_run_data[calc_tag] = calc_value
 
         # elif( xml_tag in ( 'irrigated', 'inputcrop' ) ):
-        elif( xml_tag in ( 'inputcrop' ) ):
-            inputcrop_data = xml_text.split(',')
+        # elif( xml_tag in ( 'inputcrop' ) ):
+            # inputcrop_data = xml_text.split(',')
             # Crop comes in as year,crop repeating.
-            crop_tag = 'crop'
-            crop_value = inputcrop_data[1]
+            # crop_tag = 'crop'
+            # crop_value = inputcrop_data[1]
 
         # elif( xml_tag in ('noflux', 'n2oflux', 'annppt') ):
-        elif( xml_tag in ('n2oflux') ):
+        # elif( xml_tag in ('n2oflux') ):
 
-            values = write_yearly_daycent_output92( xml_tag, xml_text, scenario, mapunit_id, field_size )
-            for value in values:
-                if xml_tag not in model_run_data.keys():
-                    model_run_data[xml_tag] = []
-                model_run_data[xml_tag].append(value)
+            # values = write_yearly_daycent_output92( xml_tag, xml_text, scenario, mapunit_id, field_size )
+            # for value in values:
+                # if xml_tag not in model_run_data.keys():
+                    # model_run_data[xml_tag] = []
+                # model_run_data[xml_tag].append(value)
 
-            if xml_tag == 'n2oflux':
-                n2oflux = model_run_data[xml_tag]
-                if n2oflux:
-                    calc_value = calc_direct_soil_n2o(n2oflux)
-                calc_tag = 'direct_soil_n2o'
-                if calc_tag not in model_run_data.keys():
-                    model_run_data[calc_tag] = calc_value
-
+            # if xml_tag == 'n2oflux':
+                # n2oflux = model_run_data[xml_tag]
+                # if n2oflux:
+                    # calc_value = calc_direct_soil_n2o(n2oflux)
+                # calc_tag = 'direct_soil_n2o'
+                # if calc_tag not in model_run_data.keys():
+                    # model_run_data[calc_tag] = calc_value
+        if (xml_tag in ('soilcarbon', 'soiln2o')):
+            print(xml_tag)
         else:
             continue
 
     # ghg_balance = calc_greenhouse_gas_balance(model_run_data['soil_carbon_exchange'][0]['output'], model_run_data['direct_soil_n2o'][0]['output'], model_run_data['indirect_soil_n2o_leached'][0]['output'], model_run_data['indirect_soil_n2o_volatilized'][0]['output'])
     # import ipdb; ipdb.set_trace()
     # add together for greenhouse gas balance total
-    ghg_balance = calc_greenhouse_gas_balance(model_run_data['soil_carbon_exchange'], model_run_data['direct_soil_n2o'], model_run_data['indirect_soil_n2o_leached'], model_run_data['indirect_soil_n2o_volatilized'])
+    # ghg_balance = calc_greenhouse_gas_balance(model_run_data['soil_carbon_exchange'], model_run_data['direct_soil_n2o'], model_run_data['indirect_soil_n2o_leached'], model_run_data['indirect_soil_n2o_volatilized'])
 
     # get crop id and iso id from file name
     # assumes input file was named 'cf_<crop_id>_<iso_id>'
-    xml_file_name = xml_file_name.split('_')
-    if len(xml_file_name) > 1:
-        crop_id = xml_file_name[-2]
-        iso_id = xml_file_name[-1]
-        iso_id = iso_id.split('.')[0] # split off the .xml from iso_id.xml
-    else:
-        crop_id = 'not provided'
-        iso_id = 'not provided'
 
-    acres = get_acres_from_m2(field_size)
+    # --- will need ---
+    # xml_file_name = xml_file_name.split('_')
+    # if len(xml_file_name) > 1:
+    #     crop_id = xml_file_name[-2]
+    #     iso_id = xml_file_name[-1]
+    #     iso_id = iso_id.split('.')[0] # split off the .xml from iso_id.xml
+    # else:
+    #     crop_id = 'not provided'
+    #     iso_id = 'not provided'
 
-    scenario_emissions_key = scenario + ' ' + 'net emissions'
-    scenario_scse_key = scenario + ' ' + 'soil carbon exchange'
-    scenario_d_n2o_key = scenario + ' ' + 'direct soil n2o'
-    scenario_ind_n2o_l_key = scenario + ' ' + 'indirect soil n2o leached'
-    scenario_ind_n2o_v_key = scenario + ' ' + 'indirect soil n2o volatilized'
+    # acres = get_acres_from_m2(field_size)
+
+    # scenario_emissions_key = scenario + ' ' + 'net emissions'
+    # scenario_scse_key = scenario + ' ' + 'soil carbon exchange'
+    # scenario_d_n2o_key = scenario + ' ' + 'direct soil n2o'
+    # scenario_ind_n2o_l_key = scenario + ' ' + 'indirect soil n2o leached'
+    # scenario_ind_n2o_v_key = scenario + ' ' + 'indirect soil n2o volatilized'
 
     mapunit_row_data = {
-        'mapunit_id': mapunit_id,
-        crop_tag: crop_value,
-        scenario_emissions_key: ghg_balance,
-        scenario_scse_key: model_run_data['soil_carbon_exchange'],
-        scenario_d_n2o_key: model_run_data['direct_soil_n2o'],
-        scenario_ind_n2o_l_key: model_run_data['indirect_soil_n2o_leached'],
-        scenario_ind_n2o_v_key: model_run_data['indirect_soil_n2o_volatilized'],
-        'acres': acres,
-        'iso_id': iso_id,
-        'crop_id': crop_id,
+        # 'mapunit_id': mapunit_id,
+        # crop_tag: crop_value,
+        # scenario_emissions_key: ghg_balance,
+        # scenario_scse_key: model_run_data['soil_carbon_exchange'],
+        # scenario_d_n2o_key: model_run_data['direct_soil_n2o'],
+        # scenario_ind_n2o_l_key: model_run_data['indirect_soil_n2o_leached'],
+        # scenario_ind_n2o_v_key: model_run_data['indirect_soil_n2o_volatilized'],
+        # 'acres': acres,
+        # 'iso_id': iso_id,
+        # 'crop_id': crop_id,
     }
 
     # import ipdb; ipdb.set_trace()
@@ -526,6 +458,61 @@ def parse_data_rows(parsed_mapunits):
 
     return data_rows
 
+def parse_aggregate(elem, scenario, model_run_name):
+
+    aggregate_data = {}
+    scenario_name = scenario.lower()
+
+    # Add the field id which is the same as model run name
+    aggregate_data['fid'] = model_run_name
+
+    for child in elem.iter():
+        xml_tag = str(child.tag)
+        xml_tag = xml_tag.lower()
+        xml_text = str(child.text)
+
+        if (xml_tag == 'scenario'):
+            aggregate_data['scenario'] = scenario_name
+        elif (xml_tag in ('soilcarbon', 'soiln2o')):
+            aggregate_data[xml_tag] = xml_text
+
+    return aggregate_data
+
+def write_aggregate_csv(all_agg, xml_name):
+    script_path = os.path.dirname(os.path.realpath(__file__))
+    results_file_name = ''
+    results_dir_name = script_path + '/../results/'
+
+    if not os.path.isdir(results_dir_name):
+        os.mkdir(results_dir_name)
+
+    aggregate_data_fieldnames = []
+
+    xml_file_name = xml_name.split('_')
+    if len(xml_file_name) > 1:
+        crop_id = xml_file_name[-2]
+        iso_id = xml_file_name[-1]
+        iso_id = iso_id.split('.')[0] # split off the .xml from iso_id.xml
+    else:
+        crop_id = 'not provided'
+        iso_id = 'not provided'
+
+    results_file_name =  crop_id + '_' + iso_id
+
+    for r in all_agg:
+        for k,v in r.items():
+            if k not in aggregate_data_fieldnames:
+                aggregate_data_fieldnames.append(k)
+
+
+    with open(results_dir_name + results_file_name + '.csv', 'wt') as csvFile:
+        writer = csv.DictWriter(csvFile, fieldnames=aggregate_data_fieldnames)
+        writer.writeheader()
+        for r in all_agg:
+            writer.writerow(r)
+
+    csvFile.close()
+
 def main():
     # check if argument has been given for xml
     if len(sys.argv) < 1:
@@ -549,6 +536,7 @@ def main():
 
     # var to store each mapunits data
     parsed_mapunits = []
+    parsed_agg = []
     # open the file passed as an argument
     xml_file = open(xml_name, 'r+')
 
@@ -565,16 +553,12 @@ def main():
         xmlText = str( elem.text )
 
         # Model run parameters that we do not want/need to process
-        if ( xmlTag in ( 'Day', 'Cropland', 'CO2', 'N2O', 'CH4', 'BiomassBurningCarbonUncertainty', 'BiomassBurningCH4Uncertainty', 'BiomassBurningN2OUncertainty', 'C02', 'DrainedOrganicSoilsCO2Uncertainty', 'DrainedOrganicSoilsN2OUncertainty', 'LimingCO2Uncertainty', 'SoilCarbonUncertainty', 'SoilCH4Uncertainty', 'SoilN2OUncertainty', 'UreaFertilizationCO2Uncertainty', 'WetlandRiceCultivationCH4Uncertainty', 'WetlandRiceCultivationN2OUncertainty', 'AFDownedDeadWood', 'AFDownedDeadWoodUncertainty', 'AFForestFloor', 'AFForestFloorUncertainty', 'AFLiveTrees', 'AFLiveTreesUncertainty', 'AFStandingDeadTrees', 'AFStandingDeadTreesUncertainty', 'AFUnderstory', 'AFUnderstoryUncertainty', 'Agroforestry', 'Animal', 'FORDownedDeadWood', 'FORDownedDeadWoodUncertainty', 'Forestry', 'FORForestFloorUncertainty', 'FORInLandfills', 'FORInLandfillsUncertainty', 'FORLiveTrees', 'FORLiveTreesUncertainty', 'FORProductsInUse', 'FORProductsInUseUncertainty', 'FORSoilOrganicCarbon', 'FORSoilOrganicCarbonUncertainty', 'FORStandingDeadTreesUncertainty', 'FORUnderstory', 'FORUnderstoryUncertainty' ) ):
+        if ( xmlTag in ( 'Day', 'Cropland', 'Carbon', 'CO2', 'N2O', 'CH4', 'BiomassBurningCarbonUncertainty', 'BiomassBurningCH4Uncertainty', 'BiomassBurningN2OUncertainty', 'C02', 'DrainedOrganicSoilsCO2Uncertainty', 'DrainedOrganicSoilsN2OUncertainty', 'LimingCO2Uncertainty', 'SoilCarbonUncertainty', 'SoilCH4Uncertainty', 'SoilN2OUncertainty', 'UreaFertilizationCO2Uncertainty', 'WetlandRiceCultivationCH4Uncertainty', 'WetlandRiceCultivationN2OUncertainty', 'AFDownedDeadWood', 'AFDownedDeadWoodUncertainty', 'AFForestFloor', 'AFForestFloorUncertainty', 'AFLiveTrees', 'AFLiveTreesUncertainty', 'AFStandingDeadTrees', 'AFStandingDeadTreesUncertainty', 'AFUnderstory', 'AFUnderstoryUncertainty', 'Agroforestry', 'Animal', 'FORDownedDeadWood', 'FORDownedDeadWoodUncertainty', 'Forestry', 'FORForestFloorUncertainty', 'FORInLandfills', 'FORInLandfillsUncertainty', 'FORLiveTrees', 'FORLiveTreesUncertainty', 'FORProductsInUse', 'FORProductsInUseUncertainty', 'FORSoilOrganicCarbon', 'FORSoilOrganicCarbonUncertainty', 'FORStandingDeadTreesUncertainty', 'FORUnderstory', 'FORUnderstoryUncertainty' ) ):
+
             continue
 
         if ( xmlTag == 'ModelRun' ):
-            # get the module, id, irrigated, mlra, and practice
-            ModelRunNameArray = xmlAttribName.split( '|' )
-            module = str( ModelRunNameArray )
-            irrigated = str( ModelRunNameArray )
-            mlra = str( '?' )
-            practice = str( ModelRunNameArray )
+            # get the model run name
             modelRunName = xmlAttribName
 
         elif( "from reduced" in modelRunName ):
@@ -588,15 +572,53 @@ def main():
             scenarioFullName = xmlAttribName
             scenario = xmlAttribName
 
-            ### check if this is a result for individual submitted scenario
+            aggregate_data = {}
+            scenario_name = scenario.lower()
+
+            ### check if this is the raw data from datacent
             if scenarioFullName.find( ' : FILE RESULTS' ) > -1:
                 # generate the scenario name
                 # used later for DayCent data within mapunit
                 scenario = xmlAttribName[:-15]
-            ### else it must be a results for aggregate of all submitted scenarios
-            # else:
-                # scenario_parsed = parse_aggregate(elem, scenario)
-                # parsed_agg.append(scenario_parsed)
+            ### else it scenario data from comet farm calculations
+            else:
+                # get a list of fields already in parsed_agg list
+                field_ids = [dic["fid"] for dic in parsed_agg]
+
+                # if field already has data append to it
+                if modelRunName in field_ids:
+                    for s in parsed_agg:
+                        if s['fid'] == modelRunName:
+                            for child in elem.iter():
+                                xml_tag = str(child.tag)
+                                xml_tag = xml_tag.lower()
+                                xml_text = str(child.text)
+
+                                # add value for scenario
+                                if xml_tag == 'soilcarbon':
+                                    s['scen1C'] = xml_text
+                                elif xml_tag == 'soiln2o':
+                                    s['scen1N'] = xml_text
+
+                else:
+                    aggregate_data['fid'] = modelRunName
+                    aggregate_data['area'] = 0
+
+                    for child in elem.iter():
+                        xml_tag = str(child.tag)
+                        xml_tag = xml_tag.lower()
+                        xml_text = str(child.text)
+
+                        # add value for scenario
+                        if xml_tag == 'soilcarbon':
+                            aggregate_data['baseC'] = xml_text
+                        elif xml_tag == 'soiln2o':
+                            aggregate_data['baseN'] = xml_text
+
+                    aggregate_data['scen1C'] = ''
+                    aggregate_data['scen1N'] = ''
+
+                    parsed_agg.append(aggregate_data)
 
         elif( "current" in scenario.lower() ):
             # will be the same as baseline so no need to duplicate
@@ -607,8 +629,20 @@ def main():
             mapunit = xmlAttribId
             field_size = xmlAttribArea
 
-            parsed_mapunit = parse_mapunit(elem, mapunit, field_size, scenario, xml_name)
-            parsed_mapunits.append(parsed_mapunit)
+            for s in parsed_agg:
+                if s['fid'] == modelRunName:
+                    if 'area' in s.keys():
+                        area_float = float(s['area'])
+                        area_float += float(field_size)
+                        s['area'] = str(area_float)
+                    else:
+                        s['area'] = field_size
+
+            # print(parsed_agg[scenario])
+            # if parsed_agg[scenario]
+            # parsed_mapunits['area'] = field_size
+            # parsed_mapunit = parse_mapunit(elem, mapunit, field_size, scenario, xml_name)
+            # parsed_mapunits.append(parsed_mapunit)
 
             # give a status update for scipt user
             print("creating records for scenario = [" + str(scenario) + "] and mapunit = [" + str( mapunit ) + "]")
@@ -616,13 +650,14 @@ def main():
         else:
             continue
 
+    write_aggregate_csv(parsed_agg, xml_name)
     # close the XML input file
     xml_file.close()
 
-    data_rows = parse_data_rows(parsed_mapunits)
+    # data_rows = parse_data_rows(parsed_mapunits)
 
     # write_aggregate_csv()
-    write_parsed_mapunits(data_rows)
+    # write_parsed_mapunits(data_rows)
 
     print("----------------------------------------------------------------------")
     End = datetime.now( )
@@ -631,84 +666,3 @@ def main():
     print("elapsed time = " + str( elapsed ))
 
 main()
-
-
-
-
-
-
-
-
-
-# all_rows = []
-# header_row = []
-
-# iter through the <Scenario> element's children to get key values
-# for scenario_element in root.iter('Scenario'):
-    # create list to store list of current iteration's value
-    # tmp_list = []
-    # iter through each elements children
-    # for mapunit_run in scenario_element.iter():
-        # some values we need are tags, some are attrbutes
-        # first check for tags
-        # if mapunit_run.tag != None:
-            # add the tag
-            # tmp_list.append(mapunit_run.tag)
-        # next check for attributes
-        # if mapunit_run.attrib != {}:
-            # attributes are returned as a dict {'key, 'value'}
-            # loop through the dict
-            # for attribute in mapunit_run.attrib:
-                # add only the key to our current list
-                # tmp_list.append(attribute)
-    # add the current iter values to the master list
-    # header_row.append(tmp_list)
-
-#  add header row to csv data
-# all_rows.append(header_row)
-
-# iter through the <Scenario> element's chlidren to get text value
-# data_row = []
-# for scenario_element in root.iter('Scenario'):
-    # create list to store list of current iteration's value
-    # tmp_list = []
-    # iter through each elements children
-    # for mapunit_run in scenario_element.iter():
-        # some values we need are tags, some are attrbutes
-        # first check for tags
-        # if mapunit_run.tag != None:
-            # add the tag
-            # tmp_list.append(mapunit_run.text)
-        # next check for attributes
-        # if mapunit_run.attrib != {}:
-            # loop through the dict
-            # for attribute in mapunit_run.attrib:
-                # tmp_list.append(mapunit_run.get(attribute))
-
-    # data_row.append(tmp_list)
-    # print(tmp_list)
-# all_rows.append(data_row)
-
-    #----- for mapunit in root.findall('MapUnit'):
-        # mapunit_id = mapunit.get('id')
-        # template_file = '../output/' + mapunit_id + '/' + scenario_name + '.csv'
-        # open a file for writing
-        # mapunit_data = open(template_file, 'w')
-
-        # create the csv writer object
-        # csvwriter = csv.writer(template_file)
-        # mapunit_data = []
-        # years = mapunit_data.find('Year')
-        # mapunit_data.append(years)
-        # csvwrite.writerow(mapunit_data)
-        # print(mapunit_data)
-
-
-# create csv file for aggregate results
-# get aggregate from xml
-# aggregate parameters:
-#   carbon
-# 	co2
-# 	n2o
-# 	ch4
-# ----

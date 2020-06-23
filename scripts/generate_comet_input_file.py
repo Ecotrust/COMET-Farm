@@ -128,7 +128,7 @@ with open(input_xml_file, 'w') as f:
         # start crop scenario
         f.write("<CropScenario Name=\"Current\">")
         for crop_year in processed_sheets[field]['yearly_current_data']: # crop years
-            if str(crop_year['Year']) != 'None':
+            if str(crop_year['Ccop_name']) != 'None' or crop_year['Ccop_name'] != None:
                 f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
                 f.write("<Crop CropNumber=\"" + str(crop_year['crop_number']) + "\">")
                 f.write("<CropName>" + str(crop_year['Ccop_name']) + "</CropName>")
@@ -193,7 +193,7 @@ with open(input_xml_file, 'w') as f:
         f.write("<CropScenario Name=\"" + processed_sheets[field]['scenario_a_name'] + "\">")
 
         for crop_year in processed_sheets[field]['yearly_scenario_data']:
-            if str(crop_year['Year']) != 'None' or crop_year['Year'] != None:
+            if str(crop_year['Ccop_name']) != 'None' or crop_year['Ccop_name'] != None:
                 f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
                 f.write("<Crop CropNumber=\"" + str(crop_year['crop_number']) + "\">")
                 f.write("<CropName>" + str(crop_year['Ccop_name']) + "</CropName>")
