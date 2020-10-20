@@ -11,24 +11,24 @@ from openpyxl import load_workbook
 #   will usually be template_crop_id
 #   if none given will use template_v2.xlsx within COMET-Farm_Master dir
 if len(sys.argv) == 1 or len(sys.argv) > 3:
-    print("\nMissing arguments")
-    print("expecting 1 or 2 arguments")
-    print("  1. GIS data")
-    print("  2. spreadsheet v2 (optional)")
-    print("\nexpected command (Windows sub `python3` with `py -3`)")
-    print("  `python3 ./script/create_api_input.py <GIS data location> <spreadsheet location>`\n")
-    print("Command-line arguments are as follows:\n")
-    print("  * <GIS data location> system location of comma separated data from GIS")
-    print("      e.g.,  /usr/local/name/comet/data.csv\n")
-    print("  * <spreadsheet locatiion> system location of spreadsheet to add GIS data")
-    print("      e.g.,  /usr/local/name/comet/data.xlsx")
-    print("      ** if not given defaults to template_v2.xlsx at repo root\n")
+    print('\nMissing arguments')
+    print('expecting 1 or 2 arguments')
+    print('  1. GIS data')
+    print('  2. spreadsheet v2 (optional)')
+    print('\nexpected command (Windows sub `python3` with `py -3`)')
+    print('  `python3 ./script/create_api_input.py <GIS data location> <spreadsheet location>`\n')
+    print('Command-line arguments are as follows:\n')
+    print('  * <GIS data location> system location of comma separated data from GIS')
+    print('      e.g.,  /usr/local/name/comet/data.csv\n')
+    print('  * <spreadsheet locatiion> system location of spreadsheet to add GIS data')
+    print('      e.g.,  /usr/local/name/comet/data.xlsx')
+    print('      ** if not given defaults to template_v2.xlsx at repo root\n')
     exit()
 
 script_dir =  sys.argv[0]
-gis_dir =  sys.argv[1]
+gis_dat_file =  sys.argv[1]
 
-gis_file_name = os.path.basename(gis_dir)
+gis_file_name = os.path.basename(gis_dat_file)
 gis_file_name = gis_file_name.split('.')[0]
 gis_file_name = gis_file_name.split('_')
 iso_id = gis_file_name[-1]
@@ -38,7 +38,8 @@ if len(sys.argv) == 3:
     wb_dir = sys.argv[2]
 else:
     script_path = os.path.dirname(os.path.realpath(__file__))
-    wb_dir = script_path + '/../template_v2.xlsx'
+    wb_dir = script_path + '/../template_v3.xlsx'
+    print('No scenario template provided. Using default of template_v3.xlsx')
 
 
 wb = load_workbook(filename = wb_dir, data_only = True)
@@ -51,7 +52,7 @@ processed_sheet = wb.create_sheet('processed')
 
 
 # open GIS data file and save it as dict
-with open(gis_dir) as csv_file:
+with open(gis_dat_file) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     csv_dict = csv.DictReader(csv_file)
     gis_values = csv_dict
@@ -71,7 +72,7 @@ with open(gis_dir) as csv_file:
     for row in gis_values:
         field_sheet = wb.copy_worksheet(scenario_sheet)
         field_sheet.title = 'ready_' + row['field_ID']
-        processed_sheet.append(["name", field_sheet.title])
+        processed_sheet.append(['name', field_sheet.title])
 
         if 'pre_80' in row:
             value_to_match = int(row['pre_80'])
@@ -179,7 +180,7 @@ with open(gis_dir) as csv_file:
                             yyyy = yyyy + diff_year
                             diff_crop_date_val = diff_crop_date.value
                             if diff_crop_date_val:
-                                diff_crop_date_val = diff_crop_date_val.replace('"','')
+                                diff_crop_date_val = diff_crop_date_val.replace(''','')
                                 diff_crop_date_datetime = datetime.strptime(str(diff_crop_date_val), '%m/%d/%Y') # formate to day number year so we can do some math
                                 diff_crop_date_to_day_num = diff_crop_date_datetime.strftime('%j')
 
@@ -276,7 +277,7 @@ with open(gis_dir) as csv_file:
                             yyyy = yyyy + diff_year
                             diff_crop_date_val = diff_crop_date.value
                             if diff_crop_date_val:
-                                diff_crop_date_val = diff_crop_date_val.replace('"','')
+                                diff_crop_date_val = diff_crop_date_val.replace(''','')
                                 diff_crop_date_datetime = datetime.strptime(str(diff_crop_date_val), '%m/%d/%Y') # formate to day number year so we can do some math
                                 diff_crop_date_to_day_num = diff_crop_date_datetime.strftime('%j')
 
@@ -298,23 +299,29 @@ with open(gis_dir) as csv_file:
                             # add formated date to template spreadsheet
                             cell.value = cfarm_format_date
 
-print("\nSuccessfully merged GIS and Excel template.\n")
-print("Creating XML...\n")
+print('Successful integration\n')
+
+# Get current scenario template name
+scenario_template_name = os.path.basename(gis_dat_file)
 
 # relative path for mac and linux
 script_rel_path = os.path.dirname(os.path.realpath(__file__))
 # absolute path for mike on neoterra
-script_path = "E:\\GIS\\projects\\Moore_Climate2018\\COMET-Farm-master\\scripts\\"
-master_path = "E:\\GIS\\projects\\Moore_Climate2018\\COMET-Farm-master\\"
+script_path = 'G:\\projects\\Moore_Climate2018\\COMET-Farm-master\\scripts\\'
+master_path = 'G:\\projects\\Moore_Climate2018\\COMET-Farm-master\\'
 
 if sys.platform.startswith('darwin') or sys.platform.startswith('linux'):
-    wb.save(script_rel_path + "/../combined_data.xlsx")
-    os.system("python3 " + script_rel_path + "/generate_comet_input_file.py" + " " + script_rel_path + "/../combined_data.xlsx")
+    wb.save(master_path + '/integrated/integrated_' + scenario_template_name + '_' + crop_id + '_' + iso_id + '.xlsx')
+    # os.system('python3 ' + script_rel_path + '/generate_comet_input_file.py' + ' ' + script_rel_path + '/../combined_data.xlsx')
 elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
-    wb.save(master_path + "combined_data.xlsx")
-    os.system("py -3 " + script_path + "generate_comet_input_file.py" + " " + master_path + "combined_data.xlsx")
+    # Save using scenario name, crop id, and iso class
+    wb.save(master_path + '\\integrated\\integrated_' + scenario_template_name + '_' + crop_id + '_' + iso_id + '.xlsx')
 
-# =*=*=*= NOTES =*=*=*=
+
+################################################################
+##******     NOTES                      ******************* ####
+################################################################
+
 # Day of Year Chart
 # First column within each month is for regular years. The second is for leap years: 1972, 1976, 1980, 1984, 1988, 1992, 1996, 2000, 2004, 2008, 2012, 2016, 2020.
 #

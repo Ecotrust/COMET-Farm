@@ -89,8 +89,8 @@ for row in range(1, processed_fields_sheet.max_row + 1):
 # relative path for mac and linux
 script_rel_path = os.path.dirname(os.path.realpath(__file__))
 # absolute path for mike on neoterra
-script_path = "E:\\GIS\\projects\\Moore_Climate2018\\COMET-Farm-master\\scripts\\"
-master_path = "E:\\GIS\\projects\\Moore_Climate2018\\COMET-Farm-master\\"
+script_path = "G:\\projects\\Moore_Climate2018\\COMET-Farm-master\\scripts\\"
+master_path = "G:\\projects\\Moore_Climate2018\\COMET-Farm-master\\"
 
 if sys.platform.startswith('darwin') or sys.platform.startswith('linux'):
     input_xml_file_name = 'cf_' + str(gis_file_name)
@@ -115,11 +115,13 @@ with open(input_xml_file, 'w') as f:
 
     # email_address = list(processed_sheets.items())[0][1]['Email']
     f.write("<CometFarm>")
-    f.write("<Project ID=\"\" PNAME=\"" + str(input_xml_file_name) + "\" USERID=\"\">")
+    f.write("<Project ID=\"34505\" PNAME=\"" + str(input_xml_file_name) + "\" USERID=\"15436\">")
     # f.write("<Day cometEmailId=\"dpollard@ecotrust.org\">")
     for field in processed_sheets:
-        f.write("<Cropland name=\"" + str(input_xml_file_name) + "\">")
-        f.write("<GEOM PARCELNAME=\"" + str(processed_sheets[field]['Scenario Name']) + "\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
+        #f.write("<Cropland name=\"" + str(input_xml_file_name) + "\">")
+        f.write("<Cropland>")
+        #f.write("<GEOM PARCELNAME=\"" + str(processed_sheets[field]['Scenario Name']) + "\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
+        f.write("<GEOM PARCELNAME=\"" + str(processed_sheets[field]['id']) + "\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
         f.write("<Pre-1980>" + processed_sheets[field]['pre_80'] + "</Pre-1980>")
         f.write("<CRPStartYear>0</CRPStartYear><CRPEndYear>0</CRPEndYear><CRPType>None</CRPType>") # CRP always None
         f.write("<Year1980-2000>" + processed_sheets[field]['yr80_2000'] + "</Year1980-2000>")
@@ -128,130 +130,149 @@ with open(input_xml_file, 'w') as f:
         # start crop scenario
         f.write("<CropScenario Name=\"Current\">")
         for crop_year in processed_sheets[field]['yearly_current_data']: # crop years
-            if str(crop_year['Ccop_name']) != 'None' or crop_year['Ccop_name'] != None:
-                f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
-                f.write("<Crop CropNumber=\"" + str(crop_year['crop_number']) + "\">")
-                f.write("<CropName>" + str(crop_year['Ccop_name']) + "</CropName>")
-                f.write("<CropType>" + str(crop_year['CropType']) + "</CropType>")
-                f.write("<PlantingDate>" + str(crop_year['planting_date']).strip('\"') + "</PlantingDate>")
-                f.write("<ContinueFromPreviousYear>" + str(crop_year['continue_from_previous_year']) + "</ContinueFromPreviousYear>")
+            if str(crop_year['Year']) != 'None':
+                if str(crop_year['Ccop_name']) != 'None':
+                    f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
+                    f.write("<Crop CropNumber=\"" + str(crop_year['crop_number']) + "\">")
+                    f.write("<CropName>" + str(crop_year['Ccop_name']) + "</CropName>")
+                    f.write("<CropType>" + str(crop_year['CropType']) + "</CropType>")
+                    f.write("<PlantingDate>" + str(crop_year['planting_date']).strip('\"') + " 07:00:00</PlantingDate>")
+                    f.write("<ContinueFromPreviousYear>" + str(crop_year['continue_from_previous_year']) + "</ContinueFromPreviousYear>")
 
-                # start harvest list
-                f.write("<HarvestList>")
-                f.write("<HarvestEvent>")
-                f.write("<HarvestDate>" + str(crop_year['harvest_date']).strip('\"') + "</HarvestDate>")
-                f.write("<Grain>" + str(crop_year['grain']) + "</Grain>")
-                f.write("<yield>" + str(crop_year['yield']) + "</yield>")
-                f.write("<StrawStoverHayRemoval>" + str(crop_year['straw_stover_hay_removal']) + "</StrawStoverHayRemoval>")
-                f.write("</HarvestEvent>")
-                f.write("</HarvestList>")
+                    # start harvest list
+                    f.write("<HarvestList>")
+                    f.write("<HarvestEvent>")
+                    f.write("<HarvestDate>" + str(crop_year['harvest_date']).strip('\"') + "</HarvestDate>")
+                    f.write("<Grain>" + str(crop_year['grain']) + "</Grain>")
+                    f.write("<yield>" + str(crop_year['yield']) + "</yield>")
+                    f.write("<StrawStoverHayRemoval>" + str(crop_year['straw_stover_hay_removal']) + "</StrawStoverHayRemoval>")
+                    f.write("</HarvestEvent>")
+                    f.write("</HarvestList>")
 
-                f.write("<GrazingList />")
+                    f.write("<GrazingList />")
 
-                f.write("<TillageList>")
-                f.write("<TillageEvent>")
-                f.write("<TillageType>" + str(crop_year['tillage_type']) + "</TillageType>")
-                f.write("<TillageDate>" + str(crop_year['tillage_date']).strip('\"') + "</TillageDate>")
-                f.write("</TillageEvent>")
-                f.write("</TillageList>")
+                    f.write("<TillageList>")
+                    f.write("<TillageEvent>")
+                    f.write("<TillageType>" + str(crop_year['tillage_type']) + "</TillageType>")
+                    f.write("<TillageDate>" + str(crop_year['tillage_date']).strip('\"') + "</TillageDate>")
+                    f.write("</TillageEvent>")
+                    f.write("</TillageList>")
 
-                # start fertilizer list
-                f.write("<NApplicationList>") # todo should i add conditional
-                f.write("<NApplicationEvent>")
-                f.write("<NApplicationType>" + str(crop_year['n_application_type']) + "</NApplicationType>")
-                f.write("<NApplicationMethod>" + str(crop_year['n_application_method']) + "</NApplicationMethod>")
-                f.write("<NApplicationDate>" + str(crop_year['n_application_date']).strip('\"') + "</NApplicationDate>")
-                f.write("<NApplicationAmount>" + str(crop_year['n_application_amount']) + "</NApplicationAmount>")
-                f.write("<PApplicationAmount>" + str(crop_year['p_application_amount']) + "</PApplicationAmount>")
-                f.write("<EEP>" + str(crop_year['eep']) + "</EEP>")
-                f.write("</NApplicationEvent>")
-                f.write("</NApplicationList>")
+                   # start fertilizer list
+                    if str(crop_year['n_application_type']) != 'None': #add OMAD tags if compost has been specified
+                        f.write("<NApplicationList>") # todo should i add conditional
+                        f.write("<NApplicationEvent>")
+                        f.write("<NApplicationType>" + str(crop_year['n_application_type']) + "</NApplicationType>")
+                        f.write("<NApplicationMethod>" + str(crop_year['n_application_method']) + "</NApplicationMethod>")
+                        f.write("<NApplicationDate>" + str(crop_year['n_application_date']).strip('\"') + "</NApplicationDate>")
+                        f.write("<NApplicationAmount>" + str(crop_year['n_application_amount']) + "</NApplicationAmount>")
+                        f.write("<PApplicationAmount>" + str(crop_year['p_application_amount']) + "</PApplicationAmount>")
+                        f.write("<EEP>" + str(crop_year['eep']) + "</EEP>")
+                        f.write("</NApplicationEvent>")
+                        f.write("</NApplicationList>")
+                    else:
+                        f.write("<NApplicationList />")
 
-                f.write("<OMADApplicationList>")
-                f.write("<OMADApplicationEvent>")
-                # f.write("<OMADApplicationDate>\"" + str(crop_year['']) + "\"</OMADApplicationDate>")
-                f.write("<OMADApplicationDate>" + str(crop_year['n_application_date']).strip('\"') + "</OMADApplicationDate>")
-                f.write("<OMADType>\"" + str(crop_year['compost_type']) + "\"</OMADType>")
-                f.write("<OMADAmount>\"" + str(crop_year['compost_amount']) + "\"</OMADAmount>")
-                # f.write("<OMADPercentN>\"" + str(crop_year['']) + "\"</OMADPercentN>")
-                f.write("<OMADPercentN>\"" + str(crop_year['yield']) + "\"</OMADPercentN>")
-                f.write("<OMADCNRatio>\"" + str(crop_year['compost_cn_ratio']) + "\"</OMADCNRatio>")
-                f.write("</OMADApplicationEvent>")
-                f.write("</OMADApplicationList>")
 
-                f.write("<IrrigationList />")
+                    if str(crop_year['compost_type']) != 'None': #add OMAD tags if compost has been specified
+                        f.write("<OMADApplicationList>")
+                        f.write("<OMADApplicationEvent>")
+                        f.write("<OMADType>" + str(crop_year['compost_type']) + "</OMADType>")
+                        # f.write("<OMADApplicationDate>\"" + str(crop_year['']) + "\"</OMADApplicationDate>")
+                        f.write("<OMADApplicationDate>" + str(crop_year['n_application_date']).strip('\"') + "</OMADApplicationDate>")
 
-                f.write("<BurnEvent>")
-                f.write("<BurnTime>No burning</BurnTime>")
-                f.write("</BurnEvent>")
+                        f.write("<OMADAmount>" + str(crop_year['compost_amount']) + "</OMADAmount>")
+                        f.write("<OMADPercentN>" + str(crop_year['compost_percent_n']) + "</OMADPercentN>")
+                        f.write("<OMADCNRatio>" + str(crop_year['compost_cn_ratio']) + "</OMADCNRatio>")
+                        f.write("</OMADApplicationEvent>")
+                        f.write("</OMADApplicationList>")
+                    else:
+                        f.write("<OMADApplicationList />")
 
-                f.write("</Crop>")
-                f.write("</CropYear>")
+
+                    f.write("<IrrigationList />")
+
+                    f.write("<BurnEvent>")
+                    f.write("<BurnTime>No burning</BurnTime>")
+                    f.write("</BurnEvent>")
+
+                    f.write("</Crop>")
+                    f.write("</CropYear>")
 
         f.write("</CropScenario>")
 
         f.write("<CropScenario Name=\"" + processed_sheets[field]['scenario_a_name'] + "\">")
 
         for crop_year in processed_sheets[field]['yearly_scenario_data']:
-            if str(crop_year['Ccop_name']) != 'None' or crop_year['Ccop_name'] != None:
-                f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
-                f.write("<Crop CropNumber=\"" + str(crop_year['crop_number']) + "\">")
-                f.write("<CropName>" + str(crop_year['Ccop_name']) + "</CropName>")
-                f.write("<CropType>" + str(crop_year['CropType']) + "</CropType>")
-                f.write("<PlantingDate>" + str(crop_year['planting_date']).strip('\"') + "</PlantingDate>")
-                f.write("<ContinueFromPreviousYear>" + str(crop_year['continue_from_previous_year']) + "</ContinueFromPreviousYear>")
+             if str(crop_year['Year']) != 'None' or crop_year['Year'] != None:
+                c = str(crop_year['Ccop_name']) #check to see if there's a cover crop
+                if c != 'None':
+                    print (str(crop_year['Ccop_name']) + str(crop_year['Year']))
+                    f.write("<CropYear Year=\"" + str(crop_year['Year']) + "\">")
+                    f.write("<Crop CropNumber=\"" + str(crop_year['crop_number']) + "\">")
+                    f.write("<CropName>" + str(crop_year['Ccop_name']) + "</CropName>")
+                    f.write("<CropType>" + str(crop_year['CropType']) + "</CropType>")
+                    f.write("<PlantingDate>" + str(crop_year['planting_date']).strip('\"') + " 07:00:00</PlantingDate>")
+                    f.write("<ContinueFromPreviousYear>" + str(crop_year['continue_from_previous_year']) + "</ContinueFromPreviousYear>")
 
-                # start harvest list
-                f.write("<HarvestList>")
-                f.write("<HarvestEvent>")
-                f.write("<HarvestDate>" + str(crop_year['harvest_date']).strip('\"') + "</HarvestDate>")
-                f.write("<Grain>" + str(crop_year['grain']) + "</Grain>")
-                f.write("<yield>" + str(crop_year['yield']) + "</yield>")
-                f.write("<StrawStoverHayRemoval>" + str(crop_year['straw_stover_hay_removal']) + "</StrawStoverHayRemoval>")
-                f.write("</HarvestEvent>")
-                f.write("</HarvestList>")
+    				# start harvest list
+                    f.write("<HarvestList>")
+                    f.write("<HarvestEvent>")
+                    f.write("<HarvestDate>" + str(crop_year['harvest_date']).strip('\"') + "</HarvestDate>")
+                    f.write("<Grain>" + str(crop_year['grain']) + "</Grain>")
+                    f.write("<yield>" + str(crop_year['yield']) + "</yield>")
+                    f.write("<StrawStoverHayRemoval>" + str(crop_year['straw_stover_hay_removal']) + "</StrawStoverHayRemoval>")
+                    f.write("</HarvestEvent>")
+                    f.write("</HarvestList>")
 
-                f.write("<GrazingList />")
+                    f.write("<GrazingList />")
 
-                f.write("<TillageList>")
-                f.write("<TillageEvent>")
-                f.write("<TillageType>" + str(crop_year['tillage_type']) + "</TillageType>")
-                f.write("<TillageDate>" + str(crop_year['tillage_date']).strip('\"') + "</TillageDate>")
-                f.write("</TillageEvent>")
-                f.write("</TillageList>")
+                    f.write("<TillageList>")
+                    f.write("<TillageEvent>")
+                    f.write("<TillageType>" + str(crop_year['tillage_type']) + "</TillageType>")
+                    f.write("<TillageDate>" + str(crop_year['tillage_date']).strip('\"') + "</TillageDate>")
+                    f.write("</TillageEvent>")
+                    f.write("</TillageList>")
 
-                # start fertilizer list
-                f.write("<NApplicationList>") # todo should i add conditional
-                f.write("<NApplicationEvent>")
-                f.write("<NApplicationType>" + str(crop_year['n_application_type']) + "</NApplicationType>")
-                f.write("<NApplicationMethod>" + str(crop_year['n_application_method']) + "</NApplicationMethod>")
-                f.write("<NApplicationDate>" + str(crop_year['n_application_date']).strip('\"') + "</NApplicationDate>")
-                f.write("<NApplicationAmount>" + str(crop_year['n_application_amount']) + "</NApplicationAmount>")
-                f.write("<PApplicationAmount>" + str(crop_year['p_application_amount']) + "</PApplicationAmount>")
-                f.write("<EEP>" + str(crop_year['eep']) + "</EEP>")
-                f.write("</NApplicationEvent>")
-                f.write("</NApplicationList>")
+                    # start fertilizer list
+                    if str(crop_year['n_application_type']) != 'None': #add OMAD tags if compost has been specified
+                        f.write("<NApplicationList>") # todo should i add conditional
+                        f.write("<NApplicationEvent>")
+                        f.write("<NApplicationType>" + str(crop_year['n_application_type']) + "</NApplicationType>")
+                        f.write("<NApplicationMethod>" + str(crop_year['n_application_method']) + "</NApplicationMethod>")
+                        f.write("<NApplicationDate>" + str(crop_year['n_application_date']).strip('\"') + "</NApplicationDate>")
+                        f.write("<NApplicationAmount>" + str(crop_year['n_application_amount']) + "</NApplicationAmount>")
+                        f.write("<PApplicationAmount>" + str(crop_year['p_application_amount']) + "</PApplicationAmount>")
+                        f.write("<EEP>" + str(crop_year['eep']) + "</EEP>")
+                        f.write("</NApplicationEvent>")
+                        f.write("</NApplicationList>")
+                    else:
+                        f.write("<NApplicationList />")
 
-                f.write("<OMADApplicationList>")
-                f.write("<OMADApplicationEvent>")
-                # f.write("<OMADApplicationDate>\"" + str(crop_year['']) + "\"</OMADApplicationDate>")
-                f.write("<OMADApplicationDate>" + str(crop_year['n_application_date']).strip('\"') + "</OMADApplicationDate>")
-                f.write("<OMADType>\"" + str(crop_year['compost_type']) + "\"</OMADType>")
-                f.write("<OMADAmount>\"" + str(crop_year['compost_amount']) + "\"</OMADAmount>")
-                # f.write("<OMADPercentN>\"" + str(crop_year['']) + "\"</OMADPercentN>")
-                f.write("<OMADPercentN>\"" + str(crop_year['yield']) + "\"</OMADPercentN>")
-                f.write("<OMADCNRatio>\"" + str(crop_year['compost_cn_ratio']) + "\"</OMADCNRatio>")
-                f.write("</OMADApplicationEvent>")
-                f.write("</OMADApplicationList>")
 
-                f.write("<IrrigationList />")
+                    if str(crop_year['compost_type']) != 'None': #add OMAD tags if compost has been specified
+                        f.write("<OMADApplicationList>")
+                        f.write("<OMADApplicationEvent>")
+                        f.write("<OMADType>" + str(crop_year['compost_type']) + "</OMADType>")
+                        # f.write("<OMADApplicationDate>\"" + str(crop_year['']) + "\"</OMADApplicationDate>")
+                        f.write("<OMADApplicationDate>" + str(crop_year['n_application_date']).strip('\"') + "</OMADApplicationDate>")
 
-                f.write("<BurnEvent>")
-                f.write("<BurnTime>No burning</BurnTime>")
-                f.write("</BurnEvent>")
+                        f.write("<OMADAmount>" + str(crop_year['compost_amount']) + "</OMADAmount>")
+                        f.write("<OMADPercentN>" + str(crop_year['compost_percent_n']) + "</OMADPercentN>")
+                        f.write("<OMADCNRatio>" + str(crop_year['compost_cn_ratio']) + "</OMADCNRatio>")
+                        f.write("</OMADApplicationEvent>")
+                        f.write("</OMADApplicationList>")
+                    else:
+                        f.write("<OMADApplicationList />")
 
-                f.write("</Crop>")
-                f.write("</CropYear>")
+                    f.write("<IrrigationList />")
+
+                    f.write("<BurnEvent>")
+                    f.write("<BurnTime>No burning</BurnTime>")
+                    f.write("</BurnEvent>")
+
+                    f.write("</Crop>")
+                    f.write("</CropYear>")
 
         f.write("</CropScenario>")
 
@@ -323,7 +344,7 @@ with open(input_xml_file, 'w') as f:
         #         f.write("</Crop>")
         #         f.write("</CropYear>")
         #
-        #     f.write("</CropScenario>")
+        #     f.write("</CropSscenario>")
 
         f.write("</Cropland>\n")
 
@@ -334,3 +355,23 @@ with open(input_xml_file, 'w') as f:
 f.close()
 
 print('XML file generated\n')
+
+print('Sendng XML POST request to API')
+
+import requests
+
+if (os.path.isfile(input_xml_file)):
+    url = "https://comet-farm.com///ApiMain/AddToQueue"
+    data = {
+        "LastCropland": -1,
+        "FirstCropland": -1,
+        "email": "mike@ecotrust.org",
+        "LastDaycentInput":0,
+        "FirstDaycentInput":0,
+        "URL":"",
+        "Files":input_xml_file,
+    }
+else:
+    print('\n')
+    print('File could not be found')
+    print(input_xml_file)
