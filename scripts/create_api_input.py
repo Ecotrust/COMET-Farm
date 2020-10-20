@@ -10,7 +10,7 @@ from openpyxl import load_workbook
 # Second argument for excel workbook has been given
 #   will usually be template_crop_id
 #   if none given will use template_v2.xlsx within COMET-Farm_Master dir
-if len(sys.argv) == 1 or len(sys.argv) > 3:
+if len(sys.argv) == 1 or len(sys.argv) > 4:
     print('\nMissing arguments')
     print('expecting 1 or 2 arguments')
     print('  1. GIS data')
@@ -34,11 +34,13 @@ gis_file_name = gis_file_name.split('_')
 iso_id = gis_file_name[-1]
 crop_id = gis_file_name[-2]
 
-if len(sys.argv) == 3:
+if len(sys.argv) > 1:
     wb_dir = sys.argv[2]
+    file_name = sys.argv[3]
 else:
     script_path = os.path.dirname(os.path.realpath(__file__))
     wb_dir = script_path + '/../template_v3.xlsx'
+    file_name = 'no_file_name_provided_as_arg'
     print('No scenario template provided. Using default of template_v3.xlsx')
 
 
@@ -301,9 +303,6 @@ with open(gis_dat_file) as csv_file:
 
 print('Successful integration\n')
 
-# Get current scenario template name
-scenario_template_name = os.path.basename(gis_dat_file)
-
 # relative path for mac and linux
 script_rel_path = os.path.dirname(os.path.realpath(__file__))
 # absolute path for mike on neoterra
@@ -311,11 +310,11 @@ script_path = 'G:\\projects\\Moore_Climate2018\\COMET-Farm-master\\scripts\\'
 master_path = 'G:\\projects\\Moore_Climate2018\\COMET-Farm-master\\'
 
 if sys.platform.startswith('darwin') or sys.platform.startswith('linux'):
-    wb.save(master_path + '/integrated/integrated_' + scenario_template_name + '_' + crop_id + '_' + iso_id + '.xlsx')
+    wb.save(master_path + '/integrated/integrated_' + file_name + '_' + crop_id + '_' + iso_id + '.xlsx')
     # os.system('python3 ' + script_rel_path + '/generate_comet_input_file.py' + ' ' + script_rel_path + '/../combined_data.xlsx')
 elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
     # Save using scenario name, crop id, and iso class
-    wb.save(master_path + '\\integrated\\integrated_' + scenario_template_name + '_' + crop_id + '_' + iso_id + '.xlsx')
+    wb.save(master_path + '\\integrated\\integrated_' + file_name + '_' + crop_id + '_' + iso_id + '.xlsx')
 
 
 ################################################################
