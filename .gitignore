@@ -4,7 +4,5 @@ tests/*
 results/
 !results/
 results/*
-inputs/*.xml
-inputs/*.txt
-inputs/*.csv
+inputs/
 combined_data.xlsx
