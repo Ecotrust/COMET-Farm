@@ -79,8 +79,9 @@ for dat_file in os.listdir(crop_inputs_path):
 # provded the integrated file as an arg
 for integrated_file in os.listdir(integrated_path):
     print('\nGenerating XML for: ' + integrated_file)
+    integrated_file_name = integrated_file[:-5]
     integrated_file_path = os.path.join(integrated_path, integrated_file)
-    os.system(python_interpreter + " " + script_path + "\\generate_comet_input_file.py" + " " + integrated_file_path)
+    os.system(python_interpreter + " " + script_path + "\\generate_comet_input_file.py" + " " + integrated_file_path + ' ' + integrated_file_name)
 
 print("\n")
 print("All done here. Now sit tight while you wait for Comet-Farm to run.")

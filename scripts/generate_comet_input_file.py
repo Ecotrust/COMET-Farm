@@ -16,6 +16,11 @@ if len(sys.argv) < 1:
     exit()
 
 script_dir = sys.argv[0]
+# Get the scenario name, crop id, and iso class to name xml and track
+if len(sys.argv) > 1:
+    integrated_scenario_name = sys.argv[2]
+else:
+    integrated_scenario_name = 'no_arg_for_scenario_file_name'
 
 wb_dir = sys.argv[1]
 wb = load_workbook(filename = wb_dir)
@@ -93,18 +98,16 @@ script_path = "G:\\projects\\Moore_Climate2018\\COMET-Farm-master\\scripts\\"
 master_path = "G:\\projects\\Moore_Climate2018\\COMET-Farm-master\\"
 
 if sys.platform.startswith('darwin') or sys.platform.startswith('linux'):
-    input_xml_file_name = 'cf_' + str(gis_file_name)
-    input_xml_file = script_rel_path + '/../inputs/api_inputs/' + input_xml_file_name + '.xml'
+    input_xml_file = script_rel_path + '/../inputs/api_inputs/' + integrated_scenario_name + '.xml'
 elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
-    input_xml_file_name = 'cf_' + str(gis_file_name)
-    input_xml_file = master_path + 'inputs\\api_inputs\\' + input_xml_file_name + '.xml'
+    input_xml_file = master_path + 'inputs\\api_inputs\\' + integrated_scenario_name + '.xml'
 
 if (os.path.isfile(input_xml_file)):
     print('Saving over previous version\n')
     print(str(input_xml_file))
     os.remove(input_xml_file)
 else:
-    print('Creating XML file')
+    print('Creating new XML file')
     print(str(input_xml_file))
 
 
@@ -115,10 +118,10 @@ with open(input_xml_file, 'w') as f:
 
     # email_address = list(processed_sheets.items())[0][1]['Email']
     f.write("<CometFarm>")
-    f.write("<Project ID=\"34505\" PNAME=\"" + str(input_xml_file_name) + "\" USERID=\"15436\">")
+    f.write("<Project ID=\"34505\" PNAME=\"" + str(integrated_scenario_name) + "\" USERID=\"15436\">")
     # f.write("<Day cometEmailId=\"dpollard@ecotrust.org\">")
     for field in processed_sheets:
-        #f.write("<Cropland name=\"" + str(input_xml_file_name) + "\">")
+        #f.write("<Cropland name=\"" + str(integrated_scenario_name) + "\">")
         f.write("<Cropland>")
         #f.write("<GEOM PARCELNAME=\"" + str(processed_sheets[field]['Scenario Name']) + "\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
         f.write("<GEOM PARCELNAME=\"" + str(processed_sheets[field]['id']) + "\" SRID=\"" + str(processed_sheets[field]['SRID']) + "\" AREA=\"" + str(processed_sheets[field]['AREA']) + "\">" + processed_sheets[field]['GEOM'] + "</GEOM>")
@@ -361,6 +364,7 @@ print('Sendng XML POST request to API')
 import requests
 
 if (os.path.isfile(input_xml_file)):
+    xml_file = open(input_xml_file, 'rb')
     url = "https://comet-farm.com///ApiMain/AddToQueue"
     data = {
         "LastCropland": -1,
@@ -369,8 +373,15 @@ if (os.path.isfile(input_xml_file)):
         "LastDaycentInput":0,
         "FirstDaycentInput":0,
         "URL":"",
-        "Files":input_xml_file,
+        "Files":xml_file,
     }
+    try:
+        req = requests.post(url, data = data)
+        print('POST sent to: ' + url)
+        print('Response: ' + req.text)
+    finally:
+        xml_file.close()
+
 else:
     print('\n')
     print('File could not be found')

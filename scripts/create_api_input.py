@@ -37,6 +37,7 @@ crop_id = gis_file_name[-2]
 if len(sys.argv) > 1:
     wb_dir = sys.argv[2]
     file_name = sys.argv[3]
+    file_name = file_name[:-5]
 else:
     script_path = os.path.dirname(os.path.realpath(__file__))
     wb_dir = script_path + '/../template_v3.xlsx'
